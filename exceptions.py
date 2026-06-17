@@ -1,0 +1,2 @@
+class BrainOSError(Exception):
+    pass
