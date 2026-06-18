@@ -6,6 +6,8 @@ from openai import OpenAI
 
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
 from drive import list_files, read_file_content, search_and_read
+from fastapi import Header, HTTPException
+from config import MCP_API_KEY
 
 router = APIRouter(prefix="/mcp", tags=["MCP Gateway"])
 
@@ -14,6 +16,9 @@ class MCPCall(BaseModel):
     tool: str = Field(..., min_length=1)
     arguments: Dict[str, Any] = Field(default_factory=dict)
 
+def verify_mcp_key(x_api_key: str = Header(default="")):
+    if MCP_API_KEY and x_api_key != MCP_API_KEY:
+        raise HTTPException(status_code=401, detail="Invalid MCP API key")
 
 def build_context(files: List[Dict[str, Any]]) -> str:
     blocks = []
@@ -55,7 +60,9 @@ def tools():
 
 
 @router.post("/call")
-def call_tool(req: MCPCall):
+def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
+    if MCP_API_KEY and x_api_key != MCP_API_KEY:
+        raise HTTPException(status_code=401, detail="Invalid MCP API key")
     tool = req.tool
     args = req.arguments
 
@@ -174,7 +181,8 @@ def test_search(q: str = "Hệ quan sát", limit: int = 3):
                 "limit": limit,
                 "max_chars_per_file": 3000,
             },
-        )
+        ),
+        x_api_key=MCP_API_KEY
     )
 @router.get("/test-ask")
 def test_ask(q: str = "Hệ quan sát là gì?"):
@@ -186,5 +194,31 @@ def test_ask(q: str = "Hệ quan sát là gì?"):
                 "limit": 3,
                 "max_chars_per_file": 6000,
             },
-        )
+        ),
+        x_api_key=MCP_API_KEY
     )
+@router.get("/manifest")
+def manifest():
+    return {
+        "name": "TRUNG_HUYEN_CORE_MCP",
+        "version": "1.0.0",
+        "description": "MCP Gateway cho Bộ Não Gốc Trung Huyền Academy",
+        "tools": [
+            {
+                "name": "list_documents",
+                "description": "Liệt kê tài liệu trong kho tri thức"
+            },
+            {
+                "name": "search_documents",
+                "description": "Tìm và đọc tài liệu liên quan từ Google Drive"
+            },
+            {
+                "name": "read_document",
+                "description": "Đọc nội dung một tài liệu theo file_id"
+            },
+            {
+                "name": "ask_knowledge",
+                "description": "Trả lời câu hỏi dựa trên kho tri thức"
+            }
+        ]
+    }
