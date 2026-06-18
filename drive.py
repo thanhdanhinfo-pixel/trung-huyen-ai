@@ -253,13 +253,7 @@ def make_snippet(text: str, query: str, size: int = 1200) -> str:
     end = min(index + size, len(text))
 
     return text[start:end].strip()
-            file["content"] = content[:max_chars_per_file] if content else ""
-            scored_results.append(file)
-
-    scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
-
-    return scored_results[:limit]
-
+    
 def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
     query = (q or "").lower().strip()
     if not query:
@@ -302,5 +296,7 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
             file["content"] = file["snippet"]
             scored_results.append(file)
 
+    scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
+    return scored_results[:limit]
     scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
     return scored_results[:limit]
