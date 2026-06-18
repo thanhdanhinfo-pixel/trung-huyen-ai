@@ -81,54 +81,47 @@
   </div>
 
   <script>
-    const chat = document.getElementById("chat");
-    const questionInput = document.getElementById("question");
-    const sendBtn = document.getElementById("sendBtn");
+  const chat = document.getElementById("chat");
+  const questionInput = document.getElementById("question");
+  const sendBtn = document.getElementById("sendBtn");
 
-    function addMessage(text, type) {
-      const div = document.createElement("div");
-      div.className = "msg " + type;
-      div.textContent = text;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
+  function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.className = "msg " + type;
+    div.textContent = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const question = questionInput.value.trim();
+    if (!question) return;
+
+    addMessage(question, "user");
+    questionInput.value = "";
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Đang suy nghĩ...";
+
+    try {
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          question: question,
+          limit: 3,
+          max_chars_per_file: 6000
+        })
+      });
+
+      const data = await res.json();
+      addMessage(data.answer || JSON.stringify(data), "bot");
+    } catch (err) {
+      addMessage("Lỗi kết nối server: " + err.message, "bot");
     }
 
-    async function sendMessage() {
-      const question = questionInput.value.trim();
-      if (!question) return;
-
-      addMessage(question, "user");
-      questionInput.value = "";
-      sendBtn.disabled = true;
-      sendBtn.textContent = "Đang suy nghĩ...";
-
-      try {
-        const res = await fetch("/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            question: question,
-            limit: 3,
-            max_chars_per_file: 6000
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          addMessage("Lỗi: " + JSON.stringify(data), "bot");
-        } else {
-          addMessage(data.answer || "Không có câu trả lời.", "bot");
-        }
-      } catch (err) {
-        addMessage("Không kết nối được server: " + err.message, "bot");
-      }
-
-      sendBtn.disabled = false;
-      sendBtn.textContent = "Gửi câu hỏi";
-    }
+    sendBtn.disabled = false;
+    sendBtn.textContent = "Gửi câu hỏi";
+  }
   </script>
 </body>
 </html>
