@@ -197,18 +197,71 @@ def read_file_content(file_id: str, mime_type: Optional[str] = None) -> str:
     return ""
 
 
-def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
-    files = search_files(q=q, limit=limit)
+def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> List[Dict[str, Any]]:
+    service = get_drive_service()
+    root_id = folder_id or DRIVE_FOLDER_ID
     results: List[Dict[str, Any]] = []
 
-    for file in files:
+    def walk(fid: str):
+        nonlocal results
+        if len(results) >= limit:
+            return
+
+        page_token = None
+        while True:
+            response = service.files().list(
+                q=f"trashed = false and '{fid}' in parents",
+                pageSize=100,
+                pageToken=page_token,
+                fields="nextPageToken, files(id, name, mimeType, modifiedTime, webViewLink, size)",
+                orderBy="modifiedTime desc",
+                supportsAllDrives=True,
+                includeItemsFromAllDrives=True,
+            ).execute()
+
+            for item in response.get("files", []):
+                if len(results) >= limit:
+                    return
+
+                results.append(item)
+
+                if item.get("mimeType") == GOOGLE_FOLDER:
+                    walk(item["id"])
+
+            page_token = response.get("nextPageToken")
+            if not page_token:
+                break
+
+    if root_id:
+        walk(root_id)
+
+    return results
+
+
+def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
+    query = (q or "").lower().strip()
+    all_files = list_files_recursive(limit=300)
+
+    results: List[Dict[str, Any]] = []
+
+    for file in all_files:
+        if len(results) >= limit:
+            break
+
+        if file.get("mimeType") == GOOGLE_FOLDER:
+            continue
+
+        name = (file.get("name") or "").lower()
+
         try:
             content = read_file_content(file["id"], file.get("mimeType"))
         except Exception as exc:
             file["read_error"] = str(exc)
             content = ""
 
-        if content:
+        text = (content or "").lower()
+
+        if query in name or query in text:
             file["content"] = content[:max_chars_per_file]
             results.append(file)
 
