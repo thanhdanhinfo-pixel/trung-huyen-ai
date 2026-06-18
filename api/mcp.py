@@ -68,29 +68,29 @@ def call_tool(req: MCPCall):
         }
 
     if tool == "search_documents":
-    try:
-        q = args.get("q", "")
-        limit = int(args.get("limit", 5))
-        max_chars = int(args.get("max_chars_per_file", 6000))
+       try:
+          q = args.get("q", "")
+          limit = int(args.get("limit", 5))
+          max_chars = int(args.get("max_chars_per_file", 6000))
 
-        files = search_and_read(
+          files = search_and_read(
             q=q,
             limit=limit,
             max_chars_per_file=max_chars,
-        )
+          )
 
-        return {
-            "status": "ok",
-            "tool": tool,
-            "query": q,
-            "files": files,
-        }
+          return {
+              "status": "ok",
+              "tool": tool,
+              "query": q,
+              "files": files,
+          }
 
-    except Exception as e:
-        return {
-            "status": "error",
-            "error": str(e),
-        }
+       except Exception as e:
+          return {
+              "status": "error",
+              "error": str(e),
+          }
 
     if tool == "read_document":
         file_id = args.get("file_id", "")
