@@ -178,7 +178,68 @@ def drive_read(file_id: str):
     except Exception as exc:
         return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
 
-
+@app.get("/actions.json", include_in_schema=False)
+def actions_schema():
+    return {
+        "openapi": "3.0.3",
+        "info": {
+            "title": "Trung Huyen Knowledge Action",
+            "version": "1.0.0"
+        },
+        "servers": [
+            {
+                "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+            }
+        ],
+        "paths": {
+            "/drive/files": {
+                "get": {
+                    "operationId": "listDriveFiles",
+                    "summary": "List Google Drive files",
+                    "parameters": [
+                        {
+                            "name": "limit",
+                            "in": "query",
+                            "required": False,
+                            "schema": {
+                                "type": "integer",
+                                "default": 5
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "List of files from Google Drive",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "status": {"type": "string"},
+                                            "folder_limited": {"type": "boolean"},
+                                            "files": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {"type": "string"},
+                                                        "name": {"type": "string"},
+                                                        "mimeType": {"type": "string"},
+                                                        "webViewLink": {"type": "string"},
+                                                        "modifiedTime": {"type": "string"}
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 @app.post("/drive/search-read")
 def drive_search_read(req: SearchReadRequest):
     try:
