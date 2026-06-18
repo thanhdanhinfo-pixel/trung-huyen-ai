@@ -293,11 +293,12 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
         if score > 0:
             file["score"] = score
             if["snippet"] = make_snippet(content, q, size=min(max_chars_per_file, 1200))
-        if "content" in file:
-          del file["content"]
 
-    scored_results.append(file)
+            if "content" in file:
+                del file["content"]
 
+.           scored_results.append(fifile
+                                  
     scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
     return scored_results[:limit]
     scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
