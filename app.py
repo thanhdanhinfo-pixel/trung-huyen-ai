@@ -1,9 +1,9 @@
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from openai import OpenAI
 
@@ -20,20 +20,20 @@ try:
     from api.admin import router as admin_router
 except Exception:
     admin_router = None
-    
+
 app = FastAPI(
     title="TRUNG_HUYEN_AI_OS",
     version="1.0.0",
     description="Bộ não AI kết nối Google Drive và OpenAI cho Trung Huyền Academy.",
 )
-mcp_router = None
 
 try:
     from api.mcp import router as mcp_router
     app.include_router(mcp_router)
     print("MCP loaded")
-except Exception ONResponse exc:
+except Exception as exc:
     print("MCP router not loaded:", exc)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -41,7 +41,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1)
@@ -80,11 +82,7 @@ def openapi_mcp():
                 "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
             }
         ],
-        "security": [
-            {
-                "ApiKeyAuth": []
-            }
-        ],
+        "security": [{"ApiKeyAuth": []}],
         "components": {
             "securitySchemes": {
                 "ApiKeyAuth": {
@@ -120,11 +118,7 @@ def openapi_mcp():
                     "operationId": "callMcpTool",
                     "summary": "Call MCP Tool",
                     "description": "Thực thi một công cụ MCP",
-                    "security": [
-                        {
-                            "ApiKeyAuth": []
-                        }
-                    ],
+                    "security": [{"ApiKeyAuth": []}],
                     "requestBody": {
                         "required": True,
                         "content": {
@@ -145,6 +139,8 @@ def openapi_mcp():
             }
         }
     })
+
+
 @app.get("/health")
 def health():
     return {
@@ -262,6 +258,7 @@ def chat(req: ChatRequest):
         ]
 
         context = build_context(files, MAX_CONTEXT_CHARS)
+
         if not context:
             return {
                 "status": "ok",
