@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 from pydantic import BaseModel, Field
+from fastapi import Request
 
 from config import (
     DRIVE_FOLDER_ID,
@@ -127,6 +128,17 @@ def os_path_exists(path: str) -> bool:
     except Exception:
         return False
 
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    print("========== REQUEST ==========")
+    print("Method:", request.method)
+    print("Path:", request.url.path)
+    print("Query:", request.url.query)
+    print("Headers:", dict(request.headers))
+    response = await call_next(request)
+    print("Status:", response.status_code)
+    print("=============================")
+    return response
 
 @app.get("/health")
 def health():
