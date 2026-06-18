@@ -4,8 +4,8 @@ from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
 from openai import OpenAI
+from pydantic import BaseModel, Field
 
 from config import (
     DRIVE_FOLDER_ID,
@@ -16,23 +16,15 @@ from config import (
 )
 from drive import list_files, search_files, read_file_content, search_and_read
 
-try:
-    from api.admin import router as admin_router
-except Exception:
-    admin_router = None
+
+SERVER_URL = "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
 
 app = FastAPI(
     title="TRUNG_HUYEN_AI_OS",
     version="1.0.0",
     description="Bộ não AI kết nối Google Drive và OpenAI cho Trung Huyền Academy.",
+    servers=[{"url": SERVER_URL}],
 )
-
-try:
-    from api.mcp import router as mcp_router
-    app.include_router(mcp_router)
-    print("MCP loaded")
-except Exception as exc:
-    print("MCP router not loaded:", exc)
 
 app.add_middleware(
     CORSMiddleware,
@@ -43,6 +35,25 @@ app.add_middleware(
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+try:
+    from api.admin import router as admin_router
+except Exception as exc:
+    admin_router = None
+    print("Admin router not loaded:", exc)
+
+try:
+    from api.mcp import router as mcp_router
+except Exception as exc:
+    mcp_router = None
+    print("MCP router not loaded:", exc)
+
+if admin_router:
+    app.include_router(admin_router)
+
+if mcp_router:
+    app.include_router(mcp_router)
 
 
 class ChatRequest(BaseModel):
@@ -63,82 +74,54 @@ def openai_client() -> OpenAI:
     return OpenAI(api_key=OPENAI_API_KEY)
 
 
+def build_context(files: List[Dict[str, Any]], max_context_chars: int) -> str:
+    blocks: List[str] = []
+    used = 0
+
+    for idx, file in enumerate(files, start=1):
+        content = (file.get("content") or file.get("snippet") or "").strip()
+        if not content:
+            continue
+
+        block = (
+            f"[TÀI LIỆU {idx}]\n"
+            f"Tên: {file.get('name')}\n"
+            f"ID: {file.get('id')}\n"
+            f"Link: {file.get('webViewLink')}\n"
+            f"Nội dung:\n{content}\n"
+        )
+
+        if used + len(block) > max_context_chars:
+            remaining = max_context_chars - used
+            if remaining > 1000:
+                blocks.append(block[:remaining])
+            break
+
+        blocks.append(block)
+        used += len(block)
+
+    return "\n---\n".join(blocks)
+
+
 @app.get("/")
 def root():
-    return FileResponse("static/index.html")
+    index_path = "static/index.html"
+    if os_path_exists(index_path):
+        return FileResponse(index_path)
+    return {
+        "system": "TRUNG_HUYEN_AI_OS",
+        "status": "running",
+        "version": "1.0.0",
+        "docs": "/docs",
+    }
 
 
-@app.get("/openapi-mcp.json", include_in_schema=False)
-def openapi_mcp():
-    return JSONResponse({
-        "openapi": "3.1.0",
-        "info": {
-            "title": "TRUNG_HUYEN_CORE_MCP",
-            "description": "MCP API cho ChatGPT",
-            "version": "1.0.0"
-        },
-        "servers": [
-            {
-                "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
-            }
-        ],
-        "security": [{"ApiKeyAuth": []}],
-        "components": {
-            "securitySchemes": {
-                "ApiKeyAuth": {
-                    "type": "apiKey",
-                    "in": "header",
-                    "name": "x-api-key"
-                }
-            },
-            "schemas": {
-                "McpRequest": {
-                    "type": "object",
-                    "required": ["tool", "arguments"],
-                    "properties": {
-                        "tool": {
-                            "type": "string",
-                            "enum": [
-                                "ask_knowledge",
-                                "search_documents",
-                                "read_document",
-                                "list_documents"
-                            ]
-                        },
-                        "arguments": {
-                            "type": "object"
-                        }
-                    }
-                }
-            }
-        },
-        "paths": {
-            "/mcp/call": {
-                "post": {
-                    "operationId": "callMcpTool",
-                    "summary": "Call MCP Tool",
-                    "description": "Thực thi một công cụ MCP",
-                    "security": [{"ApiKeyAuth": []}],
-                    "requestBody": {
-                        "required": True,
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/McpRequest"
-                                }
-                            }
-                        }
-                    },
-                    "responses": {
-                        "200": {"description": "Success"},
-                        "400": {"description": "Bad Request"},
-                        "401": {"description": "Unauthorized"},
-                        "500": {"description": "Server Error"}
-                    }
-                }
-            }
-        }
-    })
+def os_path_exists(path: str) -> bool:
+    try:
+        import os
+        return os.path.exists(path)
+    except Exception:
+        return False
 
 
 @app.get("/health")
@@ -150,6 +133,7 @@ def health():
         "drive_folder_id": bool(DRIVE_FOLDER_ID),
         "openai_api_key": bool(OPENAI_API_KEY),
         "openai_model": OPENAI_MODEL,
+        "mcp_loaded": bool(mcp_router),
     }
 
 
@@ -208,35 +192,6 @@ def drive_search_read(req: SearchReadRequest):
         return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
 
 
-def build_context(files: List[Dict[str, Any]], max_context_chars: int) -> str:
-    blocks: List[str] = []
-    used = 0
-
-    for idx, file in enumerate(files, start=1):
-        content = file.get("content", "").strip()
-        if not content:
-            continue
-
-        block = (
-            f"[TÀI LIỆU {idx}]\n"
-            f"Tên: {file.get('name')}\n"
-            f"ID: {file.get('id')}\n"
-            f"Link: {file.get('webViewLink')}\n"
-            f"Nội dung:\n{content}\n"
-        )
-
-        if used + len(block) > max_context_chars:
-            remaining = max_context_chars - used
-            if remaining > 1000:
-                blocks.append(block[:remaining])
-            break
-
-        blocks.append(block)
-        used += len(block)
-
-    return "\n---\n".join(blocks)
-
-
 @app.post("/chat")
 def chat(req: ChatRequest):
     try:
@@ -253,12 +208,12 @@ def chat(req: ChatRequest):
                 "mimeType": f.get("mimeType"),
                 "link": f.get("webViewLink"),
                 "modifiedTime": f.get("modifiedTime"),
+                "score": f.get("score"),
             }
             for f in files
         ]
 
         context = build_context(files, MAX_CONTEXT_CHARS)
-
         if not context:
             return {
                 "status": "ok",
@@ -302,7 +257,3 @@ DỮ LIỆU TỪ GOOGLE DRIVE:
 
     except Exception as exc:
         return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
-
-
-if admin_router:
-    app.include_router(admin_router)

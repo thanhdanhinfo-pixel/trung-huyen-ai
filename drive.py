@@ -244,7 +244,6 @@ def make_snippet(text: str, query: str, size: int = 1200) -> str:
 
     lower_text = text.lower()
     lower_query = query.lower().strip()
-
     index = lower_text.find(lower_query)
 
     if index == -1:
@@ -252,22 +251,61 @@ def make_snippet(text: str, query: str, size: int = 1200) -> str:
 
     start = max(index - size // 3, 0)
     end = min(index + size, len(text))
-
     return text[start:end].strip()
+
 
 def normalize_text(value: str) -> str:
     value = (value or "").lower()
     value = unicodedata.normalize("NFD", value)
     value = "".join(ch for ch in value if unicodedata.category(ch) != "Mn")
-    value = value.replace("_", " ").replace("-", " ")
+    value = value.replace("_", " ").replace("-", " ").replace(".", " ")
     return " ".join(value.split())
-    
+
+
+def score_document(query: str, query_words: List[str], name: str, text: str) -> int:
+    score = 0
+
+    # Ưu tiên tài liệu gốc/giới thiệu
+    if name.startswith("00 "):
+        score += 300
+
+    if "gioi thieu" in name:
+        score += 300
+
+    # Ưu tiên tài liệu chủ đề Hệ Quan Sát
+    if "gioi thieu he quan sat" in name:
+        score += 5000
+
+    if "he quan sat" in name:
+        score += 3000
+
+    # Khớp tên file
+    if query == name:
+        score += 1000
+    elif query in name:
+        score += 700
+
+    if query_words and all(word in name for word in query_words):
+        score += 500
+
+    # Khớp nội dung
+    if query:
+        score += text.count(query) * 10
+
+    for word in query_words:
+        if word in name:
+            score += 30
+        score += text.count(word)
+
+    return score
+
+
 def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
     query = normalize_text(q)
     query_words = query.split()
 
     if not query:
-       return []
+        return []
 
     all_files = list_files_recursive(limit=300)
     scored_results: List[Dict[str, Any]] = []
@@ -286,41 +324,14 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
             content = ""
 
         text = normalize_text(content or "")
-
-        score = 0
-
-        # Ưu tiên mạnh tài liệu gốc về Hệ Quan Sát
-        if "gioi thieu he quan sat" in name:
-           score += 5000
-
-        if "he quan sat" in name:
-           score += 3000
-
-        if query == name:
-           score += 1000
-        elif query in name:
-             score += 700
-
-        if query_words and all(word in name for word in query_words):
-           score += 500
-
-        if name.startswith("00 "):
-           score += 300
-
-        if "giới thiệu" in name:
-           score += 300
-           score += text.count(query) * 10
-
-           for word in query.split():
-               if word in name:
-                  score += 30
-                  score += text.count(word)
+        score = score_document(query, query_words, name, text)
 
         if score > 0:
-            file["score"] = score
-            file["snippet"] = make_snippet(content, q, size=min(max_chars_per_file, 1200))
-            file["content"] = content[:max_chars_per_file]
-            scored_results.append(file)   
-            
-    scored_results.sort(key=lambda x: x.get("score", 0), reverse=True) 
+            result = dict(file)
+            result["score"] = score
+            result["snippet"] = make_snippet(content, q, size=min(max_chars_per_file, 1200))
+            result["content"] = content[:max_chars_per_file]
+            scored_results.append(result)
+
+    scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
     return scored_results[:limit]
