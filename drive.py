@@ -238,7 +238,7 @@ def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> L
     return results
 
 
-def def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
+def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
     query = (q or "").lower().strip()
     all_files = list_files_recursive(limit=300)
 
