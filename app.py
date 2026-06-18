@@ -216,6 +216,57 @@ def actions_schema():
         }
     }
 
+"/drive/search": {
+    "get": {
+        "operationId": "searchDriveFiles",
+        "summary": "Search Google Drive files",
+        "description": "Tìm tài liệu trong Google Drive theo từ khóa.",
+        "parameters": [
+            {
+                "name": "q",
+                "in": "query",
+                "required": True,
+                "schema": {"type": "string"}
+            },
+            {
+                "name": "limit",
+                "in": "query",
+                "required": False,
+                "schema": {"type": "integer", "default": 5}
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "Kết quả tìm kiếm tài liệu",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {"type": "string"},
+                                "query": {"type": "string"},
+                                "files": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {"type": "string"},
+                                            "name": {"type": "string"},
+                                            "mimeType": {"type": "string"},
+                                            "webViewLink": {"type": "string"},
+                                            "modifiedTime": {"type": "string"}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 @app.get("/drive/files")
 def drive_files(limit: int = Query(default=50, ge=1, le=200)):
     try:
