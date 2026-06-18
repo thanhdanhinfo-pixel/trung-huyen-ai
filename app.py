@@ -1,10 +1,9 @@
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from openai import OpenAI
 
@@ -27,6 +26,8 @@ app = FastAPI(
     version="1.0.0",
     description="Bộ não AI kết nối Google Drive và OpenAI cho Trung Huyền Academy.",
 )
+mcp_router = None
+
 try:
     from api.mcp import router as mcp_router
     app.include_router(mcp_router)
@@ -64,6 +65,65 @@ def openai_client() -> OpenAI:
 def root():
     return FileResponse("static/index.html")
 
+@app.get("/openapi-mcp.json")
+def openapi_mcp():
+    return {
+        "openapi": "3.1.0",
+        "info": {
+            "title": "TRUNG_HUYEN_CORE_MCP",
+            "version": "1.0.0"
+        },
+        "servers": [
+            {
+                "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+            }
+        ],
+        "paths": {
+            "/mcp/call": {
+                "post": {
+                    "operationId": "callMcpTool",
+                    "summary": "Call MCP Tool",
+                    "parameters": [
+                        {
+                            "name": "x-api-key",
+                            "in": "header",
+                            "required": True,
+                            "schema": {"type": "string"}
+                        }
+                    ],
+                    "requestBody": {
+                        "required": True,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": ["tool", "arguments"],
+                                    "properties": {
+                                        "tool": {
+                                            "type": "string",
+                                            "enum": [
+                                                "list_documents",
+                                                "search_documents",
+                                                "read_document",
+                                                "ask_knowledge"
+                                            ]
+                                        },
+                                        "arguments": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {"description": "Successful response"},
+                        "401": {"description": "Invalid MCP API key"}
+                    }
+                }
+            }
+        }
+    }
 
 @app.get("/health")
 def health():
@@ -229,6 +289,3 @@ DỮ LIỆU TỪ GOOGLE DRIVE:
 
 if admin_router:
     app.include_router(admin_router)
-
-if mcp_router:
-    app.include_router(mcp_router)
