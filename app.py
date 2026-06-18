@@ -106,13 +106,10 @@ def build_context(files: List[Dict[str, Any]], max_context_chars: int) -> str:
 
 @app.get("/")
 def root():
-    return {
-        "status": "ok",
-        "service": "TRUNG_HUYEN_AI_OS",
-        "message": "API is running"
-    }
+    index_path = "static/index.html"
     if os_path_exists(index_path):
         return FileResponse(index_path)
+
     return {
         "system": "TRUNG_HUYEN_AI_OS",
         "status": "running",
@@ -130,12 +127,19 @@ def os_path_exists(path: str) -> bool:
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
+    safe_headers = dict(request.headers)
+    for key in ["authorization", "cookie", "x-api-key"]:
+        if key in safe_headers:
+            safe_headers[key] = "***REDACTED***"
+
     print("========== REQUEST ==========")
     print("Method:", request.method)
     print("Path:", request.url.path)
     print("Query:", request.url.query)
-    print("Headers:", dict(request.headers))
+    print("Headers:", safe_headers)
+
     response = await call_next(request)
+
     print("Status:", response.status_code)
     print("=============================")
     return response
@@ -255,8 +259,82 @@ def actions_schema():
             }
         }
     }
-                                                        
-
+            "/drive/search-read": {
+    "post": {
+        "operationId": "searchAndReadDrive",
+        "summary": "Search and read Google Drive documents",
+        "description": "Tìm tài liệu trong Google Drive và đọc nội dung.",
+        "requestBody": {
+            "required": True,
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "q": {
+                                "type": "string"
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "default": 5
+                            },
+                            "max_chars_per_file": {
+                                "type": "integer",
+                                "default": 6000
+                            }
+                        },
+                        "required": [
+                            "q"
+                        ]
+                    }
+                }
+            }
+        },
+        "responses": {
+            "200": {
+                "description": "Danh sách tài liệu kèm nội dung"
+            }
+        }
+    }
+},                                            
+            "/chat": {
+    "post": {
+        "operationId": "chatWithKnowledge",
+        "summary": "Ask Trung Huyen AI",
+        "description": "Tìm tài liệu Google Drive và trả lời bằng OpenAI.",
+        "requestBody": {
+            "required": True,
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "question": {
+                                "type": "string"
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "default": 5
+                            },
+                            "max_chars_per_file": {
+                                "type": "integer",
+                                "default": 6000
+                            }
+                        },
+                        "required": [
+                            "question"
+                        ]
+                    }
+                }
+            }
+        },
+        "responses": {
+            "200": {
+                "description": "AI trả lời dựa trên Google Drive"
+            }
+        }
+    }
+            }
 @app.get("/drive/files")
 def drive_files(limit: int = Query(default=50, ge=1, le=200)):
     try:
@@ -293,8 +371,6 @@ def drive_read(file_id: str):
         }
     except Exception as exc:
         return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
-
-"type": "array",
                                                 
 @app.post("/drive/search-read")
 def drive_search_read(req: SearchReadRequest):
@@ -352,6 +428,9 @@ Luật trả lời:
 4. Khi phù hợp, phân biệt hiện tượng, nguyên nhân, bản chất và quy luật.
 5. Ưu tiên tính nhất quán, khả năng mở rộng và kiến trúc dài hạn.
 6. Trả lời bằng tiếng Việt, rõ ràng, thực tế.
+Không tạo CPU, khái niệm, mô hình mới nếu tài liệu chưa chứng minh sự cần thiết.
+Nếu phát hiện trùng lặp, mâu thuẫn, nhảy tầng hoặc lỗ hổng kiến trúc, phải chỉ ra rõ.
+Mọi kết luận là kết luận tạm thời.
 """
 
         user = f"""
