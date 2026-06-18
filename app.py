@@ -140,6 +140,69 @@ def health():
         "mcp_loaded": bool(mcp_router),
     }
 
+@app.get("/actions.json", include_in_schema=False)
+def actions_schema():
+    return {
+        "openapi": "3.1.0",
+        "info": {
+            "title": "Trung Huyen Knowledge Action",
+            "version": "1.0.0"
+        },
+        "servers": [
+            {
+                "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+            }
+        ],
+        "paths": {
+            "/drive/files": {
+                "get": {
+                    "operationId": "listDriveFiles",
+                    "summary": "List Google Drive files",
+                    "description": "Liệt kê tài liệu trong Google Drive của Trung Huyền AI.",
+                    "parameters": [
+                        {
+                            "name": "limit",
+                            "in": "query",
+                            "required": False,
+                            "schema": {
+                                "type": "integer",
+                                "default": 5
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Danh sách tài liệu",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "status": {"type": "string"},
+                                            "folder_limited": {"type": "boolean"},
+                                            "files": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {"type": "string"},
+                                                        "name": {"type": "string"},
+                                                        "mimeType": {"type": "string"},
+                                                        "webViewLink": {"type": "string"},
+                                                        "modifiedTime": {"type": "string"}
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 @app.get("/drive/files")
 def drive_files(limit: int = Query(default=50, ge=1, le=200)):
