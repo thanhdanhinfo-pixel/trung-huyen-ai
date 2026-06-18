@@ -144,3 +144,15 @@ def call_tool(req: MCPCall):
         "status": "error",
         "message": f"Unknown tool: {tool}",
   }
+    @router.get("/test-search")
+def test_search(q: str = "Hệ quan sát", limit: int = 3):
+    return call_tool(
+        MCPCall(
+            tool="search_documents",
+            arguments={
+                "q": q,
+                "limit": limit,
+                "max_chars_per_file": 3000,
+            },
+        )
+    )
