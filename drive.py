@@ -253,17 +253,16 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
 
         name = (file.get("name") or "").lower()
 
-        # Ưu tiên tìm theo tên file trước để tránh đọc toàn bộ Drive
-        if query not in name:
-            continue
-
         try:
             content = read_file_content(file["id"], file.get("mimeType"))
         except Exception as exc:
-            content = ""
             file["read_error"] = str(exc)
+            content = ""
 
-        file["content"] = content[:max_chars_per_file] if content else ""
-        results.append(file)
+        text = (content or "").lower()
+
+        if query in name or query in text:
+            file["content"] = content[:max_chars_per_file]
+            results.append(file)
 
     return results
