@@ -197,7 +197,7 @@ def read_file_content(file_id: str, mime_type: Optional[str] = None) -> str:
     return ""
 
 
-def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> List[Dict[str, Any]]:
+def list_files_recursive(folder_id: Optional[str] = None, limit: int = 80) -> List[Dict[str, Any]]:
     service = get_drive_service()
     root_id = folder_id or DRIVE_FOLDER_ID
     results: List[Dict[str, Any]] = []
