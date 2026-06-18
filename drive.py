@@ -305,8 +305,8 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
 
         score += text.count(query) * 10
 
-   for word in query.split():
-        if word in name:
+        for word in query.split():
+            if word in name:
                 score += 30
             score += text.count(word)
 
