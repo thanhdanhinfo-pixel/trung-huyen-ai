@@ -162,7 +162,7 @@ def actions_schema():
         },
         "servers": [
             {
-                "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+                "url": SERVER_URL
             }
         ],
         "paths": {
@@ -170,16 +170,13 @@ def actions_schema():
                 "get": {
                     "operationId": "listDriveFiles",
                     "summary": "List Google Drive files",
-                    "description": "Liệt kê tài liệu trong Google Drive của Trung Huyền AI.",
+                    "description": "Liệt kê tài liệu trong Google Drive.",
                     "parameters": [
                         {
                             "name": "limit",
                             "in": "query",
                             "required": False,
-                            "schema": {
-                                "type": "integer",
-                                "default": 5
-                            }
+                            "schema": {"type": "integer", "default": 5}
                         }
                     ],
                     "responses": {
@@ -188,24 +185,67 @@ def actions_schema():
                             "content": {
                                 "application/json": {
                                     "schema": {
-                                        "type": "object",
-                                        "properties": {
-                                            "status": {"type": "string"},
-                                            "folder_limited": {"type": "boolean"},
-                                            "files": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "id": {"type": "string"},
-                                                        "name": {"type": "string"},
-                                                        "mimeType": {"type": "string"},
-                                                        "webViewLink": {"type": "string"},
-                                                        "modifiedTime": {"type": "string"}
-                                                    }
-                                                }
-                                            }
-                                        }
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/drive/search": {
+                "get": {
+                    "operationId": "searchDriveFiles",
+                    "summary": "Search Google Drive files",
+                    "description": "Tìm tài liệu trong Google Drive theo từ khóa.",
+                    "parameters": [
+                        {
+                            "name": "q",
+                            "in": "query",
+                            "required": True,
+                            "schema": {"type": "string"}
+                        },
+                        {
+                            "name": "limit",
+                            "in": "query",
+                            "required": False,
+                            "schema": {"type": "integer", "default": 5}
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Kết quả tìm kiếm",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/drive/read": {
+                "get": {
+                    "operationId": "readDriveFile",
+                    "summary": "Read Google Drive file content",
+                    "description": "Đọc nội dung một tài liệu Google Drive theo file_id.",
+                    "parameters": [
+                        {
+                            "name": "file_id",
+                            "in": "query",
+                            "required": True,
+                            "schema": {"type": "string"}
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Nội dung tài liệu",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object"
                                     }
                                 }
                             }
@@ -215,57 +255,7 @@ def actions_schema():
             }
         }
     }
-
-            "/drive/search": {
-                "get": {
-                    "operationId": "searchDriveFiles",
-                    "summary": "Search Google Drive files",
-                    "description": "Tìm tài liệu trong Google Drive theo từ khóa.",
-                    "parameters": [
-                       {
-                            "name": "q",
-                            "in": "query",
-                            "required": True,
-                            "schema": {"type": "string"}
-                       },
-                       {
-                            "name": "limit",
-                            "in": "query",
-                            "required": False,
-                            "schema": {"type": "integer", "default": 5}
-                       }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "Kết quả tìm kiếm tài liệu",
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "type": "object",
-                                        "properties": {
-                                            "status": {"type": "string"},
-                                            "query": {"type": "string"},
-                                            "files": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "id": {"type": "string"},
-                                                        "name": {"type": "string"},
-                                                        "mimeType": {"type": "string"},
-                                                        "webViewLink": {"type": "string"},
-                                                        "modifiedTime": {"type": "string"}
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+                                                        
 
 @app.get("/drive/files")
 def drive_files(limit: int = Query(default=50, ge=1, le=200)):
@@ -304,68 +294,8 @@ def drive_read(file_id: str):
     except Exception as exc:
         return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
 
-@app.get("/actions.json", include_in_schema=False)
-def actions_schema():
-    return {
-        "openapi": "3.0.3",
-        "info": {
-            "title": "Trung Huyen Knowledge Action",
-            "version": "1.0.0"
-        },
-        "servers": [
-            {
-                "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
-            }
-        ],
-        "paths": {
-            "/drive/files": {
-                "get": {
-                    "operationId": "listDriveFiles",
-                    "summary": "List Google Drive files",
-                    "parameters": [
-                        {
-                            "name": "limit",
-                            "in": "query",
-                            "required": False,
-                            "schema": {
-                                "type": "integer",
-                                "default": 5
-                            }
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "List of files from Google Drive",
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "type": "object",
-                                        "properties": {
-                                            "status": {"type": "string"},
-                                            "folder_limited": {"type": "boolean"},
-                                            "files": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "id": {"type": "string"},
-                                                        "name": {"type": "string"},
-                                                        "mimeType": {"type": "string"},
-                                                        "webViewLink": {"type": "string"},
-                                                        "modifiedTime": {"type": "string"}
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+"type": "array",
+                                                
 @app.post("/drive/search-read")
 def drive_search_read(req: SearchReadRequest):
     try:
