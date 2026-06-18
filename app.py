@@ -1,5 +1,5 @@
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, Query
@@ -65,7 +65,6 @@ def openai_client() -> OpenAI:
 def root():
     return FileResponse("static/index.html")
 
-from fastapi.responses import JSONResponse
 
 @app.get("/openapi-mcp.json", include_in_schema=False)
 def openapi_mcp():
@@ -97,10 +96,7 @@ def openapi_mcp():
             "schemas": {
                 "McpRequest": {
                     "type": "object",
-                    "required": [
-                        "tool",
-                        "arguments"
-                    ],
+                    "required": ["tool", "arguments"],
                     "properties": {
                         "tool": {
                             "type": "string",
@@ -140,18 +136,10 @@ def openapi_mcp():
                         }
                     },
                     "responses": {
-                        "200": {
-                            "description": "Success"
-                        },
-                        "400": {
-                            "description": "Bad Request"
-                        },
-                        "401": {
-                            "description": "Unauthorized"
-                        },
-                        "500": {
-                            "description": "Server Error"
-                        }
+                        "200": {"description": "Success"},
+                        "400": {"description": "Bad Request"},
+                        "401": {"description": "Unauthorized"},
+                        "500": {"description": "Server Error"}
                     }
                 }
             }
