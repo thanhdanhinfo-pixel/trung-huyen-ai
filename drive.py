@@ -266,8 +266,8 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
                    query = normalize_text(q)
                    query_words = query.split()
 
-        if not query:
-               return []
+    if not query:
+       return []
 
     all_files = list_files_recursive(limit=300)
     scored_results: List[Dict[str, Any]] = []
@@ -305,8 +305,8 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
 
         score += text.count(query) * 10
 
-        for word in query.split():
-            if word in name:
+   for word in query.split():
+        if word in name:
                 score += 30
             score += text.count(word)
 
