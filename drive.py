@@ -197,7 +197,7 @@ def read_file_content(file_id: str, mime_type: Optional[str] = None) -> str:
     return ""
 
 
-def list_files_recursive(folder_id: Optional[str] = None, limit: int = 80) -> List[Dict[str, Any]]:
+def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> List[Dict[str, Any]]:
     service = get_drive_service()
     root_id = folder_id or DRIVE_FOLDER_ID
     results: List[Dict[str, Any]] = []
@@ -240,14 +240,14 @@ def list_files_recursive(folder_id: Optional[str] = None, limit: int = 80) -> Li
 
 def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
     query = (q or "").lower().strip()
+    if not query:
+        return []
+
     all_files = list_files_recursive(limit=300)
 
-    results: List[Dict[str, Any]] = []
+    scored_results: List[Dict[str, Any]] = []
 
     for file in all_files:
-        if len(results) >= limit:
-            break
-
         if file.get("mimeType") == GOOGLE_FOLDER:
             continue
 
@@ -261,8 +261,25 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
 
         text = (content or "").lower()
 
-        if query in name or query in text:
-            file["content"] = content[:max_chars_per_file]
-            results.append(file)
+        score = 0
 
-    return results
+        if query == name:
+            score += 300
+        elif query in name:
+            score += 150
+
+        score += text.count(query) * 10
+
+        for word in query.split():
+            if word in name:
+                score += 30
+            score += text.count(word)
+
+        if score > 0:
+            file["score"] = score
+            file["content"] = content[:max_chars_per_file] if content else ""
+            scored_results.append(file)
+
+    scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
+
+    return scored_results[:limit]
