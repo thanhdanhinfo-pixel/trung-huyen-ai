@@ -144,6 +144,12 @@ def call_tool(req: MCPCall):
         "status": "error",
         "message": f"Unknown tool: {tool}",
   }
+@router.get("/ping")
+def ping():
+    return {
+        "status": "ok",
+        "mcp": "alive"
+    }
 @router.get("/test-search")
 def test_search(q: str = "Hệ quan sát", limit: int = 3):
     return call_tool(
