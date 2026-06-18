@@ -297,10 +297,10 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
         if query_words and all(word in name for word in query_words):
            score += 500
 
-        if name.startswith("00_"):
+        if name.startswith("00 "):
            score += 300
 
-        if "gioi_thieu" in name or "giới thiệu" in name:
+        if "giới thiệu" in name:
            score += 300
 
         score += text.count(query) * 10
