@@ -1,3 +1,5 @@
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, Query
@@ -33,7 +35,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1)
@@ -55,12 +57,7 @@ def openai_client() -> OpenAI:
 
 @app.get("/")
 def root():
-    return {
-        "system": "TRUNG_HUYEN_AI_OS",
-        "status": "running",
-        "version": "1.0.0",
-        "docs": "/docs",
-    }
+    return FileResponse("static/index.html")
 
 
 @app.get("/health")
