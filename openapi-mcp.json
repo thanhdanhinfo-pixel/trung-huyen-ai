@@ -1,0 +1,63 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "TRUNG HUYEN CORE MCP",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+    }
+  ],
+  "paths": {
+    "/mcp/call": {
+      "post": {
+        "operationId": "callMcpTool",
+        "summary": "Call Trung Huyen MCP Tool",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["tool", "arguments"],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "list_documents",
+                      "search_documents",
+                      "read_document",
+                      "ask_knowledge"
+                    ]
+                  },
+                  "arguments": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "401": {
+            "description": "Invalid MCP API key"
+          }
+        }
+      }
+    }
+  }
+}
