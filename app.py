@@ -21,7 +21,11 @@ try:
     from api.admin import router as admin_router
 except Exception:
     admin_router = None
-
+try:
+    from api.mcp import router as mcp_router
+    app.include_router(mcp_router)
+except Exception as exc:
+    print("MCP router not loaded:", exc)
 app = FastAPI(
     title="TRUNG_HUYEN_AI_OS",
     version="1.0.0",
