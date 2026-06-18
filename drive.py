@@ -1,3 +1,4 @@
+import unicodedata
 import io
 import json
 from typing import Any, Dict, List, Optional
@@ -253,12 +254,20 @@ def make_snippet(text: str, query: str, size: int = 1200) -> str:
     end = min(index + size, len(text))
 
     return text[start:end].strip()
+
+def normalize_text(value: str) -> str:
+    value = (value or "").lower()
+    value = unicodedata.normalize("NFD", value)
+    value = "".join(ch for ch in value if unicodedata.category(ch) != "Mn")
+    value = value.replace("_", " ").replace("-", " ")
+    return " ".join(value.split())
     
 def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
-    query = (q or "").lower().strip()
+    query = normalize_text(q)
     query_words = query.split()
+
     if not query:
-        return []
+    return []
 
     all_files = list_files_recursive(limit=300)
     scored_results: List[Dict[str, Any]] = []
@@ -267,7 +276,8 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
         if file.get("mimeType") == GOOGLE_FOLDER:
             continue
 
-        name = (file.get("name") or "").lower()
+        raw_name = file.get("name") or ""
+        name = normalize_text(raw_name)
 
         try:
             content = read_file_content(file["id"], file.get("mimeType"))
@@ -275,7 +285,7 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
             file["read_error"] = str(exc)
             content = ""
 
-        text = (content or "").lower()
+        text = normalize_text(content or "")
 
         score = 0
 
