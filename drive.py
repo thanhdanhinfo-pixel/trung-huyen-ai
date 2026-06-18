@@ -302,7 +302,6 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
 
         if "giới thiệu" in name:
            score += 300
-         
            score += text.count(query) * 10
 
            for word in query.split():
