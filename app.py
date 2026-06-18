@@ -1,5 +1,5 @@
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, Query
@@ -32,7 +32,7 @@ try:
     from api.mcp import router as mcp_router
     app.include_router(mcp_router)
     print("MCP loaded")
-except Exception as exc:
+except Exception ONResponse exc:
     print("MCP router not loaded:", exc)
 app.add_middleware(
     CORSMiddleware,
@@ -65,12 +65,15 @@ def openai_client() -> OpenAI:
 def root():
     return FileResponse("static/index.html")
 
-@app.get("/openapi-mcp.json")
+from fastapi.responses import JSONResponse
+
+@app.get("/openapi-mcp.json", include_in_schema=False)
 def openapi_mcp():
-    return {
+    return JSONResponse({
         "openapi": "3.1.0",
         "info": {
             "title": "TRUNG_HUYEN_CORE_MCP",
+            "description": "MCP API cho ChatGPT",
             "version": "1.0.0"
         },
         "servers": [
@@ -78,17 +81,52 @@ def openapi_mcp():
                 "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
             }
         ],
+        "security": [
+            {
+                "ApiKeyAuth": []
+            }
+        ],
+        "components": {
+            "securitySchemes": {
+                "ApiKeyAuth": {
+                    "type": "apiKey",
+                    "in": "header",
+                    "name": "x-api-key"
+                }
+            },
+            "schemas": {
+                "McpRequest": {
+                    "type": "object",
+                    "required": [
+                        "tool",
+                        "arguments"
+                    ],
+                    "properties": {
+                        "tool": {
+                            "type": "string",
+                            "enum": [
+                                "ask_knowledge",
+                                "search_documents",
+                                "read_document",
+                                "list_documents"
+                            ]
+                        },
+                        "arguments": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
         "paths": {
             "/mcp/call": {
                 "post": {
                     "operationId": "callMcpTool",
                     "summary": "Call MCP Tool",
-                    "parameters": [
+                    "description": "Thực thi một công cụ MCP",
+                    "security": [
                         {
-                            "name": "x-api-key",
-                            "in": "header",
-                            "required": True,
-                            "schema": {"type": "string"}
+                            "ApiKeyAuth": []
                         }
                     ],
                     "requestBody": {
@@ -96,35 +134,29 @@ def openapi_mcp():
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": ["tool", "arguments"],
-                                    "properties": {
-                                        "tool": {
-                                            "type": "string",
-                                            "enum": [
-                                                "list_documents",
-                                                "search_documents",
-                                                "read_document",
-                                                "ask_knowledge"
-                                            ]
-                                        },
-                                        "arguments": {
-                                            "type": "object"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/McpRequest"
                                 }
                             }
                         }
                     },
                     "responses": {
-                        "200": {"description": "Successful response"},
-                        "401": {"description": "Invalid MCP API key"}
+                        "200": {
+                            "description": "Success"
+                        },
+                        "400": {
+                            "description": "Bad Request"
+                        },
+                        "401": {
+                            "description": "Unauthorized"
+                        },
+                        "500": {
+                            "description": "Server Error"
+                        }
                     }
                 }
             }
         }
-    }
-
+    })
 @app.get("/health")
 def health():
     return {
