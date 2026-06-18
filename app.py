@@ -229,3 +229,6 @@ DỮ LIỆU TỪ GOOGLE DRIVE:
 
 if admin_router:
     app.include_router(admin_router)
+
+if mcp_router:
+    app.include_router(mcp_router)
