@@ -238,7 +238,7 @@ def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> L
     return results
 
 
-def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
+def def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
     query = (q or "").lower().strip()
     all_files = list_files_recursive(limit=300)
 
@@ -253,16 +253,17 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
 
         name = (file.get("name") or "").lower()
 
+        # Ưu tiên tìm theo tên file trước để tránh đọc toàn bộ Drive
+        if query not in name:
+            continue
+
         try:
             content = read_file_content(file["id"], file.get("mimeType"))
         except Exception as exc:
-            file["read_error"] = str(exc)
             content = ""
+            file["read_error"] = str(exc)
 
-        text = (content or "").lower()
-
-        if query in name or query in text:
-            file["content"] = content[:max_chars_per_file]
-            results.append(file)
+        file["content"] = content[:max_chars_per_file] if content else ""
+        results.append(file)
 
     return results
