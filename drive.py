@@ -256,6 +256,7 @@ def make_snippet(text: str, query: str, size: int = 1200) -> str:
     
 def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
     query = (q or "").lower().strip()
+    query_words = query.split()
     if not query:
         return []
 
@@ -282,8 +283,6 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
            score += 1000
         elif query in name:
              score += 700
-
-             query_words = query.split()
 
         if query_words and all(word in name for word in query_words):
            score += 500
