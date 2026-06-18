@@ -105,7 +105,11 @@ def build_context(files: List[Dict[str, Any]], max_context_chars: int) -> str:
 
 @app.get("/")
 def root():
-    index_path = "static/index.html"
+    return {
+        "status": "ok",
+        "service": "TRUNG_HUYEN_AI_OS",
+        "message": "API is running"
+    }
     if os_path_exists(index_path):
         return FileResponse(index_path)
     return {
