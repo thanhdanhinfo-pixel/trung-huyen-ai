@@ -144,7 +144,7 @@ def call_tool(req: MCPCall):
         "status": "error",
         "message": f"Unknown tool: {tool}",
   }
-    @router.get("/test-search")
+@router.get("/test-search")
 def test_search(q: str = "Hệ quan sát", limit: int = 3):
     return call_tool(
         MCPCall(
