@@ -176,3 +176,15 @@ def test_search(q: str = "Hệ quan sát", limit: int = 3):
             },
         )
     )
+@router.get("/test-ask")
+def test_ask(q: str = "Hệ quan sát là gì?"):
+    return call_tool(
+        MCPCall(
+            tool="ask_knowledge",
+            arguments={
+                "question": q,
+                "limit": 3,
+                "max_chars_per_file": 6000,
+            },
+        )
+    )
