@@ -289,6 +289,13 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
 
         score = 0
 
+        # Ưu tiên mạnh tài liệu gốc về Hệ Quan Sát
+        if "gioi thieu he quan sat" in name:
+           score += 5000
+
+        if "he quan sat" in name:
+           score += 3000
+
         if query == name:
            score += 1000
         elif query in name:
