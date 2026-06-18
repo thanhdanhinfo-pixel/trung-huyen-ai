@@ -237,6 +237,28 @@ def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> L
 
     return results
 
+def make_snippet(text: str, query: str, size: int = 1200) -> str:
+    if not text:
+        return ""
+
+    lower_text = text.lower()
+    lower_query = query.lower().strip()
+
+    index = lower_text.find(lower_query)
+
+    if index == -1:
+        return text[:size]
+
+    start = max(index - size // 3, 0)
+    end = min(index + size, len(text))
+
+    return text[start:end].strip()
+            file["content"] = content[:max_chars_per_file] if content else ""
+            scored_results.append(file)
+
+    scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
+
+    return scored_results[:limit]
 
 def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
     query = (q or "").lower().strip()
@@ -244,7 +266,6 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
         return []
 
     all_files = list_files_recursive(limit=300)
-
     scored_results: List[Dict[str, Any]] = []
 
     for file in all_files:
@@ -277,9 +298,9 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
 
         if score > 0:
             file["score"] = score
-            file["content"] = content[:max_chars_per_file] if content else ""
+            file["snippet"] = make_snippet(content, q, size=min(max_chars_per_file, 1200))
+            file["content"] = file["snippet"]
             scored_results.append(file)
 
     scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
-
     return scored_results[:limit]
