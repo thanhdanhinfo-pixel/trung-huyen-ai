@@ -263,11 +263,11 @@ def normalize_text(value: str) -> str:
     return " ".join(value.split())
     
 def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
-    query = normalize_text(q)
-    query_words = query.split()
+                   query = normalize_text(q)
+                   query_words = query.split()
 
-    if not query:
-    return []
+        if not query:
+               return []
 
     all_files = list_files_recursive(limit=300)
     scored_results: List[Dict[str, Any]] = []
