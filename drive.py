@@ -294,7 +294,7 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
             file["score"] = score
             file["snippet"] = make_snippet(content, q, size=min(max_chars_per_file, 1200))
             file["content"] = content[:max_chars_per_file]
-            scored_results.append(file)file    
+            scored_results.append(file)   
             
-            scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
-            return scored_results[:limit]
+        scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
+        return scored_results[:limit]
