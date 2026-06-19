@@ -1,3 +1,6 @@
+from typing import Any, Dict, List
+from fastapi import FastAPI, Query
+from rag.indexer import index_drive
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,7 +17,7 @@ from config import (
     QDRANT_URL,
     QDRANT_API_KEY,
 )
-from drive import list_files, search_files, read_file_content, search_and_read
+from drive import search_files, read_file_content, search_and_read
 
 
 SERVER_URL = "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
@@ -186,15 +189,7 @@ def rag_init():
                 "message": str(exc)
             }
         )    
-@app.post("/rag/index")
-def rag_index(limit: int = 10):
-    try:
-        return index_drive(limit=limit)
-    except Exception as exc:
-        return JSONResponse(
-            status_code=500,
-            content={"status": "error", "message": str(exc)}
-        )
+
 @app.get("/actions.json", include_in_schema=False)
 def actions_schema():
     return {
