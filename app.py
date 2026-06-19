@@ -156,6 +156,8 @@ def health():
         "openai_api_key": bool(OPENAI_API_KEY),
         "openai_model": OPENAI_MODEL,
         "mcp_loaded": bool(mcp_router),
+        "qdrant_url": bool(QDRANT_URL),
+        "qdrant_api_key": bool(QDRANT_API_KEY),
     }
 @app.post("/rag/init")
 def rag_init():
