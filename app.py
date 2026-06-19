@@ -58,7 +58,8 @@ if admin_router:
 
 if mcp_router:
     app.include_router(mcp_router)
-    app.include_router(knowledge_router)
+    
+app.include_router(knowledge_router)
 
 
 class ChatRequest(BaseModel):
