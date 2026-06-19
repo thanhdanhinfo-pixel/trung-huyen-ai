@@ -28,7 +28,7 @@ app = FastAPI(
     description="Bộ não AI kết nối Google Drive và OpenAI cho Trung Huyền Academy.",
     servers=[{"url": SERVER_URL}],
 )
-      ensure_collection()
+ensure_collection()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
