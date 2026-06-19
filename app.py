@@ -108,7 +108,19 @@ def build_context(files: List[Dict[str, Any]], max_context_chars: int) -> str:
 
     return "\n---\n".join(blocks)
 
-
+@app.get("/version")
+def version():
+    return {
+        "system": "TRUNG_HUYEN_AI_OS",
+        "version": "1.0.0",
+        "ai_brain": "v1",
+        "rag": True,
+        "qdrant": True,
+        "drive": True,
+    }
+# =====================================
+# SYSTEM
+# =====================================
 @app.get("/")
 def root():
     index_path = "static/index.html"
@@ -162,6 +174,7 @@ def health():
         "qdrant_url": bool(QDRANT_URL),
         "qdrant_api_key": bool(QDRANT_API_KEY),
     }
+
 @app.post("/rag/index")
 def rag_index(limit: int = 10):
     try:
@@ -174,7 +187,11 @@ def rag_index(limit: int = 10):
                 "message": str(exc),
                 "type": type(exc).__name__
             }
-        )    
+        ) 
+# =====================================
+# RAG
+# =====================================
+
 @app.post("/rag/init")
 def rag_init():
     try:
@@ -439,6 +456,10 @@ def actions_schema():
             },
         },
     }
+# =====================================
+# GOOGLE DRIVE
+# =====================================
+
 @app.get("/drive/files")
 def drive_files(limit: int = Query(default=50, ge=1, le=200)):
     try:
@@ -525,6 +546,10 @@ def rag_count():
                 "type": type(exc).__name__
             }
         )
+# =====================================
+# CHAT
+# =====================================
+
 @app.post("/chat")
 def chat(req: ChatRequest):
     try:
