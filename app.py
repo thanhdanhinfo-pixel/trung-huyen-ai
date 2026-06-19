@@ -7,8 +7,7 @@ from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from openai import OpenAI
-from pydantic import BaseModel, Field
+
 from fastapi import Request
 from rag.search import search_knowledge
 from config import (
