@@ -28,7 +28,7 @@ app = FastAPI(
     description="Bộ não AI kết nối Google Drive và OpenAI cho Trung Huyền Academy.",
     servers=[{"url": SERVER_URL}],
 )
-ensure_collection()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -157,6 +157,23 @@ def health():
         "openai_model": OPENAI_MODEL,
         "mcp_loaded": bool(mcp_router),
     }
+@app.post("/rag/init")
+def rag_init():
+    try:
+        from vectordb import ensure_collection
+        ensure_collection()
+        return {
+            "status": "ok",
+            "message": "Qdrant collection ready"
+        }
+    except Exception as exc:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": str(exc)
+            }
+        )    
 @app.post("/rag/index")
 def rag_index(limit: int = 10):
     try:
