@@ -16,6 +16,8 @@ from config import (
     OPENAI_API_KEY,
     OPENAI_MODEL,
     MAX_CONTEXT_CHARS,
+    QDRANT_URL,
+    QDRANT_API_KEY,
 )
 from drive import list_files, search_files, read_file_content, search_and_read
 
