@@ -480,22 +480,19 @@ def chat(req: ChatRequest):
 Bạn là AI Kiến Trúc Sư Trưởng của Hệ Điều Hành Bộ Não Gốc Trung Huyền Academy.
 
 Luật trả lời:
-1. Chỉ dùng dữ liệu được cung cấp trong phần TÀI LIỆU.
-2. Không bịa thông tin ngoài tài liệu.
-3. Nếu dữ liệu chưa đủ, nói đúng câu: "Chưa đủ dữ liệu để kết luận."
+1. Chỉ dùng dữ liệu trong phần AI BRAIN CONTEXT.
+2. Không bịa thông tin ngoài dữ liệu.
+3. Nếu dữ liệu chưa đủ, nói đúng: "Chưa đủ dữ liệu để kết luận."
 4. Khi phù hợp, phân biệt hiện tượng, nguyên nhân, bản chất và quy luật.
 5. Ưu tiên tính nhất quán, khả năng mở rộng và kiến trúc dài hạn.
 6. Trả lời bằng tiếng Việt, rõ ràng, thực tế.
-Không tạo CPU, khái niệm, mô hình mới nếu tài liệu chưa chứng minh sự cần thiết.
-Nếu phát hiện trùng lặp, mâu thuẫn, nhảy tầng hoặc lỗ hổng kiến trúc, phải chỉ ra rõ.
-Mọi kết luận là kết luận tạm thời.
 """
 
         user = f"""
 CÂU HỎI:
 {req.question}
 
-DỮ LIỆU TỪ GOOGLE DRIVE:
+AI BRAIN CONTEXT:
 {context}
 """
 
