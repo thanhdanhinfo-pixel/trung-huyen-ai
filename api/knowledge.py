@@ -1,28 +1,29 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from knowledge.capture import capture
-
-router = APIRouter(tags=["Knowledge"])
+router = APIRouter(prefix="/knowledge", tags=["Knowledge"])
 
 
-class SaveKnowledgeRequest(BaseModel):
+class Knowledge(BaseModel):
     title: str
+    type: str
     content: str
+    tags: list[str] = []
 
 
-@router.post("/knowledge/save")
-def save_knowledge(req: SaveKnowledgeRequest):
+DATABASE = []
 
-    result = capture(
-        title=req.title,
-        content=req.content,
-    )
+
+@router.post("/add")
+def add_knowledge(item: Knowledge):
+    DATABASE.append(item.model_dump())
 
     return {
         "status": "ok",
-        "saved": False,
-        "message": "Knowledge captured successfully.",
-        "filename": result["filename"],
-        "markdown": result["markdown"],
+        "count": len(DATABASE)
     }
+
+
+@router.get("/all")
+def all_knowledge():
+    return DATABASE
