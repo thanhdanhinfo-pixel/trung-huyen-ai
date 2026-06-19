@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 from pydantic import BaseModel, Field
 from fastapi import Request
-
+from rag.search import search_knowledge
 from config import (
     DRIVE_FOLDER_ID,
     GOOGLE_SERVICE_ACCOUNT_JSON,
@@ -378,7 +378,13 @@ def drive_search_read(req: SearchReadRequest):
     except Exception as exc:
         return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
 
-
+@app.get("/rag/search")
+def rag_search(q: str, limit: int = 5):
+    return {
+        "status": "ok",
+        "query": q,
+        "results": search_knowledge(q, limit)
+    }
 @app.post("/chat")
 def chat(req: ChatRequest):
     try:
