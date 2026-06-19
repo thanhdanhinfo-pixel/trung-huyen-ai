@@ -1,8 +1,8 @@
 from typing import Any, Dict, List
 from rag.indexer import index_drive
-from vectordb import ensure_collection
+
 from fastapi import FastAPI, Query
-from rag.vectordb import collection
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
