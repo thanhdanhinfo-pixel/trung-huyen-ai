@@ -1,5 +1,6 @@
 from typing import Any, Dict, List
 from fastapi import FastAPI, Query
+from api.knowledge import router as knowledge_router
 from rag.indexer import index_drive
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -57,6 +58,7 @@ if admin_router:
 
 if mcp_router:
     app.include_router(mcp_router)
+    app.include_router(knowledge_router)
 
 
 class ChatRequest(BaseModel):
