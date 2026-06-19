@@ -213,7 +213,7 @@ def actions_schema():
     }
 
     return {
-        "openapi": "3.0.1",
+        "openapi": "3.1.0",
         "info": {
             "title": "Trung Huyen Knowledge Action",
             "version": "1.0.0",
