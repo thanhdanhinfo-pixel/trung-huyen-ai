@@ -1,26 +1,35 @@
-from knowledge.template import create_markdown
-from knowledge.markdown import safe_filename
+from datetime import datetime
 
 
-def capture(
+def create_markdown(
     title: str,
     content: str,
-    knowledge_type: str = "principle",
     author: str = "Trung Huyền",
+    knowledge_type: str = "Principle",
     status: str = "draft",
+    version: str = "1.0",
+    tags: list[str] | None = None,
 ):
+    if tags is None:
+        tags = ["AI Brain"]
 
-    filename = safe_filename(title)
+    today = datetime.now().strftime("%Y-%m-%d")
 
-    markdown = create_markdown(
-        title=title,
-        content=content,
-        author=author,
-        knowledge_type=knowledge_type,
-        status=status,
-    )
+    tag_text = "\n".join(f"- {tag}" for tag in tags)
 
-    return {
-        "filename": filename + ".md",
-        "markdown": markdown,
-    }
+    return f"""---
+title: {title}
+author: {author}
+created: {today}
+version: {version}
+status: {status}
+type: {knowledge_type}
+
+tags:
+{tag_text}
+---
+
+# {title}
+
+{content}
+"""
