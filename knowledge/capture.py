@@ -1,25 +1,31 @@
-from knowledge.template import create_markdown
-from knowledge.markdown import safe_filename
+from fastapi import APIRouter
+from pydantic import BaseModel, Field
+
+from knowledge.capture import capture
+
+router = APIRouter(prefix="/knowledge", tags=["Knowledge"])
 
 
-def capture(
-    title: str,
-    content: str,
-    knowledge_type: str = "Principle",
-    author: str = "Trung Huyền",
-    status: str = "draft",
-):
-    filename = safe_filename(title)
+class SaveKnowledgeRequest(BaseModel):
+    title: str = Field(..., min_length=1)
+    content: str = Field(..., min_length=1)
+    type: str = "Principle"
+    tags: list[str] = []
 
-    markdown = create_markdown(
-        title=title,
-        content=content,
-        author=author,
-        knowledge_type=knowledge_type,
-        status=status,
+
+@router.post("/save")
+def save_knowledge(req: SaveKnowledgeRequest):
+    result = capture(
+        title=req.title,
+        content=req.content,
+        knowledge_type=req.type,
     )
 
     return {
-        "filename": filename + ".md",
-        "markdown": markdown,
+        "status": "ok",
+        "saved": False,
+        "stage": "captured",
+        "message": "Knowledge captured as markdown. Drive saving will be added next.",
+        "filename": result["filename"],
+        "markdown": result["markdown"],
     }
