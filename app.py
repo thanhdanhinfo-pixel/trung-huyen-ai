@@ -192,27 +192,44 @@ def rag_init():
 
 @app.get("/actions.json", include_in_schema=False)
 def actions_schema():
+    basic_object = {
+        "type": "object",
+        "properties": {
+            "status": {"type": "string"},
+            "message": {"type": "string"},
+        },
+    }
+
+    file_item = {
+        "type": "object",
+        "properties": {
+            "id": {"type": "string"},
+            "name": {"type": "string"},
+            "mimeType": {"type": "string"},
+            "webViewLink": {"type": "string"},
+            "modifiedTime": {"type": "string"},
+            "size": {"type": "string"},
+        },
+    }
+
     return {
-        "openapi": "3.1.0",
+        "openapi": "3.0.1",
         "info": {
             "title": "Trung Huyen Knowledge Action",
-            "version": "1.0.0"
+            "version": "1.0.0",
         },
-        "servers": [
-            {"url": SERVER_URL}
-        ],
+        "servers": [{"url": SERVER_URL}],
         "paths": {
             "/drive/files": {
                 "get": {
                     "operationId": "listDriveFiles",
                     "summary": "List Google Drive files",
-                    "description": "Liệt kê tài liệu trong Google Drive.",
                     "parameters": [
                         {
                             "name": "limit",
                             "in": "query",
                             "required": False,
-                            "schema": {"type": "integer", "default": 5}
+                            "schema": {"type": "integer", "default": 5},
                         }
                     ],
                     "responses": {
@@ -220,55 +237,73 @@ def actions_schema():
                             "description": "Danh sách tài liệu",
                             "content": {
                                 "application/json": {
-                                    "schema": {"type": "object"}
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "status": {"type": "string"},
+                                            "folder_limited": {"type": "boolean"},
+                                            "files": {
+                                                "type": "array",
+                                                "items": file_item,
+                                            },
+                                        },
+                                    }
                                 }
-                            }
+                            },
                         }
-                    }
+                    },
                 }
             },
             "/drive/search": {
                 "get": {
                     "operationId": "searchDriveFiles",
                     "summary": "Search Google Drive files",
-                    "description": "Tìm tài liệu trong Google Drive theo từ khóa.",
                     "parameters": [
                         {
                             "name": "q",
                             "in": "query",
                             "required": True,
-                            "schema": {"type": "string"}
+                            "schema": {"type": "string"},
                         },
                         {
                             "name": "limit",
                             "in": "query",
                             "required": False,
-                            "schema": {"type": "integer", "default": 5}
-                        }
+                            "schema": {"type": "integer", "default": 5},
+                        },
                     ],
                     "responses": {
                         "200": {
                             "description": "Kết quả tìm kiếm",
                             "content": {
                                 "application/json": {
-                                    "schema": {"type": "object"}
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "status": {"type": "string"},
+                                            "query": {"type": "string"},
+                                            "files": {
+                                                "type": "array",
+                                                "items": file_item,
+                                            },
+                                        },
+                                    }
                                 }
-                            }
+                            },
                         }
-                    }
+                    },
                 }
             },
             "/drive/read": {
                 "get": {
                     "operationId": "readDriveFile",
                     "summary": "Read Google Drive file content",
-                    "description": "Đọc nội dung tài liệu theo file_id.",
                     "parameters": [
                         {
                             "name": "file_id",
                             "in": "query",
                             "required": True,
-                            "schema": {"type": "string"}
+                            "schema": {"type": "string"},
                         }
                     ],
                     "responses": {
@@ -276,18 +311,25 @@ def actions_schema():
                             "description": "Nội dung tài liệu",
                             "content": {
                                 "application/json": {
-                                    "schema": {"type": "object"}
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "status": {"type": "string"},
+                                            "file_id": {"type": "string"},
+                                            "content_length": {"type": "integer"},
+                                            "content": {"type": "string"},
+                                        },
+                                    }
                                 }
-                            }
+                            },
                         }
-                    }
+                    },
                 }
             },
             "/drive/search-read": {
                 "post": {
                     "operationId": "searchAndReadDrive",
                     "summary": "Search and read Google Drive documents",
-                    "description": "Tìm tài liệu và đọc nội dung.",
                     "requestBody": {
                         "required": True,
                         "content": {
@@ -298,29 +340,51 @@ def actions_schema():
                                     "properties": {
                                         "q": {"type": "string"},
                                         "limit": {"type": "integer", "default": 5},
-                                        "max_chars_per_file": {"type": "integer", "default": 6000}
-                                    }
+                                        "max_chars_per_file": {
+                                            "type": "integer",
+                                            "default": 6000,
+                                        },
+                                    },
                                 }
                             }
-                        }
+                        },
                     },
                     "responses": {
                         "200": {
-                            "description": "Danh sách tài liệu kèm nội dung",
+                            "description": "Tài liệu kèm nội dung",
                             "content": {
                                 "application/json": {
-                                    "schema": {"type": "object"}
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "status": {"type": "string"},
+                                            "query": {"type": "string"},
+                                            "files": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {"type": "string"},
+                                                        "name": {"type": "string"},
+                                                        "mimeType": {"type": "string"},
+                                                        "webViewLink": {"type": "string"},
+                                                        "modifiedTime": {"type": "string"},
+                                                        "content": {"type": "string"},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    }
                                 }
-                            }
+                            },
                         }
-                    }
+                    },
                 }
             },
             "/chat": {
                 "post": {
                     "operationId": "chatWithKnowledge",
                     "summary": "Ask Trung Huyen AI",
-                    "description": "Trả lời dựa trên tài liệu Google Drive.",
                     "requestBody": {
                         "required": True,
                         "content": {
@@ -331,26 +395,47 @@ def actions_schema():
                                     "properties": {
                                         "question": {"type": "string"},
                                         "limit": {"type": "integer", "default": 5},
-                                        "max_chars_per_file": {"type": "integer", "default": 6000}
-                                    }
+                                        "max_chars_per_file": {
+                                            "type": "integer",
+                                            "default": 6000,
+                                        },
+                                    },
                                 }
                             }
-                        }
+                        },
                     },
                     "responses": {
                         "200": {
-                            "description": "AI trả lời dựa trên Google Drive",
+                            "description": "AI trả lời dựa trên AI Brain",
                             "content": {
                                 "application/json": {
-                                    "schema": {"type": "object"}
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "status": {"type": "string"},
+                                            "answer": {"type": "string"},
+                                            "sources": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "name": {"type": "string"},
+                                                        "link": {"type": "string"},
+                                                        "score": {"type": "number"},
+                                                        "chunk_index": {"type": "integer"},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    }
                                 }
-                            }
+                            },
                         }
-                    }
+                    },
                 }
-            }
-        }
-                        }                                    
+            },
+        },
+    }
 @app.get("/drive/files")
 def drive_files(limit: int = Query(default=50, ge=1, le=200)):
     try:
