@@ -1,6 +1,7 @@
 from typing import Any, Dict, List
 from rag.indexer import index_drive
 from fastapi import FastAPI, Query
+from rag.vectordb import collection
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -385,6 +386,11 @@ def rag_search(q: str, limit: int = 5):
         "query": q,
         "results": search_knowledge(q, limit)
     }
+@app.get("/rag/count")
+def rag_count():
+    return {
+        "count": collection.count()
+    }   
 @app.post("/chat")
 def chat(req: ChatRequest):
     try:
