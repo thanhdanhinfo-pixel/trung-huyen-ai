@@ -373,17 +373,23 @@ def drive_files(limit: int = Query(default=50, ge=1, le=200)):
         return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
 
 
-@app.get("/drive/search")
-def drive_search(q: str = Query(..., min_length=1), limit: int = Query(default=20, ge=1, le=100)):
+@app.get("/rag/search")
+def rag_search(q: str, limit: int = 5):
     try:
         return {
             "status": "ok",
             "query": q,
-            "files": search_files(q=q, limit=limit),
+            "results": search_knowledge(q, limit)
         }
     except Exception as exc:
-        return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
-
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": str(exc),
+                "type": type(exc).__name__
+            }
+        )
 
 @app.get("/drive/read")
 def drive_read(file_id: str):
