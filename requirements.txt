@@ -21,3 +21,4 @@ orjson==3.10.12
 chromadb==0.5.5
 tiktoken
 numpy
+qdrant-client
