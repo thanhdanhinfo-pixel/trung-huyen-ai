@@ -450,11 +450,19 @@ def rag_count():
 @app.post("/chat")
 def chat(req: ChatRequest):
     try:
+        knowledge = search_knowledge(req.question, limit=5)
+        
+        rag_context = "\n\n---\n\n".join(
+            item.get("content", "")
+            for item in knowledge
+            if item.get("content")
+        )
         files = search_and_read(
             q=req.question,
             limit=req.limit,
             max_chars_per_file=req.max_chars_per_file,
         )
+        
 
         sources = [
             {
