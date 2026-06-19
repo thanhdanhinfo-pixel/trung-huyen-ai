@@ -452,11 +452,13 @@ def chat(req: ChatRequest):
     try:
         knowledge = search_knowledge(req.question, limit=5)
         context = build_context(files, MAX_CONTEXT_CHARS)
-        rag_context = "\n\n---\n\n".join(
-            item.get("content", "")
-            for item in knowledge
-            if item.get("content")
-        )
+        if not context:
+            return {
+                "status": "ok",
+                "answer": "Chưa tìm thấy thông tin trong AI Brain.",
+                "sources": []
+            }
+        
         files = search_and_read(
             q=req.question,
             limit=req.limit,
