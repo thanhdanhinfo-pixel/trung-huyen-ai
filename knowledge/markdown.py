@@ -1,16 +1,27 @@
-import re
-import unicodedata
+from datetime import datetime
 
 
-def safe_filename(name: str) -> str:
-    # Bỏ dấu tiếng Việt
-    name = unicodedata.normalize("NFKD", name)
-    name = name.encode("ascii", "ignore").decode("ascii")
+def build_markdown(item):
 
-    # Xóa ký tự đặc biệt
-    name = re.sub(r"[^a-zA-Z0-9\s_-]", "", name)
+    today = datetime.now().strftime("%Y-%m-%d")
 
-    # Đổi khoảng trắng thành _
-    name = "_".join(name.split())
+    return f"""---
+title: {item.title}
 
-    return name.lower()
+author: {item.author}
+
+created: {today}
+
+version: {item.version}
+
+type: {item.type}
+
+tags:
+{chr(10).join("- "+t for t in item.tags)}
+
+---
+
+# {item.title}
+
+{item.content}
+"""
