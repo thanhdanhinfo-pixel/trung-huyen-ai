@@ -1,5 +1,6 @@
 from typing import Any, Dict, List
 from rag.indexer import index_drive
+from vectordb import ensure_collection
 from fastapi import FastAPI, Query
 from rag.vectordb import collection
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,7 +28,7 @@ app = FastAPI(
     description="Bộ não AI kết nối Google Drive và OpenAI cho Trung Huyền Academy.",
     servers=[{"url": SERVER_URL}],
 )
-
+      ensure_collection()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
