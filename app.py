@@ -162,9 +162,18 @@ def health():
         "qdrant_api_key": bool(QDRANT_API_KEY),
     }
 @app.post("/rag/index")
-def rag_index():
-    from rag import index_drive
-    return index_drive()    
+def rag_index(limit: int = 10):
+    try:
+        return index_drive(limit=limit)
+    except Exception as exc:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": str(exc),
+                "type": type(exc).__name__
+            }
+        )    
 @app.post("/rag/init")
 def rag_init():
     try:
