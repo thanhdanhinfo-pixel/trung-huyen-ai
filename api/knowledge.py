@@ -18,7 +18,8 @@ def save_knowledge(req: SaveKnowledgeRequest):
     result = capture(
         title=req.title,
         content=req.content,
-    )
+        knowledge_type=req.type,
+     )
 
     return {
         "status": "ok",
