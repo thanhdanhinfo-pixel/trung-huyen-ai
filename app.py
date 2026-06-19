@@ -451,43 +451,31 @@ def rag_count():
 def chat(req: ChatRequest):
     try:
         knowledge = search_knowledge(req.question, limit=5)
-        context = build_context(files, MAX_CONTEXT_CHARS)
+
+        rag_context = "\n\n---\n\n".join(
+            item.get("content", "")
+            for item in knowledge
+            if item.get("content")
+        )
+
+        context = rag_context
+
+        sources = [
+            {
+                "name": item.get("metadata", {}).get("name"),
+                "link": item.get("metadata", {}).get("link"),
+                "score": item.get("score"),
+                "chunk_index": item.get("metadata", {}).get("chunk_index"),
+            }
+            for item in knowledge
+        ]
+
         if not context:
             return {
                 "status": "ok",
                 "answer": "Chưa tìm thấy thông tin trong AI Brain.",
-                "sources": []
+                "sources": sources
             }
-        
-        files = search_and_read(
-            q=req.question,
-            limit=req.limit,
-            max_chars_per_file=req.max_chars_per_file,
-        )
-        
-
-        sources = [
-            {
-                "name": f.get("name"),
-                "id": f.get("id"),
-                "mimeType": f.get("mimeType"),
-                "link": f.get("webViewLink"),
-                "modifiedTime": f.get("modifiedTime"),
-                "score": f.get("score"),
-            }
-            for f in files
-        ]
-        context = build_context(files, MAX_CONTEXT_CHARS)
-
-        context = rag_context
-
-        if not context:
-        return {
-            "status": "ok",
-            "answer": "Chưa tìm thấy thông tin trong AI Brain.",
-            "sources": []
-        }
-
         system = """
 Bạn là AI Kiến Trúc Sư Trưởng của Hệ Điều Hành Bộ Não Gốc Trung Huyền Academy.
 
