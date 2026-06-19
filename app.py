@@ -1,5 +1,5 @@
 from typing import Any, Dict, List
-
+from rag.indexer import index_drive
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -155,7 +155,15 @@ def health():
         "openai_model": OPENAI_MODEL,
         "mcp_loaded": bool(mcp_router),
     }
-
+@app.post("/rag/index")
+def rag_index(limit: int = 10):
+    try:
+        return index_drive(limit=limit)
+    except Exception as exc:
+        return JSONResponse(
+            status_code=500,
+            content={"status": "error", "message": str(exc)}
+        )
 @app.get("/actions.json", include_in_schema=False)
 def actions_schema():
     return {
