@@ -420,18 +420,33 @@ def drive_search_read(req: SearchReadRequest):
     except Exception as exc:
         return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
 
-@app.get("/rag/search")
-def rag_search(q: str, limit: int = 5):
-    return {
-        "status": "ok",
-        "query": q,
-        "results": search_knowledge(q, limit)
-    }
+
 @app.get("/rag/count")
 def rag_count():
-    return {
-        "count": collection.count()
-    }   
+    try:
+        from vectordb import client, COLLECTION_NAME, ensure_collection
+
+        ensure_collection()
+
+        result = client.count(
+            collection_name=COLLECTION_NAME,
+            exact=True
+        )
+
+        return {
+            "status": "ok",
+            "count": result.count
+        }
+
+    except Exception as exc:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": str(exc),
+                "type": type(exc).__name__
+            }
+        )
 @app.post("/chat")
 def chat(req: ChatRequest):
     try:
