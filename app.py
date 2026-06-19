@@ -1,3 +1,4 @@
+from api.chat import router as chat_router
 from typing import Any, Dict, List
 from rag.indexer import index_drive
 
@@ -30,7 +31,7 @@ app = FastAPI(
     description="Bộ não AI kết nối Google Drive và OpenAI cho Trung Huyền Academy.",
     servers=[{"url": SERVER_URL}],
 )
-
+app.include_router(chat_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -447,68 +448,3 @@ def rag_count():
                 "type": type(exc).__name__
             }
         )
-@app.post("/chat")
-def chat(req: ChatRequest):
-    try:
-        knowledge = search_knowledge(req.question, limit=5)
-
-        rag_context = "\n\n---\n\n".join(
-            item.get("content", "")
-            for item in knowledge
-            if item.get("content")
-        )
-
-        context = rag_context
-
-        sources = [
-            {
-                "name": item.get("metadata", {}).get("name"),
-                "link": item.get("metadata", {}).get("link"),
-                "score": item.get("score"),
-                "chunk_index": item.get("metadata", {}).get("chunk_index"),
-            }
-            for item in knowledge
-        ]
-
-        if not context:
-            return {
-                "status": "ok",
-                "answer": "Chưa tìm thấy thông tin trong AI Brain.",
-                "sources": sources
-            }
-        system = """
-Bạn là AI Kiến Trúc Sư Trưởng của Hệ Điều Hành Bộ Não Gốc Trung Huyền Academy.
-
-Luật trả lời:
-1. Chỉ dùng dữ liệu trong phần AI BRAIN CONTEXT.
-2. Không bịa thông tin ngoài dữ liệu.
-3. Nếu dữ liệu chưa đủ, nói đúng: "Chưa đủ dữ liệu để kết luận."
-4. Khi phù hợp, phân biệt hiện tượng, nguyên nhân, bản chất và quy luật.
-5. Ưu tiên tính nhất quán, khả năng mở rộng và kiến trúc dài hạn.
-6. Trả lời bằng tiếng Việt, rõ ràng, thực tế.
-"""
-
-        user = f"""
-CÂU HỎI:
-{req.question}
-
-AI BRAIN CONTEXT:
-{context}
-"""
-
-        response = openai_client().responses.create(
-            model=OPENAI_MODEL,
-            input=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-        )
-
-        return {
-            "status": "ok",
-            "answer": response.output_text,
-            "sources": sources,
-        }
-
-    except Exception as exc:
-        return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
