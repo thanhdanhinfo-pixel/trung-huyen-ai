@@ -475,14 +475,16 @@ def chat(req: ChatRequest):
             }
             for f in files
         ]
-
         context = build_context(files, MAX_CONTEXT_CHARS)
+
+        context = rag_context
+
         if not context:
-            return {
-                "status": "ok",
-                "answer": "Chưa đủ dữ liệu để kết luận. Server đã tìm trong Google Drive nhưng chưa đọc được tài liệu phù hợp với câu hỏi.",
-                "sources": sources,
-            }
+        return {
+            "status": "ok",
+            "answer": "Chưa tìm thấy thông tin trong AI Brain.",
+            "sources": []
+        }
 
         system = """
 Bạn là AI Kiến Trúc Sư Trưởng của Hệ Điều Hành Bộ Não Gốc Trung Huyền Academy.
