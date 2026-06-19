@@ -1,26 +1,34 @@
 from rag.embedding import embed_text
-from rag.vectordb import collection
+from vectordb import client, COLLECTION_NAME, ensure_collection
 
 
 def search_knowledge(query: str, limit: int = 5):
+    ensure_collection()
+
     vector = embed_text(query)
 
-    result = collection.query(
-        query_embeddings=[vector],
-        n_results=limit
+    results = client.search(
+        collection_name=COLLECTION_NAME,
+        query_vector=vector,
+        limit=limit,
     )
-
-    docs = result.get("documents", [[]])[0]
-    metas = result.get("metadatas", [[]])[0]
-    distances = result.get("distances", [[]])[0]
 
     output = []
 
-    for doc, meta, distance in zip(docs, metas, distances):
+    for item in results:
+        payload = item.payload or {}
+
         output.append({
-            "score": distance,
-            "content": doc,
-            "metadata": meta
+            "score": item.score,
+            "content": payload.get("content"),
+            "metadata": {
+                "file_id": payload.get("file_id"),
+                "name": payload.get("name"),
+                "link": payload.get("link"),
+                "mimeType": payload.get("mimeType"),
+                "modifiedTime": payload.get("modifiedTime"),
+                "chunk_index": payload.get("chunk_index"),
+            }
         })
 
     return output
