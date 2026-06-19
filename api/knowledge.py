@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
@@ -10,7 +12,7 @@ class SaveKnowledgeRequest(BaseModel):
     title: str = Field(..., min_length=1)
     content: str = Field(..., min_length=1)
     type: str = "Principle"
-    tags: list[str] = []
+    tags: List[str] = []
 
 
 @router.post("/save")
@@ -19,7 +21,7 @@ def save_knowledge(req: SaveKnowledgeRequest):
         title=req.title,
         content=req.content,
         knowledge_type=req.type,
-     )
+    )
 
     return {
         "status": "ok",
