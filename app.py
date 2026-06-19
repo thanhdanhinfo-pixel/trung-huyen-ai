@@ -161,6 +161,10 @@ def health():
         "qdrant_url": bool(QDRANT_URL),
         "qdrant_api_key": bool(QDRANT_API_KEY),
     }
+@app.post("/rag/index")
+def rag_index():
+    from rag import index_drive
+    return index_drive()    
 @app.post("/rag/init")
 def rag_init():
     try:
