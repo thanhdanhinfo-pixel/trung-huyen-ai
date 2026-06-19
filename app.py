@@ -451,7 +451,7 @@ def rag_count():
 def chat(req: ChatRequest):
     try:
         knowledge = search_knowledge(req.question, limit=5)
-        
+        context = build_context(files, MAX_CONTEXT_CHARS)
         rag_context = "\n\n---\n\n".join(
             item.get("content", "")
             for item in knowledge
