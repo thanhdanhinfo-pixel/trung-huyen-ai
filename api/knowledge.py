@@ -24,10 +24,11 @@ def save_knowledge(req: SaveKnowledgeRequest):
     )
 
     return {
-        "status": "ok",
-        "saved": False,
-        "stage": "captured",
-        "message": "Knowledge captured as markdown. Drive saving will be added next.",
-        "filename": result["filename"],
-        "markdown": result["markdown"],
-    }
+    "status": "ok",
+    "saved": True,
+    "stage": "uploaded",
+    "message": "Knowledge saved successfully.",
+    "filename": result["filename"],
+    "file_id": result["file_id"],
+    "webViewLink": result["webViewLink"],
+}
