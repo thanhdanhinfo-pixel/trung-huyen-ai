@@ -56,11 +56,11 @@ except Exception as exc:
 
 if admin_router:
     app.include_router(admin_router)
-    app.include_router(github_router)
+app.include_router(github_router)
 
 if mcp_router:
-    app.include_router(mcp_router)
-    app.include_router(github_router)
+app.include_router(mcp_router)
+app.include_router(github_router)
     
 app.include_router(knowledge_router)
 
