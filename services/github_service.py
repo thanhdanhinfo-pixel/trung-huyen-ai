@@ -7,6 +7,13 @@ GITHUB_OWNER = os.getenv("GITHUB_OWNER")
 GITHUB_REPO = os.getenv("GITHUB_REPO")
 GITHUB_BRANCH = os.getenv("GITHUB_BRANCH", "main")
 
+print("===== GITHUB CONFIG =====")
+print("TOKEN:", bool(GITHUB_TOKEN))
+print("OWNER:", GITHUB_OWNER)
+print("REPO:", GITHUB_REPO)
+print("BRANCH:", GITHUB_BRANCH)
+print("=========================")
+
 BASE = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}"
 
 
