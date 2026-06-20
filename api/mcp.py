@@ -208,7 +208,7 @@ def test_search(q: str = "Hệ quan sát", limit: int = 3):
                 "limit": limit,
                 "max_chars_per_file": 3000,
             },
-        ),
+        },
         x_api_key=MCP_API_KEY
     )
 @router.get("/test-ask")
@@ -246,6 +246,12 @@ def manifest():
             {
                 "name": "ask_knowledge",
                 "description": "Trả lời câu hỏi dựa trên kho tri thức"
+            },
+
+            {    
+                "name": "append_document",
+                "description": "Thêm nội dung vào cuối Google Docs sau khi người dùng phê duyệt"
+            
             }
         ]
     }
