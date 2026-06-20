@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from openai import OpenAI
 
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
-from drive import list_files, read_file_content, search_and_read
+from drive import list_files, read_file_content, search_and_read, append_google_doc
 from fastapi import Header, HTTPException
 from config import MCP_API_KEY
 
@@ -54,7 +54,8 @@ def tools():
             "list_documents",
             "search_documents",
             "read_document",
-            "ask_knowledge"
+            "ask_knowledge",
+            "append_document"
         ]
     }
 
@@ -108,6 +109,32 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "file_id": file_id,
             "content_length": len(content),
             "content": content,
+        }
+    if tool == "append_document":
+        file_id = args.get("file_id", "")
+        content = args.get("content", "")
+        approved = bool(args.get("approved", False))
+
+        if not approved:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "Append denied. User approval is required.",
+            }
+
+        if not file_id or not content:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "file_id and content are required.",
+            }
+
+        result = append_google_doc(file_id=file_id, content=content)
+
+        return {
+            "status": "ok",
+            "tool": tool,
+            "result": result,
         }
 
     if tool == "ask_knowledge":
