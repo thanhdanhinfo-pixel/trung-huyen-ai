@@ -11,8 +11,8 @@ from config import GOOGLE_SERVICE_ACCOUNT_JSON, DRIVE_FOLDER_ID
 
 SCOPES = [
     "https://www.googleapis.com/auth/drive",
-    "https://www.googleapis.com/auth/documents.readonly",
-    "https://www.googleapis.com/auth/spreadsheets.readonly",
+    "https://www.googleapis.com/auth/documents",
+    "https://www.googleapis.com/auth/spreadsheets",
 ]
 
 GOOGLE_DOC = "application/vnd.google-apps.document"
@@ -335,3 +335,24 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
 
     scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
     return scored_results[:limit]
+    
+def append_google_doc(file_id: str, content: str) -> dict:
+    docs = get_docs_service()
+    document = docs.documents().get(documentId=file_id).execute()
+    end_index = document["body"]["content"][-1]["endIndex"] - 1
+
+    docs.documents().batchUpdate(
+        documentId=file_id,
+        body={
+            "requests": [
+                {
+                    "insertText": {
+                        "location": {"index": end_index},
+                        "text": "\n" + content
+                    }
+                }
+            ]
+        },
+    ).execute()
+
+    return {"status": "ok", "file_id": file_id, "action": "append_google_doc"}
