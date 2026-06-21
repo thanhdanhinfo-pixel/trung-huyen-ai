@@ -3,6 +3,7 @@ from typing import Any, Dict, List
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from openai import OpenAI
+from knowledge.fallback import fallback_drive
 from services.github_service import github_list_files, github_read_file, github_update_file
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
 from drive import list_files, read_file_content, search_and_read, append_google_doc
@@ -200,6 +201,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         )
 
         context = build_context(files)
+        answer = ask_llm(question=question, context=context)
         if not answer or "Chưa đủ dữ liệu" in answer:
 
     docs = fallback_drive(question)
