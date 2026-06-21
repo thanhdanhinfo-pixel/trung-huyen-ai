@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from openai import OpenAI
-from knowledge.fallback import fallback_drive
+
 from services.github_service import github_list_files, github_read_file, github_update_file
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
 from drive import list_files, read_file_content, search_and_read, append_google_doc
@@ -189,14 +189,18 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "result": result,
         }
 
-    if tool == "ask_knowledge":
-        print("=== VERSION 2 ===")
-        print("=== FALLBACK START ===")
-docs = fallback_drive(question)
-print(docs)
+if tool == "ask_knowledge":
         question = args.get("question", "")
         limit = int(args.get("limit", 5))
         max_chars = int(args.get("max_chars_per_file", 6000))
+
+        if not question:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "question is required",
+            }
+
         files = search_and_read(
             q=question,
             limit=limit,
@@ -204,25 +208,6 @@ print(docs)
         )
 
         context = build_context(files)
-        answer = ask_llm(question=question, context=context)
-        if not answer or "Chưa đủ dữ liệu" in answer:
-
-    docs = fallback_drive(question)
-
-    if docs:
-        prompt = f"""
-Câu hỏi:
-
-{question}
-
-Tài liệu:
-
-{docs}
-
-Hãy trả lời chỉ dựa trên tài liệu.
-"""
-
-        answer = llm(prompt)
 
         if not context:
             return {
@@ -230,6 +215,7 @@ Hãy trả lời chỉ dựa trên tài liệu.
                 "tool": tool,
                 "answer": "Chưa đủ dữ liệu để kết luận.",
                 "sources": files,
+                "mode": "drive_first_no_context",
             }
 
         if not OPENAI_API_KEY:
@@ -246,7 +232,11 @@ Hãy trả lời chỉ dựa trên tài liệu.
             input=[
                 {
                     "role": "system",
-                    "content": "Chỉ trả lời dựa trên dữ liệu được cung cấp. Nếu chưa đủ dữ liệu, nói: Chưa đủ dữ liệu để kết luận.",
+                    "content": (
+                        "Bạn là AI của Trung Huyền Academy. "
+                        "Chỉ trả lời dựa trên dữ liệu được cung cấp. "
+                        "Nếu dữ liệu chưa đủ, nói: Chưa đủ dữ liệu để kết luận."
+                    ),
                 },
                 {
                     "role": "user",
@@ -260,6 +250,7 @@ Hãy trả lời chỉ dựa trên tài liệu.
             "tool": tool,
             "answer": response.output_text,
             "sources": files,
+            "mode": "drive_first",
         }
 
     return {
