@@ -253,10 +253,10 @@ if tool == "ask_knowledge":
             "mode": "drive_first",
         }
 
-    return {
+        return {
         "status": "error",
         "message": f"Unknown tool: {tool}",
-  }
+        }
 @router.get("/ping")
 def ping():
     return {
