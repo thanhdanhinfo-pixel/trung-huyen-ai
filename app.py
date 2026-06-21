@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 from pydantic import BaseModel, Field
 from fastapi import Request
+from api.workspace import router as workspace_router
 from rag.search import search_knowledge
 from config import (
     DRIVE_FOLDER_ID,
@@ -63,6 +64,7 @@ app.include_router(github_router)
 if mcp_router:
     app.include_router(mcp_router)
 app.include_router(github_router)
+app.include_router(workspace_router)
     
 app.include_router(knowledge_router)
 
