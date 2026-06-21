@@ -51,8 +51,10 @@ except Exception as exc:
 try:
     from api.mcp import router as mcp_router
 except Exception as exc:
+    import traceback
+    print("MCP router not loaded")
+    traceback.print_exc()
     mcp_router = None
-    print("MCP router not loaded:", exc)
 
 if admin_router:
     app.include_router(admin_router)
