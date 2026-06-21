@@ -189,7 +189,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "result": result,
         }
 
-if tool == "ask_knowledge":
+    if tool == "ask_knowledge":
         question = args.get("question", "")
         limit = int(args.get("limit", 5))
         max_chars = int(args.get("max_chars_per_file", 6000))
