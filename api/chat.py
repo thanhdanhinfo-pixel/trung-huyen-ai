@@ -6,7 +6,7 @@ from openai import OpenAI
 from pydantic import BaseModel, Field
 
 from config import OPENAI_API_KEY, OPENAI_MODEL
-from rag.search import search_knowledge
+from drive import search_and_read
 
 router = APIRouter()
 
@@ -26,7 +26,11 @@ def openai_client() -> OpenAI:
 @router.post("/chat")
 def chat(req: ChatRequest):
     try:
-        knowledge = search_knowledge(req.question, limit=5)
+        knowledge = search_and_read(
+            q=req.question,
+            limit=req.limit,
+            max_chars_per_file=req.max_chars_per_file,
+        )
 
         context = "\n\n---\n\n".join(
             item.get("content", "")
@@ -35,13 +39,13 @@ def chat(req: ChatRequest):
         )
 
         sources = [
-            {
-                "name": item.get("metadata", {}).get("name"),
-                "link": item.get("metadata", {}).get("link"),
-                "score": item.get("score"),
-                "chunk_index": item.get("metadata", {}).get("chunk_index"),
-            }
-            for item in knowledge
+        {
+                "name": item.get("name"),
+                "link": item.get("webViewLink"),
+                "id": item.get("id"),
+                "mimeType": item.get("mimeType"),
+        }
+        for item in knowledge
         ]
 
         if not context:
@@ -55,7 +59,7 @@ def chat(req: ChatRequest):
 Bạn là AI Kiến Trúc Sư Trưởng của Hệ Điều Hành Bộ Não Gốc Trung Huyền Academy.
 
 Luật trả lời:
-1. Chỉ dùng dữ liệu trong phần AI BRAIN CONTEXT.
+1. Chỉ dùng dữ liệu trong phần GOOGLE DRIVE CONTEXT.
 2. Không bịa thông tin ngoài dữ liệu.
 3. Nếu dữ liệu chưa đủ, nói đúng: "Chưa đủ dữ liệu để kết luận."
 4. Khi phù hợp, phân biệt hiện tượng, nguyên nhân, bản chất và quy luật.
@@ -66,7 +70,7 @@ Luật trả lời:
 CÂU HỎI:
 {req.question}
 
-AI BRAIN CONTEXT:
+GOOGLE DRIVE CONTEXT:
 {context}
 """
 
