@@ -247,8 +247,10 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
 def ping():
     return {
         "status": "ok",
-        "mcp": "alive"
+        "mcp": "alive",
     }
+
+
 @router.get("/test-search")
 def test_search(q: str = "Hệ quan sát", limit: int = 3):
     return call_tool(
@@ -259,9 +261,11 @@ def test_search(q: str = "Hệ quan sát", limit: int = 3):
                 "limit": limit,
                 "max_chars_per_file": 3000,
             },
-        },
-        x_api_key=MCP_API_KEY
+        ),
+        x_api_key=MCP_API_KEY,
     )
+
+
 @router.get("/test-ask")
 def test_ask(q: str = "Hệ quan sát là gì?"):
     return call_tool(
@@ -273,7 +277,7 @@ def test_ask(q: str = "Hệ quan sát là gì?"):
                 "max_chars_per_file": 6000,
             },
         ),
-        x_api_key=MCP_API_KEY
+        x_api_key=MCP_API_KEY,
     )
 @router.get("/manifest")
 def manifest():
