@@ -24,6 +24,8 @@ def openai_client() -> OpenAI:
 
 
 @router.post("/chat")
+from services.workspace_service import load_workspace
+    
 def chat(req: ChatRequest):
     try:
         knowledge = search_and_read(
@@ -55,15 +57,22 @@ def chat(req: ChatRequest):
                 "sources": sources,
             }
 
-        system = """
-Bạn là AI Kiến Trúc Sư Trưởng của Hệ Điều Hành Bộ Não Gốc Trung Huyền Academy.
+        system = f"""
 
-Luật trả lời:
-1. Chỉ dùng dữ liệu trong phần GOOGLE DRIVE CONTEXT.
-2. Không bịa thông tin ngoài dữ liệu.
-3. Nếu dữ liệu chưa đủ, nói đúng: "Chưa đủ dữ liệu để kết luận."
-4. Khi phù hợp, phân biệt hiện tượng, nguyên nhân, bản chất và quy luật.
-5. Trả lời bằng tiếng Việt, rõ ràng, thực tế.
+AI_KERNEL
+
+{workspace["kernel"]}
+
+AI_STATE
+
+{workspace["state"]}
+
+====================
+
+Bạn phải tuân thủ AI_KERNEL.
+
+Bạn phải làm việc theo AI_STATE.
+
 """
 
         user = f"""
