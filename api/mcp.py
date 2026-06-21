@@ -190,10 +190,13 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         }
 
     if tool == "ask_knowledge":
+        print("=== VERSION 2 ===")
+        print("=== FALLBACK START ===")
+docs = fallback_drive(question)
+print(docs)
         question = args.get("question", "")
         limit = int(args.get("limit", 5))
         max_chars = int(args.get("max_chars_per_file", 6000))
-
         files = search_and_read(
             q=question,
             limit=limit,
