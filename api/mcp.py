@@ -254,10 +254,12 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "mode": "google_drive_only",
         }
 
-        return {
+    return {
         "status": "error",
         "message": f"Unknown tool: {tool}",
-        }
+    }
+
+        
 @router.get("/ping")
 def ping():
     return {
