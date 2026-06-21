@@ -61,18 +61,43 @@ def list_files(limit: int = 50, folder_id: Optional[str] = None) -> List[Dict[st
     ).execute()
     return result.get("files", [])
 
+def list_files_recursive(folder_id: str, limit: int = 1000):
+    all_files = []
 
-def search_files(q: str, limit: int = 20, folder_id: Optional[str] = None) -> List[Dict[str, Any]]:
-    service = get_drive_service()
-    safe_q = q.replace("'", "\\'")
-    result = service.files().list(
-        q=f"trashed = false and name contains '{safe_q}'{_folder_clause(folder_id)}",
+    query = f"'{folder_id}' in parents and trashed = false"
+
+    response = service.files().list(
+        q=query,
         pageSize=limit,
-        fields="files(id, name, mimeType, modifiedTime, webViewLink, size)",
-        orderBy="modifiedTime desc",
+        fields="files(id, name, mimeType, webViewLink, modifiedTime)",
         supportsAllDrives=True,
         includeItemsFromAllDrives=True,
     ).execute()
+
+    files = response.get("files", [])
+
+    for f in files:
+        all_files.append(f)
+
+        if f.get("mimeType") == "application/vnd.google-apps.folder":
+            all_files.extend(list_files_recursive(f["id"], limit))
+
+    return all_files
+
+def search_files(q: str, limit: int = 20):
+    files = list_files_recursive(DRIVE_FOLDER_ID)
+
+    query = q.lower().replace("_", " ").replace("-", " ")
+
+    results = []
+    for f in files:
+        name = f.get("name", "")
+        normalized_name = name.lower().replace("_", " ").replace("-", " ")
+
+        if query in normalized_name or all(word in normalized_name for word in query.split()):
+            results.append(f)
+
+    return results[:limit]
     return result.get("files", [])
 
 
