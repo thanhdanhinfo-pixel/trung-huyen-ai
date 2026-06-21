@@ -571,22 +571,24 @@ def rag_count():
 @app.post("/chat")
 def chat(req: ChatRequest):
     try:
-        knowledge = search_knowledge(req.question, limit=5)
+        knowledge = search_and_read(
+            q=req.question,
+            limit=req.limit,
+            max_chars_per_file=req.max_chars_per_file,
+        )
 
-        rag_context = "\n\n---\n\n".join(
+        context = "\n\n---\n\n".join(
             item.get("content", "")
             for item in knowledge
             if item.get("content")
         )
 
-        context = rag_context
-
         sources = [
             {
-                "name": item.get("metadata", {}).get("name"),
-                "link": item.get("metadata", {}).get("link"),
-                "score": item.get("score"),
-                "chunk_index": item.get("metadata", {}).get("chunk_index"),
+                "name": item.get("name"),
+                "link": item.get("webViewLink"),
+                "id": item.get("id"),
+                "mimeType": item.get("mimeType"),
             }
             for item in knowledge
         ]
@@ -594,26 +596,26 @@ def chat(req: ChatRequest):
         if not context:
             return {
                 "status": "ok",
-                "answer": "Chưa tìm thấy thông tin trong AI Brain.",
-                "sources": sources
+                "answer": "Chưa tìm thấy thông tin trong Google Drive.",
+                "sources": sources,
             }
+
         system = """
-Bạn là AI Kiến Trúc Sư Trưởng của Hệ Điều Hành Bộ Não Gốc Trung Huyền Academy.
+Bạn là AI của Trung Huyền Academy.
 
 Luật trả lời:
-1. Chỉ dùng dữ liệu trong phần AI BRAIN CONTEXT.
-2. Không bịa thông tin ngoài dữ liệu.
-3. Nếu dữ liệu chưa đủ, nói đúng: "Chưa đủ dữ liệu để kết luận."
-4. Khi phù hợp, phân biệt hiện tượng, nguyên nhân, bản chất và quy luật.
-5. Ưu tiên tính nhất quán, khả năng mở rộng và kiến trúc dài hạn.
-6. Trả lời bằng tiếng Việt, rõ ràng, thực tế.
+1. Chỉ dùng dữ liệu trong phần GOOGLE DRIVE CONTEXT.
+2. Không dùng AI BRAIN CONTEXT.
+3. Không bịa thông tin ngoài dữ liệu.
+4. Nếu dữ liệu chưa đủ, nói đúng: "Chưa đủ dữ liệu để kết luận."
+5. Trả lời bằng tiếng Việt, rõ ràng, thực tế.
 """
 
         user = f"""
 CÂU HỎI:
 {req.question}
 
-AI BRAIN CONTEXT:
+GOOGLE DRIVE CONTEXT:
 {context}
 """
 
@@ -627,6 +629,7 @@ AI BRAIN CONTEXT:
 
         return {
             "status": "ok",
+            "mode": "google_drive_only",
             "answer": response.output_text,
             "sources": sources,
         }
