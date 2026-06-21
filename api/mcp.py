@@ -208,6 +208,11 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         )
 
         context = build_context(files)
+        print("=" * 60)
+        print("ASK_KNOWLEDGE_FILES:", len(files))
+        print("ASK_KNOWLEDGE_CONTEXT_LEN:", len(context))
+        print("ASK_KNOWLEDGE_CONTEXT_PREVIEW:", context[:1000])
+        print("=" * 60)
 
         if not context:
             return {
