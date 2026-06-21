@@ -231,7 +231,12 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             }
 
         client = OpenAI(api_key=OPENAI_API_KEY)
-
+        print("=" * 60)
+        print("MODEL:", OPENAI_MODEL)
+        print("QUESTION:", question)
+        print("CONTEXT LENGTH:", len(context))
+        print(context)
+        print("=" * 60)
         response = client.responses.create(
             model=OPENAI_MODEL,
             input=[
