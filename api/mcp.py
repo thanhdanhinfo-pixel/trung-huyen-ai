@@ -234,13 +234,14 @@ if tool == "ask_knowledge":
                     "role": "system",
                     "content": (
                         "Bạn là AI của Trung Huyền Academy. "
-                        "Chỉ trả lời dựa trên dữ liệu được cung cấp. "
+                        "Chỉ trả lời dựa trên dữ liệu Google Drive được cung cấp. "
+                        "Không dùng AI BRAIN CONTEXT. "
                         "Nếu dữ liệu chưa đủ, nói: Chưa đủ dữ liệu để kết luận."
                     ),
                 },
                 {
                     "role": "user",
-                    "content": f"CÂU HỎI:\n{question}\n\nDỮ LIỆU:\n{context}",
+                    "content": f"CÂU HỎI:\n{question}\n\nDỮ LIỆU GOOGLE DRIVE:\n{context}",
                 },
             ],
         )
@@ -250,7 +251,7 @@ if tool == "ask_knowledge":
             "tool": tool,
             "answer": response.output_text,
             "sources": files,
-            "mode": "drive_first",
+            "mode": "google_drive_only",
         }
 
         return {
