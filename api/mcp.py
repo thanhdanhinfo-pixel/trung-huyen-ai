@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from openai import OpenAI
-
+from services.github_service import github_list_files, github_read_file, github_update_file
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
 from drive import list_files, read_file_content, search_and_read, append_google_doc
 from fastapi import Header, HTTPException
@@ -55,6 +55,9 @@ def tools():
             "search_documents",
             "read_document",
             "ask_knowledge",
+            "github_list_files",
+            "github_read_file",
+            "github_update_file",
             "append_document"
         ]
     }
@@ -74,7 +77,55 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "tool": tool,
             "files": list_files(limit=limit),
         }
+    if tool == "github_list_files":
+        path = args.get("path", "")
+        return {
+            "status": "ok",
+            "tool": tool,
+            "result": github_list_files(path),
+        }
 
+    if tool == "github_read_file":
+        path = args.get("path", "")
+        if not path:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "path is required",
+            }
+
+        return {
+            "status": "ok",
+            "tool": tool,
+            "result": github_read_file(path),
+        }
+
+    if tool == "github_update_file":
+        approved = bool(args.get("approved", False))
+        if not approved:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "User approval is required",
+            }
+
+        path = args.get("path", "")
+        content = args.get("content", "")
+        sha = args.get("sha", "")
+        message = args.get("message", "")
+
+        if not path or not content or not sha or not message:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "path, content, sha and message are required",
+            }
+
+        return {
+            "status": "ok",
+            "tool": tool,
+            "result": github_update_file(path, content, sha, message),
+        }
     if tool == "search_documents":
        try:
           q = args.get("q", "")
