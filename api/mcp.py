@@ -200,6 +200,24 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         )
 
         context = build_context(files)
+        if not answer or "Chưa đủ dữ liệu" in answer:
+
+    docs = fallback_drive(question)
+
+    if docs:
+        prompt = f"""
+Câu hỏi:
+
+{question}
+
+Tài liệu:
+
+{docs}
+
+Hãy trả lời chỉ dựa trên tài liệu.
+"""
+
+        answer = llm(prompt)
 
         if not context:
             return {
