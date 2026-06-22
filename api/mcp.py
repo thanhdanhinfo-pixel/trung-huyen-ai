@@ -3,6 +3,7 @@ from typing import Any, Dict, List
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from openai import OpenAI
+import requests
 
 from services.github_service import github_list_files, github_read_file, github_update_file
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
@@ -60,6 +61,7 @@ def tools():
             "github_read_file",
             "system_self_test",
             "github_update_file",
+            "backend_call",
             "system_tree",
             "workspace_bootstrap",
             "append_document",
@@ -73,6 +75,50 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
     tool = req.tool
     args = req.arguments
 
+    if tool == "backend_call":
+        method = args.get("method", "GET").upper()
+        path = args.get("path", "")
+        body = args.get("body", None)
+
+        if not path.startswith("/"):
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "path must start with /",
+            }
+
+        url = f"http://127.0.0.1:8080{path}"
+
+        try:
+            if method == "GET":
+                response = requests.get(url, timeout=60)
+            elif method == "POST":
+                response = requests.post(url, json=body, timeout=60)
+            else:
+                return {
+                    "status": "error",
+                    "tool": tool,
+                    "message": f"Unsupported method: {method}",
+                }
+
+            try:
+                data = response.json()
+            except Exception:
+                data = response.text
+
+            return {
+                "status": "ok" if response.ok else "error",
+                "tool": tool,
+                "status_code": response.status_code,
+                "result": data,
+            }
+
+        except Exception as exc:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": str(exc),
+            }
     if tool == "list_documents":
         limit = int(args.get("limit", 50))
         return {
