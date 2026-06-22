@@ -19,8 +19,6 @@ from config import (
     QDRANT_URL,
     QDRANT_API_KEY,
 )
-
-)
 from drive import search_files, read_file_content, search_and_read, list_files
 
 
