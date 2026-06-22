@@ -35,7 +35,17 @@ def _credentials():
 def get_drive_service():
     return build("drive", "v3", credentials=_credentials(), cache_discovery=False)
 
+
+def list_recursive():
+    ...
+
+def find_file_by_path(path: str):
+    ...
+
 def read_by_path(path: str):
+    ...
+
+def read_folder(path: str):
     ...
 def get_docs_service():
     return build("docs", "v1", credentials=_credentials(), cache_discovery=False)
