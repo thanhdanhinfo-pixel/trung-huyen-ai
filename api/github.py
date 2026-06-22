@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from services.github_runtime import github_runtime
 import difflib
+import ast
 router = APIRouter(prefix="/github", tags=["GitHub Runtime"])
 
 class ReadFile(BaseModel):
@@ -96,7 +97,19 @@ def patch(req: PatchFile):
         "ready_to_commit": new_content != old_content and not warnings,
         "diff": diff,
     }
+    # Python syntax verification
+    if req.path.endswith(".py"):
+        try:
+            ast.parse(new_content)
+        except SyntaxError as e:
+            warnings.append(
+                f"python_syntax_error: line {e.lineno}: {e.msg}"
+            )
 
+    result["warnings"] = warnings
+    result["ready_to_commit"] = (
+        new_content != old_content and len(warnings) == 0
+    )
     if not req.commit:
         return result
 
