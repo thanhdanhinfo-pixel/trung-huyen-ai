@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from pydantic import BaseModel
 from services.system_service import self_test
 
 router = APIRouter(
@@ -72,3 +73,19 @@ def ai_runtime_tasks():
         "status": "ok",
         "tasks": ai_runtime.list_tasks(),
     }
+    
+
+class CreateTaskRequest(BaseModel):
+    title: str
+    worker: str = "orchestrator"
+    priority: int = 3
+
+
+@router.post("/runtime/tasks")
+def create_runtime_task(req: CreateTaskRequest):
+    from services.ai_runtime import ai_runtime
+    return ai_runtime.add_task(
+        title=req.title,
+        worker=req.worker,
+        priority=req.priority,
+    )
