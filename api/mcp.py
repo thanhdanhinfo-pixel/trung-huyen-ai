@@ -82,18 +82,18 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "files": list_files(limit=limit),
         }
     if tool == "workspace_bootstrap":
-    from drive import list_recursive, read_by_path
+        from drive import list_recursive, read_by_path
 
-    files = list_recursive()
+        files = list_recursive()
 
-    protocol_path = "09_INFRASTRUCTURE/AI_PROTOCOLS/00_AI_PROTOCOL"
-    state_path = "07_AI_FACTORY/00_AI_STATE.md"
-    kernel_path = "07_AI_FACTORY/00_AI_KERNEL"
+        protocol_path = "09_INFRASTRUCTURE/AI_PROTOCOLS/00_AI_PROTOCOL"
+        state_path = "07_AI_FACTORY/00_AI_STATE.md"
+        kernel_path = "07_AI_FACTORY/00_AI_KERNEL"
 
-    return {
-        "status": "ok",
-        "tool": tool,
-        "workspace": {
+        return {
+            "status": "ok",
+            "tool": tool,
+            "workspace": {
             "protocol_path": protocol_path,
             "state_path": state_path,
             "kernel_path": kernel_path,
