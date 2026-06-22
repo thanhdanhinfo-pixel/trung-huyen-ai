@@ -4,98 +4,41 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Literal, Optional
 
-TaskStatus = Literal["todo", "doing", "review", "done", "blocked"]
+TaskStatus = Literal["todo","doing","review","done","blocked"]
 
-
-def utc_now() -> str:
+def utc_now()->str:
     return datetime.now(timezone.utc).isoformat()
-
 
 @dataclass
 class RuntimeTask:
-    id: str
-    title: str
-    worker: str = "orchestrator"
-    status: TaskStatus = "todo"
-    priority: int = 3
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    created_at: str = field(default_factory=utc_now)
-    updated_at: str = field(default_factory=utc_now)
-
+    id:str
+    title:str
+    worker:str="orchestrator"
+    status:TaskStatus="todo"
+    priority:int=3
+    metadata:Dict[str,Any]=field(default_factory=dict)
+    created_at:str=field(default_factory=utc_now)
+    updated_at:str=field(default_factory=utc_now)
 
 class AIRuntime:
-    def __init__(self) -> None:
-        self.name = "TRUNG_HUYEN_AI_OS Runtime"
-        self.phase = "Foundation"
-        self.started_at = utc_now()
-        self.tasks: List[RuntimeTask] = []
-
-    def status(self) -> Dict[str, Any]:
-        return {
-            "status": "ok",
-            "name": self.name,
-            "phase": self.phase,
-            "started_at": self.started_at,
-            "task_count": len(self.tasks),
-            "todo_count": len([task for task in self.tasks if task.status == "todo"]),
-            "doing_count": len([task for task in self.tasks if task.status == "doing"]),
-            "review_count": len([task for task in self.tasks if task.status == "review"]),
-            "done_count": len([task for task in self.tasks if task.status == "done"]),
-            "blocked_count": len([task for task in self.tasks if task.status == "blocked"]),
-        }
-
-    def add_task(
-        self,
-        title: str,
-        worker: str = "orchestrator",
-        priority: int = 3,
-        metadata: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
-        task = RuntimeTask(
-            id=f"task-{len(self.tasks) + 1:04d}",
-            title=title,
-            worker=worker,
-            priority=priority,
-            metadata=metadata or {},
-        )
-        self.tasks.append(task)
-        return task.__dict__
-
-    def list_tasks(self) -> List[Dict[str, Any]]:
-        return [task.__dict__ for task in self.tasks]
-
-    def get_task(self, task_id: str) -> Dict[str, Any]:
-        for task in self.tasks:
-            if task.id == task_id:
-                return task.__dict__
-        raise ValueError(f"Task not found: {task_id}")
-
-    def update_task_status(self, task_id: str, status: TaskStatus) -> Dict[str, Any]:
-        for task in self.tasks:
-            if task.id == task_id:
-                task.status = status
-                task.updated_at = utc_now()
-                return task.__dict__
-        raise ValueError(f"Task not found: {task_id}")
-
-    def execute(
-        self,
-        title: str,
-        worker: str = "orchestrator",
-        priority: int = 3,
-        metadata: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
-        task = self.add_task(
-            title=title,
-            worker=worker,
-            priority=priority,
-            metadata=metadata,
-        )
-
-        return {
-            "status": "accepted",
-            "task": task,
-        }
-
-
-ai_runtime = AIRuntime()
+    def __init__(self):
+        self.name="TRUNG_HUYEN_AI_OS Runtime"; self.phase="Foundation"; self.started_at=utc_now(); self.tasks=[]
+    def status(self): return {"status":"ok","task_count":len(self.tasks)}
+    def add_task(self,title,worker="orchestrator",priority=3,metadata=None):
+        t=RuntimeTask(id=f"task-{len(self.tasks)+1:04d}",title=title,worker=worker,priority=priority,metadata=metadata or {})
+        self.tasks.append(t); return t.__dict__
+    def list_tasks(self): return [t.__dict__ for t in self.tasks]
+    def update_task_status(self,task_id,status):
+        for t in self.tasks:
+            if t.id==task_id:
+                t.status=status; t.updated_at=utc_now(); return t.__dict__
+        raise ValueError("Task not found")
+    def execute(self,title,worker="orchestrator",priority=3,metadata=None):
+        task=self.add_task(title,worker,priority,metadata)
+        self.update_task_status(task['id'],"doing")
+        return {"status":"accepted","task":self.get_task(task['id'])}
+    def get_task(self,task_id):
+        for t in self.tasks:
+            if t.id==task_id:return t.__dict__
+        raise ValueError("Task not found")
+ai_runtime=AIRuntime()
