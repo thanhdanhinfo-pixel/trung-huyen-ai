@@ -126,3 +126,30 @@ def runtime_execute(req: CreateTaskRequest):
         worker=req.worker,
         priority=req.priority,
     )
+@router.get("/developer/status")
+def developer_status():
+    return {
+        "status": "ready",
+        "runtime": "developer",
+        "message": "Developer Runtime API ready"
+    }
+
+
+@router.post("/developer/patch")
+def developer_patch():
+    return {"status": "ready", "action": "patch"}
+
+
+@router.post("/developer/commit")
+def developer_commit():
+    return {"status": "ready", "action": "commit"}
+
+
+@router.post("/developer/verify")
+def developer_verify():
+    return {"status": "ready", "action": "verify"}
+
+
+@router.post("/developer/rollback")
+def developer_rollback():
+    return {"status": "ready", "action": "rollback"}
