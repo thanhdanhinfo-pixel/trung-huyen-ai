@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import base64
+import difflib
 import os
 import time
 from datetime import datetime, timezone
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 import requests
 
@@ -36,6 +37,7 @@ class GitHubRuntime:
         self.delay_seconds = delay_seconds
         self.last_success_at: Optional[str] = None
         self.last_error: Optional[str] = None
+        self.last_commit_sha: Optional[str] = None
 
     def headers(self) -> Dict[str, str]:
         if not GITHUB_TOKEN:
