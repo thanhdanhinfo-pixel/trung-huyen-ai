@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
+
 from pydantic import BaseModel, Field
 from fastapi import Request
 from api.workspace import router as workspace_router
@@ -68,7 +69,9 @@ app.include_router(workspace_router)
     
 app.include_router(knowledge_router)
 
+from api.system import router as system_router
 
+app.include_router(system_router)
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1)
     limit: int = Field(default=5, ge=1, le=20)
