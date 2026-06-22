@@ -59,3 +59,16 @@ def runtime_health_check():
     runtime_health.check("runtime", lambda: {"reachable": True})
 
     return runtime_health.status()
+@router.get("/runtime/status")
+def ai_runtime_status():
+    from services.ai_runtime import ai_runtime
+    return ai_runtime.status()
+
+
+@router.get("/runtime/tasks")
+def ai_runtime_tasks():
+    from services.ai_runtime import ai_runtime
+    return {
+        "status": "ok",
+        "tasks": ai_runtime.list_tasks(),
+    }
