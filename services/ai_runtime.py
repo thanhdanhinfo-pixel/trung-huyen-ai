@@ -1,4 +1,4 @@
-from __future__ import annotations
+ĩfrom __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -60,22 +60,22 @@ class AIRuntime:
         return [task.__dict__ for task in self.tasks]
         
     def execute(
-    self,
-    title: str,
-    worker: str = "orchestrator",
-    priority: int = 3,
-    metadata: Optional[Dict[str, Any]] = None,
-) -> Dict[str, Any]:
-    task = self.add_task(
-        title=title,
-        worker=worker,
-        priority=priority,
-        metadata=metadata,
-    )
+        self,
+        title: str,
+        worker: str = "orchestrator",
+        priority: int = 3,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        task = self.add_task(
+            title=title,
+            worker=worker,
+            priority=priority,
+            metadata=metadata,
+        )
 
-    return {
-        "status": "accepted",
-        "task": task,
-    }
+        return {
+            "status": "accepted",
+            "task": task,
+        }
 
 ai_runtime = AIRuntime()
