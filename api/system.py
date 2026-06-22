@@ -16,3 +16,19 @@ def files():
         "status": "ok",
         "files": list_recursive()
     }
+@router.get("/tree")
+def tree():
+    from drive import list_recursive
+    files = list_recursive()
+    return {
+        "status": "ok",
+        "count": len(files),
+        "files": [
+            {
+                "name": f.get("name"),
+                "path": f.get("path"),
+                "mimeType": f.get("mimeType"),
+            }
+            for f in files
+        ],
+    }
