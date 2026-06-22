@@ -63,6 +63,7 @@ def tools():
         "system_self_test",
         "github_update_file",
         "system_tree",
+        "workspace_bootstrap",
         "append_document",
     ]
         }
@@ -81,6 +82,35 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "tool": tool,
             "files": list_files(limit=limit),
         }
+    if tool == "workspace_bootstrap":
+    from drive import list_recursive, read_by_path
+
+    files = list_recursive()
+
+    protocol_path = "09_INFRASTRUCTURE/AI_PROTOCOLS/00_AI_PROTOCOL"
+    state_path = "07_AI_FACTORY/00_AI_STATE.md"
+    kernel_path = "07_AI_FACTORY/00_AI_KERNEL"
+
+    return {
+        "status": "ok",
+        "tool": tool,
+        "workspace": {
+            "protocol_path": protocol_path,
+            "state_path": state_path,
+            "kernel_path": kernel_path,
+            "protocol": read_by_path(protocol_path),
+            "state": read_by_path(state_path),
+            "kernel": read_by_path(kernel_path),
+            "tree": [
+                {
+                    "name": f.get("name"),
+                    "path": f.get("path"),
+                    "mimeType": f.get("mimeType"),
+                }
+                for f in files
+            ],
+        },
+    }        
     if tool == "github_list_files":
         path = args.get("path", "")
         return {
