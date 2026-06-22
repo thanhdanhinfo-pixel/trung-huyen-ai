@@ -2,39 +2,25 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from services.system_service import self_test
 
-router = APIRouter(prefix="/system", tags=["System"])
+router=APIRouter(prefix="/system",tags=["System"])
 
 @router.get("/self-test")
-def test():
-    return self_test()
+def test(): return self_test()
 
-@router.get("/files")
-def files():
-    from drive import list_recursive
-    return {"status":"ok","files":list_recursive()}
+@router.get("/runtime/self-test")
+def runtime_self_test():
+    from services.health_runtime import health_runtime
+    return health_runtime.self_test()
 
-@router.get("/tree")
-def tree():
-    from drive import list_recursive
-    files=list_recursive()
-    return {"status":"ok","count":len(files),"files":[{"name":f.get("name"),"path":f.get("path"),"mimeType":f.get("mimeType")} for f in files]}
+@router.post("/runtime/self-test/run")
+def runtime_self_test_run():
+    from services.health_runtime import health_runtime
+    return health_runtime.self_test()
 
-@router.get("/runtime/health")
-def runtime_health_check():
-    from runtime_health import runtime_health
-    from services.github_runtime import github_runtime
-    runtime_health.check("github", lambda: github_runtime.status())
-    def drive_check():
-        from drive import list_files
-        return {"reachable":True,"sample_count":len(list_files(limit=1))}
-    runtime_health.check("drive", drive_check)
-    def qdrant_check():
-        from vectordb import client,COLLECTION_NAME,ensure_collection
-        ensure_collection(); result=client.count(collection_name=COLLECTION_NAME, exact=True)
-        return {"reachable":True,"count":result.count}
-    runtime_health.check("qdrant", qdrant_check)
-    runtime_health.check("runtime", lambda:{"reachable":True})
-    return runtime_health.status()
+@router.get("/runtime/self-test/latest")
+def runtime_self_test_latest():
+    from services.health_runtime import health_runtime
+    return health_runtime.last_report or {"status":"idle","message":"No self-test has been executed yet."}
 
 @router.get("/runtime/status")
 def ai_runtime_status():
@@ -45,11 +31,6 @@ def ai_runtime_status():
 def ai_runtime_tasks():
     from services.ai_runtime import ai_runtime
     return {"status":"ok","tasks":ai_runtime.list_tasks()}
-
-@router.get("/runtime/self-test")
-def runtime_self_test():
-    from services.health_runtime import health_runtime
-    return health_runtime.self_test()
 
 class CreateTaskRequest(BaseModel):
     title:str
