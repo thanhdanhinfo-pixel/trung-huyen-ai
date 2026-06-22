@@ -15,11 +15,15 @@ def self_test():
 
     try:
         protocol = read_by_path(
-            "09_INFRASTRUCTURE/AI_PROTOCOLS/00_AI_PROTOCOL.md"
+    "09_INFRASTRUCTURE/AI_PROTOCOLS/00_AI_PROTOCOL.md"
         )
 
-        result["protocol_ok"] = True
-        result["protocol_size"] = len(protocol)
+        if protocol is None:
+            result["protocol_ok"] = False
+            result["protocol_error"] = "Protocol not found"
+        else:
+            result["protocol_ok"] = True
+            result["protocol_size"] = len(protocol)
 
     except Exception as e:
         result["protocol_ok"] = False
