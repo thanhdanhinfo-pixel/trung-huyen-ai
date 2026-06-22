@@ -89,3 +89,9 @@ def create_runtime_task(req: CreateTaskRequest):
         worker=req.worker,
         priority=req.priority,
     )
+@router.post("/runtime/execute")
+def runtime_execute():
+    return {
+        "status": "ok",
+        "message": "Execution API ready"
+    }
