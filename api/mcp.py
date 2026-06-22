@@ -62,6 +62,7 @@ def tools():
         "github_read_file",
         "system_self_test",
         "github_update_file",
+        "system_tree",
         "append_document",
     ]
         }
@@ -110,7 +111,20 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         "tool": tool,
         "result": self_test(),
     }
-
+    if tool == "system_tree":
+    from drive import list_recursive
+    return {
+        "status": "ok",
+        "tool": tool,
+        "files": [
+            {
+                "name": f.get("name"),
+                "path": f.get("path"),
+                "mimeType": f.get("mimeType"),
+            }
+            for f in list_recursive()
+        ],
+    }
     if tool == "github_update_file":
         approved = bool(args.get("approved", False))
         if not approved:
