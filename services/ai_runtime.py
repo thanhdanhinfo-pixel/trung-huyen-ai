@@ -37,6 +37,11 @@ class AIRuntime:
             "phase": self.phase,
             "started_at": self.started_at,
             "task_count": len(self.tasks),
+            "todo_count": len([task for task in self.tasks if task.status == "todo"]),
+            "doing_count": len([task for task in self.tasks if task.status == "doing"]),
+            "review_count": len([task for task in self.tasks if task.status == "review"]),
+            "done_count": len([task for task in self.tasks if task.status == "done"]),
+            "blocked_count": len([task for task in self.tasks if task.status == "blocked"]),
         }
 
     def add_task(
@@ -58,7 +63,21 @@ class AIRuntime:
 
     def list_tasks(self) -> List[Dict[str, Any]]:
         return [task.__dict__ for task in self.tasks]
-        
+
+    def get_task(self, task_id: str) -> Dict[str, Any]:
+        for task in self.tasks:
+            if task.id == task_id:
+                return task.__dict__
+        raise ValueError(f"Task not found: {task_id}")
+
+    def update_task_status(self, task_id: str, status: TaskStatus) -> Dict[str, Any]:
+        for task in self.tasks:
+            if task.id == task_id:
+                task.status = status
+                task.updated_at = utc_now()
+                return task.__dict__
+        raise ValueError(f"Task not found: {task_id}")
+
     def execute(
         self,
         title: str,
@@ -77,5 +96,6 @@ class AIRuntime:
             "status": "accepted",
             "task": task,
         }
+
 
 ai_runtime = AIRuntime()
