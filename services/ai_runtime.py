@@ -58,6 +58,24 @@ class AIRuntime:
 
     def list_tasks(self) -> List[Dict[str, Any]]:
         return [task.__dict__ for task in self.tasks]
+        
+    def execute(
+    self,
+    title: str,
+    worker: str = "orchestrator",
+    priority: int = 3,
+    metadata: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    task = self.add_task(
+        title=title,
+        worker=worker,
+        priority=priority,
+        metadata=metadata,
+    )
 
+    return {
+        "status": "accepted",
+        "task": task,
+    }
 
 ai_runtime = AIRuntime()
