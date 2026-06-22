@@ -2,7 +2,6 @@ from typing import Any, Dict, List
 from api.github import router as github_router
 from fastapi import FastAPI, Query
 from api.knowledge import router as knowledge_router
-from rag.indexer import index_drive
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -11,15 +10,13 @@ from openai import OpenAI
 from pydantic import BaseModel, Field
 from fastapi import Request
 from api.workspace import router as workspace_router
-from rag.search import search_knowledge
 from config import (
     DRIVE_FOLDER_ID,
     GOOGLE_SERVICE_ACCOUNT_JSON,
     OPENAI_API_KEY,
     OPENAI_MODEL,
     MAX_CONTEXT_CHARS,
-    QDRANT_URL,
-    QDRANT_API_KEY,
+
 )
 from drive import search_files, read_file_content, search_and_read, list_files
 
