@@ -58,10 +58,12 @@ def tools():
             "ask_knowledge",
             "github_list_files",
             "github_read_file",
+            "system_self_test",
             "github_update_file",
             "append_document"
         ]
     }
+
 
 
 @router.post("/call")
@@ -100,6 +102,14 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "tool": tool,
             "result": github_read_file(path),
         }
+    if tool == "system_self_test":
+    from services.system_service import self_test
+
+    return {
+        "status": "ok",
+        "tool": tool,
+        "result": self_test(),
+    }
 
     if tool == "github_update_file":
         approved = bool(args.get("approved", False))
