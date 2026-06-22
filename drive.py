@@ -36,17 +36,51 @@ def get_drive_service():
     return build("drive", "v3", credentials=_credentials(), cache_discovery=False)
 
 
-def list_recursive():
-    ...
+def list_recursive(parent_id=None, current_path=""):
+    service = get_drive_service()
+    parent_id = parent_id or DRIVE_FOLDER_ID
+
+    query = f"'{parent_id}' in parents and trashed=false"
+    result = service.files().list(
+        q=query,
+        fields="files(id,name,mimeType,webViewLink,modifiedTime)",
+        supportsAllDrives=True,
+        includeItemsFromAllDrives=True,
+    ).execute()
+
+    items = []
+    for f in result.get("files", []):
+        path = f"{current_path}/{f['name']}".strip("/")
+        f["path"] = path
+        items.append(f)
+
+        if f["mimeType"] == "application/vnd.google-apps.folder":
+            items.extend(list_recursive(f["id"], path))
+
+    return items
+
 
 def find_file_by_path(path: str):
-    ...
+    target = path.strip("/")
+    for f in list_recursive():
+        if f.get("path") == target:
+            return f
+    return None
+
 
 def read_by_path(path: str):
-    ...
+    f = find_file_by_path(path)
+    if not f:
+        return None
+    return read_file_content(f["id"])
+
 
 def read_folder(path: str):
-    ...
+    prefix = path.strip("/") + "/"
+    return [
+        f for f in list_recursive()
+        if f.get("path", "").startswith(prefix)
+    ]
 def get_docs_service():
     return build("docs", "v1", credentials=_credentials(), cache_discovery=False)
 
