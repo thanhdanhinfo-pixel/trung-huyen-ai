@@ -35,7 +35,8 @@ def _credentials():
 def get_drive_service():
     return build("drive", "v3", credentials=_credentials(), cache_discovery=False)
 
-
+def read_by_path(path: str):
+    ...
 def get_docs_service():
     return build("docs", "v1", credentials=_credentials(), cache_discovery=False)
 
