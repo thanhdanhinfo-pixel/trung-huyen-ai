@@ -51,8 +51,7 @@ def build_context(files: List[Dict[str, Any]]) -> str:
 def tools():
     return {
         "status": "ok",
-        return {
-    "status": "ok",
+    
     "tools": [
         "list_documents",
         "search_documents",
