@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from services.github_runtime import github_runtime
 import difflib
 import ast
+import time
 router = APIRouter(prefix="/github", tags=["GitHub Runtime"])
 
 class ReadFile(BaseModel):
@@ -127,11 +128,17 @@ def patch(req: PatchFile):
         sha=current.get("sha"),
     )
 
-    verify = github_runtime.read_file(req.path)
+    verified = False
+    for _ in range(5):
+        time.sleep(0.5)
+        verify = github_runtime.read_file(req.path)
+        if verify.get("content") == new_content:
+            verified = True
+            break
 
     return {
         "status": "committed",
         "path": req.path,
         "commit": commit_result.get("commit", {}),
-        "verified": verify.get("content") == new_content,
+        "verified": verified,
     }
