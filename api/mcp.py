@@ -435,3 +435,39 @@ def manifest():
             }
         ]
     }
+class BackendCallRequest(BaseModel):
+    method: str = "GET"
+    path: str
+    body: Dict[str, Any] = {}
+
+
+@router.post("/backend-call")
+def backend_call_direct(req: BackendCallRequest, x_api_key: str = Header(default="")):
+    if MCP_API_KEY and x_api_key != MCP_API_KEY:
+        raise HTTPException(status_code=401, detail="Invalid MCP API key")
+
+    import requests
+
+    if not req.path.startswith("/"):
+        return {"status": "error", "message": "path must start with /"}
+
+    url = f"http://127.0.0.1:8080{req.path}"
+    method = req.method.upper()
+
+    if method == "GET":
+        response = requests.get(url, timeout=60)
+    elif method == "POST":
+        response = requests.post(url, json=req.body, timeout=60)
+    else:
+        return {"status": "error", "message": f"Unsupported method: {method}"}
+
+    try:
+        data = response.json()
+    except Exception:
+        data = response.text
+
+    return {
+        "status": "ok" if response.ok else "error",
+        "status_code": response.status_code,
+        "result": data,
+    }
