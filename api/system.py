@@ -9,3 +9,10 @@ router = APIRouter(
 @router.get("/self-test")
 def test():
     return self_test()
+@router.get("/files")
+def files():
+    from drive import list_recursive
+    return {
+        "status": "ok",
+        "files": list_recursive()
+    }
