@@ -51,21 +51,20 @@ def build_context(files: List[Dict[str, Any]]) -> str:
 def tools():
     return {
         "status": "ok",
-    
-    "tools": [
-        "list_documents",
-        "search_documents",
-        "read_document",
-        "ask_knowledge",
-        "github_list_files",
-        "github_read_file",
-        "system_self_test",
-        "github_update_file",
-        "system_tree",
-        "workspace_bootstrap",
-        "append_document",
-    ]
-        }
+        "tools": [
+            "list_documents",
+            "search_documents",
+            "read_document",
+            "ask_knowledge",
+            "github_list_files",
+            "github_read_file",
+            "system_self_test",
+            "github_update_file",
+            "system_tree",
+            "workspace_bootstrap",
+            "append_document",
+        ]
+            }
 
 @router.post("/call")
 def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
@@ -133,20 +132,20 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "result": github_read_file(path),
         }
     if tool == "system_self_test":
-    from services.system_service import self_test
+        from services.system_service import self_test
 
-    return {
-        "status": "ok",
-        "tool": tool,
-        "result": self_test(),
-    }
+        return {
+            "status": "ok",
+            "tool": tool,
+            "result": self_test(),
+        }
     if tool == "system_tree":
-    from drive import list_recursive
-    return {
-        "status": "ok",
-        "tool": tool,
-        "files": [
-            {
+        from drive import list_recursive
+        return {
+            "status": "ok",
+            "tool": tool,
+            "files": [
+                {
                 "name": f.get("name"),
                 "path": f.get("path"),
                 "mimeType": f.get("mimeType"),
