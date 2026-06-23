@@ -1,7 +1,7 @@
 from typing import Any
 
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from services.workflow_engine import workflow_engine
 
@@ -10,7 +10,7 @@ router = APIRouter(tags=["Developer Gateway"])
 
 class DeveloperExecuteRequest(BaseModel):
     action: str
-    payload: dict[str, Any] = {}
+    payload: dict[str, Any] = Field(default_factory=dict)
     requires_approval: bool = False
     auto_run: bool = True
 
