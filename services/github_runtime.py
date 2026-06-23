@@ -78,6 +78,7 @@ class GitHubRuntime:
             "last_error": self.last_error,
             "capabilities": [
                 "list_files",
+                "get_file_metadata",
                 "read_file",
                 "update_file",
                 "patch_file",
@@ -98,6 +99,37 @@ class GitHubRuntime:
             )
             response.raise_for_status()
             return response.json()
+
+        return self.run_with_retry(request)
+
+    def get_file_metadata(self, path: str) -> Dict[str, Any]:
+        """Return GitHub file metadata without decoding file content.
+
+        This is required for binary-safe operations such as deleting .pyc,
+        images, PDFs, archives, or any non UTF-8 file.
+        """
+
+        def request():
+            response = requests.get(
+                f"{BASE}/contents/{path}",
+                headers=self.headers(),
+                params={"ref": GITHUB_BRANCH},
+                timeout=30,
+            )
+            response.raise_for_status()
+            data = response.json()
+            if isinstance(data, list):
+                raise GitHubRuntimeError(f"Path is a directory, not a file: {path}")
+            return {
+                "path": path,
+                "sha": data.get("sha"),
+                "name": data.get("name"),
+                "size": data.get("size"),
+                "type": data.get("type"),
+                "encoding": data.get("encoding"),
+                "html_url": data.get("html_url"),
+                "download_url": data.get("download_url"),
+            }
 
         return self.run_with_retry(request)
 
@@ -133,7 +165,7 @@ class GitHubRuntime:
             resolved_sha = sha
             if not resolved_sha:
                 try:
-                    resolved_sha = self.read_file(path).get("sha")
+                    resolved_sha = self.get_file_metadata(path).get("sha")
                 except requests.HTTPError as exc:
                     if exc.response is None or exc.response.status_code != 404:
                         raise
@@ -163,7 +195,7 @@ class GitHubRuntime:
         return self.run_with_retry(request)
 
     def delete_file(self, path: str, message: str = "Delete file") -> Dict[str, Any]:
-        current = self.read_file(path)
+        current = self.get_file_metadata(path)
 
         def request():
             response = requests.delete(
