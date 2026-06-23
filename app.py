@@ -7,7 +7,9 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 
+
 from pydantic import BaseModel, Field
+from typing import Any
 from fastapi import Request
 from api.workspace import router as workspace_router
 from config import (
@@ -567,6 +569,34 @@ def rag_count():
                 "type": type(exc).__name__
             }
         )
+class DeveloperExecuteRequest(BaseModel):
+    action: str
+    payload: dict[str, Any] = {}
+
+
+@app.post("/developer/execute")
+def developer_execute(req: DeveloperExecuteRequest):
+    if req.action == "github.status":
+        from services.github_runtime import github_runtime
+        return github_runtime.status()
+
+    if req.action == "github.read":
+        from services.github_runtime import github_runtime
+        return github_runtime.read_file(req.payload.get("path", ""))
+
+    if req.action == "github.patch":
+        from services.github_runtime import github_runtime
+        return github_runtime.patch_file(
+            path=req.payload.get("path", ""),
+            operations=req.payload.get("operations", []),
+            message=req.payload.get("message", "Developer Gateway patch"),
+            commit=bool(req.payload.get("commit", False)),
+        )
+
+    return {
+        "status": "error",
+        "message": f"Unsupported action: {req.action}",
+    }
 # =====================================
 # CHAT
 # =====================================
