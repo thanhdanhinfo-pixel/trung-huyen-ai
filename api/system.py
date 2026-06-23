@@ -42,6 +42,24 @@ def tree():
     }
 
 
+@router.get("/runtime/diagnostic/version")
+def runtime_diagnostic_version():
+    from services.runtime_diagnostic import runtime_diagnostic
+    return runtime_diagnostic.version()
+
+
+@router.get("/runtime/diagnostic/github")
+def runtime_diagnostic_github():
+    from services.runtime_diagnostic import runtime_diagnostic
+    return runtime_diagnostic.github_status()
+
+
+@router.post("/runtime/diagnostic/github-write-selftest")
+def runtime_diagnostic_github_write_selftest():
+    from services.runtime_diagnostic import runtime_diagnostic
+    return runtime_diagnostic.github_write_selftest()
+
+
 @router.get("/runtime/health")
 def runtime_health_check():
     from runtime_health import runtime_health
