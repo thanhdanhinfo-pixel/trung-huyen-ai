@@ -1,5 +1,6 @@
 from typing import Any, Dict, List
 from api.github import router as github_router
+from api.developer import router as developer_router
 from fastapi import FastAPI, Query
 from api.knowledge import router as knowledge_router
 from fastapi.middleware.cors import CORSMiddleware
@@ -60,6 +61,7 @@ except Exception as exc:
 if admin_router:
     app.include_router(admin_router)
 app.include_router(github_router)
+app.include_router(developer_router)
 
 if mcp_router:
     app.include_router(mcp_router)
@@ -567,34 +569,6 @@ def rag_count():
                 "type": type(exc).__name__
             }
         )
-class DeveloperExecuteRequest(BaseModel):
-    action: str
-    payload: dict[str, Any] = {}
-
-
-@app.post("/developer/execute")
-def developer_execute(req: DeveloperExecuteRequest):
-    if req.action == "github.status":
-        from services.github_runtime import github_runtime
-        return github_runtime.status()
-
-    if req.action == "github.read":
-        from services.github_runtime import github_runtime
-        return github_runtime.read_file(req.payload.get("path", ""))
-
-    if req.action == "github.patch":
-        from services.github_runtime import github_runtime
-        return github_runtime.patch_file(
-            path=req.payload.get("path", ""),
-            operations=req.payload.get("operations", []),
-            message=req.payload.get("message", "Developer Gateway patch"),
-            commit=bool(req.payload.get("commit", False)),
-        )
-
-    return {
-        "status": "error",
-        "message": f"Unsupported action: {req.action}",
-    }
 # =====================================
 # CHAT
 # =====================================
