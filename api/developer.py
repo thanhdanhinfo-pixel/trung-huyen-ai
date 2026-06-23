@@ -3,34 +3,36 @@ from typing import Any
 from fastapi import APIRouter
 from pydantic import BaseModel
 
+from services.workflow_engine import workflow_engine
+
 router = APIRouter(tags=["Developer Gateway"])
 
 
 class DeveloperExecuteRequest(BaseModel):
     action: str
     payload: dict[str, Any] = {}
+    requires_approval: bool = False
+    auto_run: bool = True
 
 
 @router.post("/developer/execute")
 def developer_execute(req: DeveloperExecuteRequest):
-    if req.action == "github.status":
-        from services.github_runtime import github_runtime
-        return github_runtime.status()
+    return workflow_engine.submit(
+        action=f"developer.{req.action}",
+        payload=req.payload,
+        requires_approval=req.requires_approval,
+        auto_run=req.auto_run,
+    )
 
-    if req.action == "github.read":
-        from services.github_runtime import github_runtime
-        return github_runtime.read_file(req.payload.get("path", ""))
 
-    if req.action == "github.patch":
-        from services.github_runtime import github_runtime
-        return github_runtime.patch_file(
-            path=req.payload.get("path", ""),
-            operations=req.payload.get("operations", []),
-            message=req.payload.get("message", "Developer Gateway patch"),
-            commit=bool(req.payload.get("commit", False)),
-        )
+@router.get("/developer/workflow/status")
+def developer_workflow_status():
+    return workflow_engine.status()
 
+
+@router.get("/developer/workflow/tasks")
+def developer_workflow_tasks():
     return {
-        "status": "error",
-        "message": f"Unsupported action: {req.action}",
+        "status": "ok",
+        "tasks": workflow_engine.queue(),
     }
