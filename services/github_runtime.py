@@ -26,11 +26,7 @@ class GitHubRuntimeError(RuntimeError):
 
 
 class GitHubRuntime:
-    """Stable GitHub runtime for TRUNG_HUYEN_AI_OS.
-
-    This is the primary GitHub path for the backend. MCP should be treated as a
-    secondary tool only.
-    """
+    """Stable GitHub runtime for TRUNG_HUYEN_AI_OS."""
 
     def __init__(self, attempts: int = 3, delay_seconds: float = 0.5) -> None:
         self.attempts = attempts
@@ -80,6 +76,16 @@ class GitHubRuntime:
             "token_configured": bool(GITHUB_TOKEN),
             "last_success_at": self.last_success_at,
             "last_error": self.last_error,
+            "capabilities": [
+                "list_files",
+                "read_file",
+                "update_file",
+                "patch_file",
+                "delete_file",
+                "move_file",
+                "batch_commit",
+                "cleanup_repository",
+            ],
         }
 
     def list_files(self, path: str = "") -> Any:
@@ -149,12 +155,160 @@ class GitHubRuntime:
             )
             response.raise_for_status()
             result = response.json()
-            parent_sha = result.get("commit", {}).get("parents", [{}])[0].get("sha")
-            if parent_sha:
-                self.last_commit_sha = parent_sha
+            commit_sha = result.get("commit", {}).get("sha")
+            if commit_sha:
+                self.last_commit_sha = commit_sha
             return result
 
         return self.run_with_retry(request)
+
+    def delete_file(self, path: str, message: str = "Delete file") -> Dict[str, Any]:
+        current = self.read_file(path)
+
+        def request():
+            response = requests.delete(
+                f"{BASE}/contents/{path}",
+                headers=self.headers(),
+                json={
+                    "message": message,
+                    "sha": current.get("sha"),
+                    "branch": GITHUB_BRANCH,
+                },
+                timeout=30,
+            )
+            response.raise_for_status()
+            result = response.json()
+            commit_sha = result.get("commit", {}).get("sha")
+            if commit_sha:
+                self.last_commit_sha = commit_sha
+            return {
+                "status": "deleted",
+                "path": path,
+                "previous_sha": current.get("sha"),
+                "commit": result.get("commit", {}),
+            }
+
+        return self.run_with_retry(request)
+
+    def move_file(self, source: str, destination: str, message: str = "Move file") -> Dict[str, Any]:
+        current = self.read_file(source)
+        created = self.update_file(
+            path=destination,
+            content=current.get("content", ""),
+            message=f"{message}: create {destination}",
+        )
+        deleted = self.delete_file(
+            path=source,
+            message=f"{message}: remove {source}",
+        )
+        verify = self.read_file(destination)
+        return {
+            "status": "moved",
+            "source": source,
+            "destination": destination,
+            "created_commit": created.get("commit", {}),
+            "deleted_commit": deleted.get("commit", {}),
+            "verified": verify.get("content") == current.get("content"),
+        }
+
+    def batch_commit(self, operations: List[Dict[str, Any]], message: str = "Batch repository update") -> Dict[str, Any]:
+        results: List[Dict[str, Any]] = []
+        failed = 0
+        for index, operation in enumerate(operations, start=1):
+            op_type = operation.get("type")
+            try:
+                if op_type == "delete":
+                    result = self.delete_file(
+                        path=operation.get("path", ""),
+                        message=operation.get("message", message),
+                    )
+                elif op_type == "move":
+                    result = self.move_file(
+                        source=operation.get("source", ""),
+                        destination=operation.get("destination", ""),
+                        message=operation.get("message", message),
+                    )
+                elif op_type == "update":
+                    result = self.update_file(
+                        path=operation.get("path", ""),
+                        content=operation.get("content", ""),
+                        message=operation.get("message", message),
+                        sha=operation.get("sha"),
+                    )
+                    result = {"status": "updated", "path": operation.get("path"), "result": result}
+                elif op_type == "patch":
+                    result = self.patch_file(
+                        path=operation.get("path", ""),
+                        operations=operation.get("operations", []),
+                        message=operation.get("message", message),
+                        commit=bool(operation.get("commit", True)),
+                    )
+                else:
+                    result = {"status": "error", "message": f"Unsupported batch operation: {op_type}"}
+                    failed += 1
+                results.append({"index": index, "type": op_type, "result": result})
+                if result.get("status") in {"error", "blocked", "failed"}:
+                    failed += 1
+            except Exception as exc:  # noqa: BLE001
+                failed += 1
+                results.append({"index": index, "type": op_type, "status": "failed", "error": f"{type(exc).__name__}: {exc}"})
+
+        return {
+            "status": "done" if failed == 0 else "partial_failure",
+            "operation_count": len(operations),
+            "failed": failed,
+            "results": results,
+        }
+
+    def cleanup_repository(self, commit: bool = False) -> Dict[str, Any]:
+        root_files = self.list_files("")
+        if not isinstance(root_files, list):
+            return {"status": "error", "message": "Repository root listing did not return a list"}
+
+        delete_targets = []
+        move_targets = []
+        for item in root_files:
+            if item.get("type") != "file":
+                continue
+            path = item.get("path", "")
+            name = item.get("name", "")
+            if name.endswith(".pyc") or name in {"RUNTIME_WRITE_TEST.md", "TEST_GITHUB_CONNECTOR.md"}:
+                delete_targets.append(path)
+            elif name in {
+                "ARCHITECTURE_REPORT.md",
+                "README_REFRACTOR.md",
+                "REPO_CLEANUP_PLAN.md",
+                "REPO_DEPENDENCY_MAP.md",
+                "PROJECT_BACKLOG.md",
+                "preflight_check.md",
+            }:
+                move_targets.append({"source": path, "destination": f"docs/{name}"})
+
+        planned_operations: List[Dict[str, Any]] = [
+            {"type": "delete", "path": path, "message": f"Cleanup repository: delete {path}"}
+            for path in delete_targets
+        ] + [
+            {
+                "type": "move",
+                "source": item["source"],
+                "destination": item["destination"],
+                "message": f"Cleanup repository: move {item['source']} to docs",
+            }
+            for item in move_targets
+        ]
+
+        plan = {
+            "status": "preview",
+            "delete_targets": delete_targets,
+            "move_targets": move_targets,
+            "operation_count": len(planned_operations),
+            "operations": planned_operations,
+        }
+        if not commit:
+            return plan
+
+        result = self.batch_commit(planned_operations, message="Cleanup repository root")
+        return {"status": result.get("status"), "plan": plan, "result": result}
 
     def patch_file(
         self,
