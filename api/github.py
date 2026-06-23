@@ -4,16 +4,42 @@ from services.github_runtime import github_runtime
 import difflib
 import ast
 import time
+from typing import Any
+
 router = APIRouter(prefix="/github", tags=["GitHub Runtime"])
 
+
 class ReadFile(BaseModel):
-    path:str
+    path: str
+
 
 class UpdateFile(BaseModel):
-    path:str
-    content:str
-    message:str
-    sha:str|None=None
+    path: str
+    content: str
+    message: str
+    sha: str | None = None
+
+
+class DeleteFile(BaseModel):
+    path: str
+    message: str = "Delete file"
+
+
+class MoveFile(BaseModel):
+    source: str
+    destination: str
+    message: str = "Move file"
+
+
+class BatchCommit(BaseModel):
+    operations: list[dict[str, Any]]
+    message: str = "Batch repository update"
+
+
+class CleanupRepository(BaseModel):
+    commit: bool = False
+
+
 class PatchOperation(BaseModel):
     type: str
     find: str = ""
@@ -26,21 +52,46 @@ class PatchFile(BaseModel):
     message: str = "Safe patch update"
     commit: bool = False
 
+
 @router.get('/runtime/status')
 def runtime_status():
     return github_runtime.status()
 
+
 @router.get('/list')
-def list_files(path:str=''):
-    return {'status':'ok','files':github_runtime.list_files(path)}
+def list_files(path: str = ''):
+    return {'status': 'ok', 'files': github_runtime.list_files(path)}
+
 
 @router.post('/read')
-def read(req:ReadFile):
+def read(req: ReadFile):
     return github_runtime.read_file(req.path)
 
+
 @router.post('/update')
-def update(req:UpdateFile):
-    return github_runtime.update_file(req.path,req.content,req.message,req.sha)
+def update(req: UpdateFile):
+    return github_runtime.update_file(req.path, req.content, req.message, req.sha)
+
+
+@router.post('/delete')
+def delete(req: DeleteFile):
+    return github_runtime.delete_file(req.path, req.message)
+
+
+@router.post('/move')
+def move(req: MoveFile):
+    return github_runtime.move_file(req.source, req.destination, req.message)
+
+
+@router.post('/batch')
+def batch(req: BatchCommit):
+    return github_runtime.batch_commit(req.operations, req.message)
+
+
+@router.post('/cleanup')
+def cleanup(req: CleanupRepository):
+    return github_runtime.cleanup_repository(commit=req.commit)
+
 
 @router.post("/patch")
 def patch(req: PatchFile):
@@ -98,28 +149,19 @@ def patch(req: PatchFile):
         "ready_to_commit": new_content != old_content and not warnings,
         "diff": diff,
     }
-    # Python syntax verification
     if req.path.endswith(".py"):
         try:
             ast.parse(new_content)
         except SyntaxError as e:
-            warnings.append(
-                f"python_syntax_error: line {e.lineno}: {e.msg}"
-            )
+            warnings.append(f"python_syntax_error: line {e.lineno}: {e.msg}")
 
     result["warnings"] = warnings
-    result["ready_to_commit"] = (
-        new_content != old_content and len(warnings) == 0
-    )
+    result["ready_to_commit"] = new_content != old_content and len(warnings) == 0
     if not req.commit:
         return result
 
     if warnings:
-        return {
-            "status": "blocked",
-            "warnings": warnings,
-            "diff": diff,
-        }
+        return {"status": "blocked", "warnings": warnings, "diff": diff}
 
     commit_result = github_runtime.update_file(
         path=req.path,
