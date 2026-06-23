@@ -1,13 +1,13 @@
-import unicodedata
 import io
 import json
+import unicodedata
 from typing import Any, Dict, List, Optional
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
-from config import GOOGLE_SERVICE_ACCOUNT_JSON, DRIVE_FOLDER_ID
+from config import DRIVE_FOLDER_ID, GOOGLE_SERVICE_ACCOUNT_JSON
 
 SCOPES = [
     "https://www.googleapis.com/auth/drive",
@@ -36,51 +36,6 @@ def get_drive_service():
     return build("drive", "v3", credentials=_credentials(), cache_discovery=False)
 
 
-def list_recursive(parent_id=None, current_path=""):
-    service = get_drive_service()
-    parent_id = parent_id or DRIVE_FOLDER_ID
-
-    query = f"'{parent_id}' in parents and trashed=false"
-    result = service.files().list(
-        q=query,
-        fields="files(id,name,mimeType,webViewLink,modifiedTime)",
-        supportsAllDrives=True,
-        includeItemsFromAllDrives=True,
-    ).execute()
-
-    items = []
-    for f in result.get("files", []):
-        path = f"{current_path}/{f['name']}".strip("/")
-        f["path"] = path
-        items.append(f)
-
-        if f["mimeType"] == "application/vnd.google-apps.folder":
-            items.extend(list_recursive(f["id"], path))
-
-    return items
-
-
-def find_file_by_path(path: str):
-    target = path.strip("/")
-    for f in list_recursive():
-        if f.get("path") == target:
-            return f
-    return None
-
-
-def read_by_path(path: str):
-    f = find_file_by_path(path)
-    if not f:
-        return None
-    return read_file_content(f["id"])
-
-
-def read_folder(path: str):
-    prefix = path.strip("/") + "/"
-    return [
-        f for f in list_recursive()
-        if f.get("path", "").startswith(prefix)
-    ]
 def get_docs_service():
     return build("docs", "v1", credentials=_credentials(), cache_discovery=False)
 
@@ -89,10 +44,21 @@ def get_sheets_service():
     return build("sheets", "v4", credentials=_credentials(), cache_discovery=False)
 
 
+def _root_folder_id(folder_id: Optional[str] = None) -> str:
+    fid = (folder_id or DRIVE_FOLDER_ID or "").strip()
+    if not fid:
+        raise RuntimeError("Missing DRIVE_FOLDER_ID.")
+    return fid
+
+
 def _folder_clause(folder_id: Optional[str] = None) -> str:
     fid = (folder_id or DRIVE_FOLDER_ID or "").strip()
     return f" and '{fid}' in parents" if fid else ""
 
+
+# =====================================
+# READ / LIST
+# =====================================
 
 def list_files(limit: int = 50, folder_id: Optional[str] = None) -> List[Dict[str, Any]]:
     service = get_drive_service()
@@ -106,58 +72,177 @@ def list_files(limit: int = 50, folder_id: Optional[str] = None) -> List[Dict[st
     ).execute()
     return result.get("files", [])
 
-def list_files_recursive(folder_id: str, limit: int = 1000):
-    all_files = []
 
-    query = f"'{folder_id}' in parents and trashed = false"
+def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> List[Dict[str, Any]]:
+    service = get_drive_service()
+    root_id = _root_folder_id(folder_id)
+    results: List[Dict[str, Any]] = []
 
-    response = service.files().list(
+    def walk(fid: str):
+        nonlocal results
+        if len(results) >= limit:
+            return
+
+        page_token = None
+        while True:
+            response = service.files().list(
+                q=f"trashed = false and '{fid}' in parents",
+                pageSize=100,
+                pageToken=page_token,
+                fields="nextPageToken, files(id, name, mimeType, modifiedTime, webViewLink, size)",
+                orderBy="modifiedTime desc",
+                supportsAllDrives=True,
+                includeItemsFromAllDrives=True,
+            ).execute()
+
+            for item in response.get("files", []):
+                if len(results) >= limit:
+                    return
+                results.append(item)
+                if item.get("mimeType") == GOOGLE_FOLDER:
+                    walk(item["id"])
+
+            page_token = response.get("nextPageToken")
+            if not page_token:
+                break
+
+    walk(root_id)
+    return results
+
+
+def list_recursive(parent_id: Optional[str] = None, current_path: str = "") -> List[Dict[str, Any]]:
+    service = get_drive_service()
+    parent_id = _root_folder_id(parent_id)
+    query = f"'{parent_id}' in parents and trashed=false"
+    result = service.files().list(
         q=query,
-        pageSize=limit,
-        fields="files(id, name, mimeType, webViewLink, modifiedTime)",
+        fields="files(id,name,mimeType,webViewLink,modifiedTime)",
         supportsAllDrives=True,
         includeItemsFromAllDrives=True,
     ).execute()
 
-    files = response.get("files", [])
+    items: List[Dict[str, Any]] = []
+    for item in result.get("files", []):
+        path = f"{current_path}/{item['name']}".strip("/")
+        item["path"] = path
+        items.append(item)
+        if item["mimeType"] == GOOGLE_FOLDER:
+            items.extend(list_recursive(item["id"], path))
+    return items
 
-    for f in files:
-        all_files.append(f)
 
-        if f.get("mimeType") == "application/vnd.google-apps.folder":
-            all_files.extend(list_files_recursive(f["id"], limit))
+def find_file_by_path(path: str):
+    target = path.strip("/")
+    for item in list_recursive():
+        if item.get("path") == target:
+            return item
+    return None
 
-    return all_files
 
-def search_files(q: str, limit: int = 20):
-    files = list_files_recursive(DRIVE_FOLDER_ID)
+def read_by_path(path: str):
+    item = find_file_by_path(path)
+    if not item:
+        return None
+    return read_file_content(item["id"])
 
-    query = q.lower().replace("_", " ").replace("-", " ")
 
-    results = []
-    for f in files:
-        name = f.get("name", "")
-        normalized_name = name.lower().replace("_", " ").replace("-", " ")
-
-        if query in normalized_name or all(word in normalized_name for word in query.split()):
-            results.append(f)
-
-    return results[:limit]
-    return result.get("files", [])
+def read_folder(path: str):
+    prefix = path.strip("/") + "/"
+    return [item for item in list_recursive() if item.get("path", "").startswith(prefix)]
 
 
 def get_file_metadata(file_id: str) -> Dict[str, Any]:
     return get_drive_service().files().get(
         fileId=file_id,
-        fields="id, name, mimeType, modifiedTime, webViewLink, size",
+        fields="id, name, mimeType, modifiedTime, webViewLink, size, parents",
         supportsAllDrives=True,
     ).execute()
 
 
+# =====================================
+# WRITE / MANAGE
+# =====================================
+
+def create_folder(name: str, parent_id: Optional[str] = None) -> Dict[str, Any]:
+    service = get_drive_service()
+    metadata = {
+        "name": name,
+        "mimeType": GOOGLE_FOLDER,
+        "parents": [_root_folder_id(parent_id)],
+    }
+    return service.files().create(
+        body=metadata,
+        fields="id, name, mimeType, webViewLink, parents",
+        supportsAllDrives=True,
+    ).execute()
+
+
+def create_google_doc(name: str, content: str = "", parent_id: Optional[str] = None) -> Dict[str, Any]:
+    service = get_drive_service()
+    metadata = {
+        "name": name,
+        "mimeType": GOOGLE_DOC,
+        "parents": [_root_folder_id(parent_id)],
+    }
+    doc = service.files().create(
+        body=metadata,
+        fields="id, name, mimeType, webViewLink, parents",
+        supportsAllDrives=True,
+    ).execute()
+
+    if content:
+        append_google_doc(doc["id"], content)
+    return doc
+
+
+def move_file(file_id: str, new_parent_id: str) -> Dict[str, Any]:
+    service = get_drive_service()
+    metadata = service.files().get(
+        fileId=file_id,
+        fields="parents",
+        supportsAllDrives=True,
+    ).execute()
+    previous_parents = ",".join(metadata.get("parents", []))
+    return service.files().update(
+        fileId=file_id,
+        addParents=new_parent_id,
+        removeParents=previous_parents,
+        fields="id, name, parents, webViewLink",
+        supportsAllDrives=True,
+    ).execute()
+
+
+def rename_file(file_id: str, name: str) -> Dict[str, Any]:
+    return get_drive_service().files().update(
+        fileId=file_id,
+        body={"name": name},
+        fields="id, name, mimeType, webViewLink",
+        supportsAllDrives=True,
+    ).execute()
+
+
+def grant_permission(file_id: str, email: str, role: str = "reader") -> Dict[str, Any]:
+    body = {
+        "type": "user",
+        "role": role,
+        "emailAddress": email,
+    }
+    return get_drive_service().permissions().create(
+        fileId=file_id,
+        body=body,
+        fields="id, type, role, emailAddress",
+        supportsAllDrives=True,
+        sendNotificationEmail=False,
+    ).execute()
+
+
+# =====================================
+# READ CONTENT
+# =====================================
+
 def read_google_doc(file_id: str) -> str:
     doc = get_docs_service().documents().get(documentId=file_id).execute()
     parts: List[str] = []
-
     for element in doc.get("body", {}).get("content", []):
         paragraph = element.get("paragraph")
         if not paragraph:
@@ -166,14 +251,13 @@ def read_google_doc(file_id: str) -> str:
             text_run = item.get("textRun")
             if text_run:
                 parts.append(text_run.get("content", ""))
-
     return "".join(parts).strip()
 
 
 def read_google_sheet(file_id: str, max_rows_per_sheet: int = 200) -> str:
     sheets = get_sheets_service()
     metadata = sheets.spreadsheets().get(spreadsheetId=file_id).execute()
-    titles = [s["properties"]["title"] for s in metadata.get("sheets", [])]
+    titles = [sheet["properties"]["title"] for sheet in metadata.get("sheets", [])]
 
     output: List[str] = []
     for title in titles:
@@ -194,11 +278,9 @@ def download_file_bytes(file_id: str) -> bytes:
     request = get_drive_service().files().get_media(fileId=file_id, supportsAllDrives=True)
     fh = io.BytesIO()
     downloader = MediaIoBaseDownload(fh, request)
-
     done = False
     while not done:
         _, done = downloader.next_chunk()
-
     return fh.getvalue()
 
 
@@ -244,85 +326,26 @@ def read_file_content(file_id: str, mime_type: Optional[str] = None) -> str:
 
     if actual_mime == GOOGLE_FOLDER:
         return ""
-
     if actual_mime == GOOGLE_DOC:
         return read_google_doc(file_id)
-
     if actual_mime == GOOGLE_SHEET:
         return read_google_sheet(file_id)
-
     if actual_mime.startswith("text/") or name.endswith((".txt", ".md", ".csv", ".json")):
         return download_text_file(file_id)
 
     data = download_file_bytes(file_id)
-
     if actual_mime == "application/pdf" or name.endswith(".pdf"):
         return read_pdf_bytes(data)
-
     if name.endswith(".docx"):
         return read_docx_bytes(data)
-
     if name.endswith((".xlsx", ".xls")):
         return read_excel_bytes(data)
-
     return ""
 
 
-def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> List[Dict[str, Any]]:
-    service = get_drive_service()
-    root_id = folder_id or DRIVE_FOLDER_ID
-    results: List[Dict[str, Any]] = []
-
-    def walk(fid: str):
-        nonlocal results
-        if len(results) >= limit:
-            return
-
-        page_token = None
-        while True:
-            response = service.files().list(
-                q=f"trashed = false and '{fid}' in parents",
-                pageSize=100,
-                pageToken=page_token,
-                fields="nextPageToken, files(id, name, mimeType, modifiedTime, webViewLink, size)",
-                orderBy="modifiedTime desc",
-                supportsAllDrives=True,
-                includeItemsFromAllDrives=True,
-            ).execute()
-
-            for item in response.get("files", []):
-                if len(results) >= limit:
-                    return
-
-                results.append(item)
-
-                if item.get("mimeType") == GOOGLE_FOLDER:
-                    walk(item["id"])
-
-            page_token = response.get("nextPageToken")
-            if not page_token:
-                break
-
-    if root_id:
-        walk(root_id)
-
-    return results
-
-def make_snippet(text: str, query: str, size: int = 1200) -> str:
-    if not text:
-        return ""
-
-    lower_text = text.lower()
-    lower_query = query.lower().strip()
-    index = lower_text.find(lower_query)
-
-    if index == -1:
-        return text[:size]
-
-    start = max(index - size // 3, 0)
-    end = min(index + size, len(text))
-    return text[start:end].strip()
-
+# =====================================
+# SEARCH
+# =====================================
 
 def normalize_text(value: str) -> str:
     value = (value or "").lower()
@@ -332,61 +355,68 @@ def normalize_text(value: str) -> str:
     return " ".join(value.split())
 
 
+def make_snippet(text: str, query: str, size: int = 1200) -> str:
+    if not text:
+        return ""
+    lower_text = text.lower()
+    lower_query = query.lower().strip()
+    index = lower_text.find(lower_query)
+    if index == -1:
+        return text[:size]
+    start = max(index - size // 3, 0)
+    end = min(index + size, len(text))
+    return text[start:end].strip()
+
+
 def score_document(query: str, query_words: List[str], name: str, text: str) -> int:
     score = 0
-
-    # Ưu tiên tài liệu gốc/giới thiệu
     if name.startswith("00 "):
         score += 300
-
     if "gioi thieu" in name:
         score += 300
-
-    # Ưu tiên tài liệu chủ đề Hệ Quan Sát
     if "gioi thieu he quan sat" in name:
         score += 5000
-
     if "he quan sat" in name:
         score += 3000
-
-    # Khớp tên file
     if query == name:
         score += 1000
     elif query in name:
         score += 700
-
     if query_words and all(word in name for word in query_words):
         score += 500
-
-    # Khớp nội dung
     if query:
         score += text.count(query) * 10
-
     for word in query_words:
         if word in name:
             score += 30
         score += text.count(word)
-
     return score
+
+
+def search_files(q: str, limit: int = 20):
+    query = normalize_text(q)
+    query_words = query.split()
+    results = []
+    for item in list_files_recursive(limit=300):
+        name = normalize_text(item.get("name", ""))
+        if query in name or all(word in name for word in query_words):
+            results.append(item)
+    return results[:limit]
 
 
 def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
     query = normalize_text(q)
     query_words = query.split()
-
     if not query:
         return []
 
-    all_files = list_files_recursive(limit=300)
     scored_results: List[Dict[str, Any]] = []
-
-    for file in all_files:
+    for file in list_files_recursive(limit=300):
         if file.get("mimeType") == GOOGLE_FOLDER:
             continue
 
         raw_name = file.get("name") or ""
         name = normalize_text(raw_name)
-
         try:
             content = read_file_content(file["id"], file.get("mimeType"))
         except Exception as exc:
@@ -395,7 +425,6 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
 
         text = normalize_text(content or "")
         score = score_document(query, query_words, name, text)
-
         if score > 0:
             result = dict(file)
             result["score"] = score
@@ -405,7 +434,8 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
 
     scored_results.sort(key=lambda x: x.get("score", 0), reverse=True)
     return scored_results[:limit]
-    
+
+
 def append_google_doc(file_id: str, content: str) -> dict:
     docs = get_docs_service()
     document = docs.documents().get(documentId=file_id).execute()
@@ -418,7 +448,7 @@ def append_google_doc(file_id: str, content: str) -> dict:
                 {
                     "insertText": {
                         "location": {"index": end_index},
-                        "text": "\n" + content
+                        "text": "\n" + content,
                     }
                 }
             ]
