@@ -148,9 +148,112 @@ class GitHubRuntime:
                 timeout=30,
             )
             response.raise_for_status()
-            return response.json()
+            result = response.json()
+            parent_sha = result.get("commit", {}).get("parents", [{}])[0].get("sha")
+            if parent_sha:
+                self.last_commit_sha = parent_sha
+            return result
 
         return self.run_with_retry(request)
+
+    def patch_file(
+        self,
+        path: str,
+        operations: List[Dict[str, str]],
+        message: str = "Safe patch update",
+        commit: bool = False,
+    ) -> Dict[str, Any]:
+        current = self.read_file(path)
+        old_content = current.get("content", "")
+        new_content = old_content
+
+        for op in operations:
+            op_type = op.get("type", "")
+            find = op.get("find", "")
+            replace = op.get("replace", "")
+
+            if op_type == "replace":
+                if not find or find not in new_content:
+                    return {"status": "error", "message": "find text not found"}
+                new_content = new_content.replace(find, replace, 1)
+            elif op_type == "insert_after":
+                if not find or find not in new_content:
+                    return {"status": "error", "message": "anchor text not found"}
+                new_content = new_content.replace(find, find + replace, 1)
+            elif op_type == "insert_before":
+                if not find or find not in new_content:
+                    return {"status": "error", "message": "anchor text not found"}
+                new_content = new_content.replace(find, replace + find, 1)
+            elif op_type == "delete":
+                if not find or find not in new_content:
+                    return {"status": "error", "message": "delete text not found"}
+                new_content = new_content.replace(find, "", 1)
+            elif op_type == "append":
+                new_content = new_content + replace
+            elif op_type == "prepend":
+                new_content = replace + new_content
+            else:
+                return {"status": "error", "message": f"Unsupported operation: {op_type}"}
+
+        before_lines = old_content.splitlines()
+        after_lines = new_content.splitlines()
+        warnings: List[str] = []
+
+        if len(after_lines) < len(before_lines) * 0.8:
+            warnings.append("line_count_drop_over_20_percent")
+        if "APIRouter" in old_content and "APIRouter" not in new_content:
+            warnings.append("possible_router_import_removed")
+        if "@router." in old_content and "@router." not in new_content:
+            warnings.append("possible_endpoint_loss")
+
+        diff = "\n".join(
+            difflib.unified_diff(
+                before_lines,
+                after_lines,
+                fromfile=f"before/{path}",
+                tofile=f"after/{path}",
+                lineterm="",
+            )
+        )
+
+        result: Dict[str, Any] = {
+            "status": "preview",
+            "path": path,
+            "changed": new_content != old_content,
+            "warnings": warnings,
+            "ready_to_commit": new_content != old_content and not warnings,
+            "diff": diff,
+        }
+
+        if not commit:
+            return result
+
+        if warnings:
+            return {"status": "blocked", "warnings": warnings, "diff": diff}
+        if new_content == old_content:
+            return {"status": "noop", "message": "Patch produced no changes"}
+
+        commit_result = self.update_file(
+            path=path,
+            content=new_content,
+            message=message,
+            sha=current.get("sha"),
+        )
+
+        verified = False
+        for _ in range(5):
+            time.sleep(0.5)
+            verify = self.read_file(path)
+            if verify.get("content") == new_content:
+                verified = True
+                break
+
+        return {
+            "status": "committed",
+            "path": path,
+            "commit": commit_result.get("commit", {}),
+            "verified": verified,
+        }
 
 
 github_runtime = GitHubRuntime()
