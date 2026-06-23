@@ -1,0 +1,77 @@
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+from typing import Any, Callable, Dict, List, Optional
+
+ActionHandler = Callable[[Dict[str, Any], Any], Dict[str, Any]]
+
+
+@dataclass
+class ActionDefinition:
+    name: str
+    handler: ActionHandler
+    description: str = ""
+    requires_approval: bool = False
+    namespace: str = "default"
+
+    def to_dict(self) -> Dict[str, Any]:
+        data = asdict(self)
+        data.pop("handler", None)
+        return data
+
+
+class ActionRegistry:
+    """Central registry for runtime actions.
+
+    Runtime capabilities should be registered here instead of being scattered
+    across routers or long if/else blocks.
+    """
+
+    def __init__(self) -> None:
+        self._actions: Dict[str, ActionDefinition] = {}
+
+    def register(
+        self,
+        name: str,
+        handler: ActionHandler,
+        description: str = "",
+        requires_approval: bool = False,
+        namespace: Optional[str] = None,
+    ) -> None:
+        self._actions[name] = ActionDefinition(
+            name=name,
+            handler=handler,
+            description=description,
+            requires_approval=requires_approval,
+            namespace=namespace or name.split(".", 1)[0],
+        )
+
+    def execute(self, name: str, payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+        action = self._actions.get(name)
+        if not action:
+            return {
+                "status": "error",
+                "message": f"Unsupported action: {name}",
+                "available_actions": sorted(self._actions.keys()),
+            }
+        return action.handler(payload, context)
+
+    def has(self, name: str) -> bool:
+        return name in self._actions
+
+    def list_actions(self) -> List[Dict[str, Any]]:
+        return [self._actions[key].to_dict() for key in sorted(self._actions.keys())]
+
+    def status(self) -> Dict[str, Any]:
+        by_namespace: Dict[str, int] = {}
+        for action in self._actions.values():
+            by_namespace[action.namespace] = by_namespace.get(action.namespace, 0) + 1
+        return {
+            "status": "ok",
+            "action_count": len(self._actions),
+            "namespaces": by_namespace,
+            "actions": sorted(self._actions.keys()),
+        }
+
+
+action_registry = ActionRegistry()
