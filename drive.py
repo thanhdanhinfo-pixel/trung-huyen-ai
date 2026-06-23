@@ -7,7 +7,12 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
-from config import DRIVE_FOLDER_ID, GOOGLE_SERVICE_ACCOUNT_JSON
+from config import (
+    DRIVE_FOLDER_ID,
+    GOOGLE_SERVICE_ACCOUNT_JSON,
+    drive_root_sources,
+    master_document_source,
+)
 
 SCOPES = [
     "https://www.googleapis.com/auth/drive",
@@ -44,15 +49,39 @@ def get_sheets_service():
     return build("sheets", "v4", credentials=_credentials(), cache_discovery=False)
 
 
+def _configured_drive_roots() -> List[Dict[str, str]]:
+    """
+    Return configured Drive roots.
+
+    Preferred source: KNOWLEDGE_SOURCES drive entries.
+    Backward-compatible fallback: DRIVE_FOLDER_ID.
+    """
+    roots = drive_root_sources()
+    if roots:
+        return roots
+    if DRIVE_FOLDER_ID:
+        return [{"type": "drive", "name": "default", "id": DRIVE_FOLDER_ID}]
+    return []
+
+
 def _root_folder_id(folder_id: Optional[str] = None) -> str:
-    fid = (folder_id or DRIVE_FOLDER_ID or "").strip()
-    if not fid:
-        raise RuntimeError("Missing DRIVE_FOLDER_ID.")
-    return fid
+    fid = (folder_id or "").strip()
+    if fid:
+        return fid
+
+    roots = _configured_drive_roots()
+    if roots:
+        return roots[0]["id"]
+
+    raise RuntimeError("Missing DRIVE_FOLDER_ID or KNOWLEDGE_SOURCES drive source.")
 
 
 def _folder_clause(folder_id: Optional[str] = None) -> str:
-    fid = (folder_id or DRIVE_FOLDER_ID or "").strip()
+    fid = (folder_id or "").strip()
+    if not fid:
+        roots = _configured_drive_roots()
+        if len(roots) == 1:
+            fid = roots[0]["id"]
     return f" and '{fid}' in parents" if fid else ""
 
 
@@ -62,6 +91,20 @@ def _folder_clause(folder_id: Optional[str] = None) -> str:
 
 def list_files(limit: int = 50, folder_id: Optional[str] = None) -> List[Dict[str, Any]]:
     service = get_drive_service()
+
+    if not folder_id and len(_configured_drive_roots()) > 1:
+        results: List[Dict[str, Any]] = []
+        per_root_limit = max(limit, 1)
+        for source in _configured_drive_roots():
+            for item in list_files(limit=per_root_limit, folder_id=source["id"]):
+                enriched = dict(item)
+                enriched["source"] = source.get("name")
+                enriched["source_id"] = source.get("id")
+                results.append(enriched)
+                if len(results) >= limit:
+                    return results
+        return results
+
     result = service.files().list(
         q=f"trashed = false{_folder_clause(folder_id)}",
         pageSize=limit,
@@ -74,6 +117,21 @@ def list_files(limit: int = 50, folder_id: Optional[str] = None) -> List[Dict[st
 
 
 def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> List[Dict[str, Any]]:
+    if not folder_id and len(_configured_drive_roots()) > 1:
+        results: List[Dict[str, Any]] = []
+        for source in _configured_drive_roots():
+            remaining = limit - len(results)
+            if remaining <= 0:
+                break
+            for item in list_files_recursive(folder_id=source["id"], limit=remaining):
+                enriched = dict(item)
+                enriched["source"] = source.get("name")
+                enriched["source_id"] = source.get("id")
+                results.append(enriched)
+                if len(results) >= limit:
+                    break
+        return results
+
     service = get_drive_service()
     root_id = _root_folder_id(folder_id)
     results: List[Dict[str, Any]] = []
@@ -111,6 +169,44 @@ def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> L
 
 
 def list_recursive(parent_id: Optional[str] = None, current_path: str = "") -> List[Dict[str, Any]]:
+    if not parent_id and not current_path and len(_configured_drive_roots()) > 1:
+        items: List[Dict[str, Any]] = []
+        for source in _configured_drive_roots():
+            source_name = source.get("name") or "source"
+            source_root = {
+                "id": source["id"],
+                "name": source_name,
+                "path": source_name,
+                "mimeType": GOOGLE_FOLDER,
+                "source": source_name,
+                "source_id": source["id"],
+            }
+            items.append(source_root)
+            for child in list_recursive(source["id"], source_name):
+                enriched = dict(child)
+                enriched["source"] = source_name
+                enriched["source_id"] = source["id"]
+                items.append(enriched)
+        master = master_document_source()
+        if master:
+            try:
+                metadata = get_file_metadata(master["id"])
+                metadata["path"] = master.get("name", "master")
+                metadata["source"] = master.get("name", "master")
+                metadata["source_id"] = master.get("id")
+                items.append(metadata)
+            except Exception as exc:
+                items.append({
+                    "id": master["id"],
+                    "name": master.get("name", "master"),
+                    "path": master.get("name", "master"),
+                    "mimeType": GOOGLE_DOC,
+                    "source": master.get("name", "master"),
+                    "source_id": master.get("id"),
+                    "read_error": str(exc),
+                })
+        return items
+
     service = get_drive_service()
     parent_id = _root_folder_id(parent_id)
     query = f"'{parent_id}' in parents and trashed=false"
@@ -404,16 +500,44 @@ def search_files(q: str, limit: int = 20):
     return results[:limit]
 
 
+def _master_doc_result() -> Optional[Dict[str, Any]]:
+    master = master_document_source()
+    if not master:
+        return None
+    try:
+        metadata = get_file_metadata(master["id"])
+        metadata["source"] = master.get("name", "master")
+        metadata["source_id"] = master.get("id")
+        return metadata
+    except Exception:
+        return {
+            "id": master["id"],
+            "name": master.get("name", "master"),
+            "mimeType": GOOGLE_DOC,
+            "source": master.get("name", "master"),
+            "source_id": master.get("id"),
+        }
+
+
 def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
     query = normalize_text(q)
     query_words = query.split()
     if not query:
         return []
 
+    candidates = list_files_recursive(limit=300)
+    master_candidate = _master_doc_result()
+    if master_candidate:
+        candidates.append(master_candidate)
+
     scored_results: List[Dict[str, Any]] = []
-    for file in list_files_recursive(limit=300):
+    seen_ids = set()
+    for file in candidates:
         if file.get("mimeType") == GOOGLE_FOLDER:
             continue
+        if file.get("id") in seen_ids:
+            continue
+        seen_ids.add(file.get("id"))
 
         raw_name = file.get("name") or ""
         name = normalize_text(raw_name)
