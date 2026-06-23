@@ -24,5 +24,3 @@ Bản upload lần đầu tiên cho GitHub và Cloud Run.
 ## Deploy
 
 Upload toàn bộ project này lên GitHub repository `trung-huyen-ai`, sau đó để Cloud Run build từ GitHub.
-
-<!-- DEVELOPER GATEWAY PREVIEW TEST -->
