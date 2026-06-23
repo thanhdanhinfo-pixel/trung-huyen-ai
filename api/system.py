@@ -1,5 +1,7 @@
+from typing import Optional
+
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from services.system_service import self_test
 
 router = APIRouter(
@@ -126,6 +128,73 @@ def runtime_execute(req: CreateTaskRequest):
         worker=req.worker,
         priority=req.priority,
     )
+
+
+class DriveCreateFolderRequest(BaseModel):
+    name: str = Field(..., min_length=1)
+    parent_id: Optional[str] = None
+
+
+class DriveCreateDocRequest(BaseModel):
+    name: str = Field(..., min_length=1)
+    content: str = ""
+    parent_id: Optional[str] = None
+
+
+class DriveMoveRequest(BaseModel):
+    file_id: str = Field(..., min_length=1)
+    new_parent_id: str = Field(..., min_length=1)
+
+
+class DriveRenameRequest(BaseModel):
+    file_id: str = Field(..., min_length=1)
+    name: str = Field(..., min_length=1)
+
+
+@router.post("/drive/create-folder")
+def system_drive_create_folder(req: DriveCreateFolderRequest):
+    from drive import create_folder
+    return {
+        "status": "ok",
+        "action": "drive.create_folder",
+        "result": create_folder(name=req.name, parent_id=req.parent_id),
+    }
+
+
+@router.post("/drive/create-doc")
+def system_drive_create_doc(req: DriveCreateDocRequest):
+    from drive import create_google_doc
+    return {
+        "status": "ok",
+        "action": "drive.create_doc",
+        "result": create_google_doc(
+            name=req.name,
+            content=req.content,
+            parent_id=req.parent_id,
+        ),
+    }
+
+
+@router.post("/drive/move")
+def system_drive_move(req: DriveMoveRequest):
+    from drive import move_file
+    return {
+        "status": "ok",
+        "action": "drive.move",
+        "result": move_file(file_id=req.file_id, new_parent_id=req.new_parent_id),
+    }
+
+
+@router.post("/drive/rename")
+def system_drive_rename(req: DriveRenameRequest):
+    from drive import rename_file
+    return {
+        "status": "ok",
+        "action": "drive.rename",
+        "result": rename_file(file_id=req.file_id, name=req.name),
+    }
+
+
 @router.get("/developer/status")
 def developer_status():
     return {
