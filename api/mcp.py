@@ -7,7 +7,13 @@ import requests
 
 from services.github_service import github_list_files, github_read_file, github_update_file
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
-from drive import list_files, read_file_content, search_and_read, append_google_doc
+from drive import (
+    list_files,
+    read_file_content,
+    search_and_read,
+    append_google_doc,
+    create_google_doc,
+)
 from fastapi import Header, HTTPException
 from config import MCP_API_KEY
 
@@ -64,9 +70,10 @@ def tools():
             "backend_call",
             "system_tree",
             "workspace_bootstrap",
+            "create_document",
             "append_document",
         ]
-            }
+    }
 
 @router.post("/call")
 def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
@@ -139,22 +146,22 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "status": "ok",
             "tool": tool,
             "workspace": {
-            "protocol_path": protocol_path,
-            "state_path": state_path,
-            "kernel_path": kernel_path,
-            "protocol": read_by_path(protocol_path),
-            "state": read_by_path(state_path),
-            "kernel": read_by_path(kernel_path),
-            "tree": [
-                {
-                    "name": f.get("name"),
-                    "path": f.get("path"),
-                    "mimeType": f.get("mimeType"),
-                }
-                for f in files
-            ],
-        },
-    }        
+                "protocol_path": protocol_path,
+                "state_path": state_path,
+                "kernel_path": kernel_path,
+                "protocol": read_by_path(protocol_path),
+                "state": read_by_path(state_path),
+                "kernel": read_by_path(kernel_path),
+                "tree": [
+                    {
+                        "name": f.get("name"),
+                        "path": f.get("path"),
+                        "mimeType": f.get("mimeType"),
+                    }
+                    for f in files
+                ],
+            },
+        }
     if tool == "github_list_files":
         path = args.get("path", "")
         return {
@@ -192,13 +199,13 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "tool": tool,
             "files": [
                 {
-                "name": f.get("name"),
-                "path": f.get("path"),
-                "mimeType": f.get("mimeType"),
-            }
-            for f in list_recursive()
-        ],
-    }
+                    "name": f.get("name"),
+                    "path": f.get("path"),
+                    "mimeType": f.get("mimeType"),
+                }
+                for f in list_recursive()
+            ],
+        }
     if tool == "github_update_file":
         approved = bool(args.get("approved", False))
         if not approved:
@@ -226,29 +233,29 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "result": github_update_file(path, content, sha, message),
         }
     if tool == "search_documents":
-       try:
-          q = args.get("q", "")
-          limit = int(args.get("limit", 5))
-          max_chars = int(args.get("max_chars_per_file", 6000))
+        try:
+            q = args.get("q", "")
+            limit = int(args.get("limit", 5))
+            max_chars = int(args.get("max_chars_per_file", 6000))
 
-          files = search_and_read(
-            q=q,
-            limit=limit,
-            max_chars_per_file=max_chars,
-          )
+            files = search_and_read(
+                q=q,
+                limit=limit,
+                max_chars_per_file=max_chars,
+            )
 
-          return {
-              "status": "ok",
-              "tool": tool,
-              "query": q,
-              "files": files,
-          }
+            return {
+                "status": "ok",
+                "tool": tool,
+                "query": q,
+                "files": files,
+            }
 
-       except Exception as e:
-          return {
-              "status": "error",
-              "error": str(e),
-          }
+        except Exception as e:
+            return {
+                "status": "error",
+                "error": str(e),
+            }
 
     if tool == "read_document":
         file_id = args.get("file_id", "")
@@ -260,6 +267,41 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "content_length": len(content),
             "content": content,
         }
+    if tool == "create_document":
+        title = args.get("title") or args.get("name") or ""
+        content = args.get("content", "")
+        parent_id = args.get("parent_id", None)
+        approved = bool(args.get("approved", False))
+
+        if not approved:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "Create denied. User approval is required.",
+            }
+
+        if not title:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "title is required.",
+            }
+
+        try:
+            result = create_google_doc(name=title, content=content, parent_id=parent_id)
+            return {
+                "status": "ok",
+                "tool": tool,
+                "result": result,
+            }
+        except Exception as exc:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": str(exc),
+                "error_type": type(exc).__name__,
+            }
+
     if tool == "append_document":
         file_id = args.get("file_id", "")
         content = args.get("content", "")
@@ -367,7 +409,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         "message": f"Unknown tool: {tool}",
     }
 
-        
+
 @router.get("/ping")
 def ping():
     return {
@@ -404,6 +446,8 @@ def test_ask(q: str = "Hệ quan sát là gì?"):
         ),
         x_api_key=MCP_API_KEY,
     )
+
+
 @router.get("/manifest")
 def manifest():
     return {
@@ -427,14 +471,18 @@ def manifest():
                 "name": "ask_knowledge",
                 "description": "Trả lời câu hỏi dựa trên kho tri thức"
             },
-
-            {    
+            {
+                "name": "create_document",
+                "description": "Tạo Google Docs mới sau khi người dùng phê duyệt"
+            },
+            {
                 "name": "append_document",
                 "description": "Thêm nội dung vào cuối Google Docs sau khi người dùng phê duyệt"
-            
             }
         ]
     }
+
+
 class BackendCallRequest(BaseModel):
     method: str = "GET"
     path: str
