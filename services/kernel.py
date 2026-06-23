@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
-def now() -> str:
+def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
 class TrungHuyenKernel:
-    """Nhân điều hành tối giản của Trung Huyền OS."""
+    """Nhân điều hành Trung Huyền OS.
+
+    Kernel là trục điều phối duy nhất. Các service khác phải đăng ký như plugin
+    thay vì hoạt động rời rạc.
+    """
 
     def __init__(self) -> None:
         self.plugins: Dict[str, Dict[str, Any]] = {}
@@ -26,25 +30,44 @@ class TrungHuyenKernel:
             "plugins": list(self.plugins.values()),
         }
 
-    def register_plugin(self, name: str, capability: str, owner: str, metadata: Dict[str, Any] | None = None) -> Dict[str, Any]:
+    def register_plugin(
+        self,
+        name: str,
+        capability: str,
+        owner: str,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
         plugin = {
             "name": name,
             "capability": capability,
             "owner": owner,
             "status": "registered",
-            "registered_at": now(),
+            "registered_at": utc_now(),
             "metadata": metadata or {},
         }
         self.plugins[name] = plugin
         self.publish("kernel.plugin.registered", "kernel", plugin)
         return {"status": "registered", "plugin": plugin}
 
-    def publish(self, topic: str, source: str, payload: Dict[str, Any] | None = None) -> Dict[str, Any]:
+    def unregister_plugin(self, name: str) -> Dict[str, Any]:
+        plugin = self.plugins.pop(name, None)
+        if not plugin:
+            return {"status": "not_found", "plugin": name}
+        self.publish("kernel.plugin.unregistered", "kernel", plugin)
+        return {"status": "unregistered", "plugin": plugin}
+
+    def list_plugins(self, capability: Optional[str] = None) -> Dict[str, Any]:
+        plugins = list(self.plugins.values())
+        if capability:
+            plugins = [plugin for plugin in plugins if plugin.get("capability") == capability]
+        return {"status": "ok", "plugins": plugins}
+
+    def publish(self, topic: str, source: str, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         event = {
             "topic": topic,
             "source": source,
             "payload": payload or {},
-            "created_at": now(),
+            "created_at": utc_now(),
         }
         self.events.append(event)
         return {"status": "published", "event": event}
@@ -52,12 +75,12 @@ class TrungHuyenKernel:
     def recent_events(self, limit: int = 50) -> Dict[str, Any]:
         return {"status": "ok", "events": self.events[-limit:]}
 
-    def set_state(self, key: str, value: Any) -> Dict[str, Any]:
+    def set_state(self, key: str, value: Any, source: str = "kernel") -> Dict[str, Any]:
         self.state[key] = value
-        self.publish("kernel.state.updated", "kernel", {"key": key, "value": value})
+        self.publish("kernel.state.updated", source, {"key": key, "value": value})
         return {"status": "ok", "key": key, "value": value}
 
-    def get_state(self, key: str | None = None) -> Dict[str, Any]:
+    def get_state(self, key: Optional[str] = None) -> Dict[str, Any]:
         if key:
             return {"status": "ok", "key": key, "value": self.state.get(key)}
         return {"status": "ok", "state": self.state}
@@ -70,6 +93,9 @@ class TrungHuyenKernel:
             ("supervisor", "monitoring", "monitoring_director"),
             ("developer_runtime", "development", "runtime_director"),
             ("repository_manager", "repository", "cto"),
+            ("repository_governor", "governance", "ciso"),
+            ("repository_health", "monitoring", "monitoring_director"),
+            ("runtime_diagnostic", "diagnostic", "monitoring_director"),
         ]
         registered = []
         for name, capability, owner in defaults:
