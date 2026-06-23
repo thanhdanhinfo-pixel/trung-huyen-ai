@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
@@ -195,30 +195,55 @@ def system_drive_rename(req: DriveRenameRequest):
     }
 
 
+class DeveloperPatchRequest(BaseModel):
+    files: list[dict[str, Any]] = Field(default_factory=list)
+    message: str = "Developer runtime patch"
+    commit: bool = False
+
+
+class DeveloperBatchRequest(BaseModel):
+    operations: list[dict[str, Any]] = Field(default_factory=list)
+    message: str = "Developer runtime batch"
+    commit: bool = False
+
+
+class DeveloperVerifyRequest(BaseModel):
+    paths: list[str] = Field(default_factory=list)
+
+
 @router.get("/developer/status")
 def developer_status():
-    return {
-        "status": "ready",
-        "runtime": "developer",
-        "message": "Developer Runtime API ready"
-    }
+    from services.developer_runtime import developer_runtime
+    return developer_runtime.status()
 
 
 @router.post("/developer/patch")
-def developer_patch():
-    return {"status": "ready", "action": "patch"}
+def developer_patch(req: DeveloperPatchRequest):
+    from services.developer_runtime import developer_runtime
+    return developer_runtime.patch(
+        files=req.files,
+        message=req.message,
+        commit=req.commit,
+    )
 
 
 @router.post("/developer/commit")
-def developer_commit():
-    return {"status": "ready", "action": "commit"}
+def developer_commit(req: DeveloperBatchRequest):
+    from services.developer_runtime import developer_runtime
+    return developer_runtime.batch(
+        operations=req.operations,
+        message=req.message,
+        commit=req.commit,
+    )
 
 
 @router.post("/developer/verify")
-def developer_verify():
-    return {"status": "ready", "action": "verify"}
+def developer_verify(req: DeveloperVerifyRequest):
+    from services.developer_runtime import developer_runtime
+    return developer_runtime.verify(paths=req.paths)
 
 
 @router.post("/developer/rollback")
 def developer_rollback():
-    return {"status": "ready", "action": "rollback"}
+    from services.developer_runtime import developer_runtime
+    return developer_runtime.rollback()
