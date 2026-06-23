@@ -9,7 +9,6 @@ from openai import OpenAI
 
 
 from pydantic import BaseModel, Field
-from typing import Any
 from fastapi import Request
 from api.workspace import router as workspace_router
 from config import (
@@ -64,7 +63,6 @@ app.include_router(github_router)
 
 if mcp_router:
     app.include_router(mcp_router)
-app.include_router(github_router)
 app.include_router(workspace_router)
     
 app.include_router(knowledge_router)
