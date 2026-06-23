@@ -36,7 +36,7 @@ class DeveloperRuntime:
 
     WorkflowEngine submits developer actions here. GitHubRuntime remains the
     infrastructure adapter. This class owns execution policy, task log, verify,
-    and rollback-safe operations.
+    rollback-safe operations, and batch execution.
     """
 
     def __init__(self) -> None:
@@ -48,6 +48,14 @@ class DeveloperRuntime:
             "runtime": "developer",
             "task_count": len(self.tasks),
             "github": github_runtime.status(),
+            "actions": [
+                "github.status",
+                "github.read",
+                "github.patch",
+                "github.verify",
+                "github.rollback",
+                "workflow.batch",
+            ],
         }
 
     def _record(self, action: str, payload: Dict[str, Any]) -> DeveloperTask:
@@ -97,7 +105,85 @@ class DeveloperRuntime:
         if action == "github.rollback":
             return self.rollback_file(payload=payload, task=task)
 
+        if action == "workflow.batch":
+            return self.batch_execute(payload=payload, task=task)
+
         return {"status": "error", "message": f"Unsupported action: {action}"}
+
+    def batch_execute(self, payload: Dict[str, Any], task: DeveloperTask) -> Dict[str, Any]:
+        steps = payload.get("steps", [])
+        rollback_on_error = bool(payload.get("rollback_on_error", True))
+        stop_on_error = bool(payload.get("stop_on_error", True))
+
+        if not isinstance(steps, list) or not steps:
+            return {"status": "blocked", "message": "workflow.batch requires a non-empty steps list."}
+
+        report: Dict[str, Any] = {
+            "status": "running",
+            "step_count": len(steps),
+            "completed": 0,
+            "failed": 0,
+            "steps": [],
+            "rollback_results": [],
+        }
+        rollback_stack: List[Dict[str, Any]] = []
+        task.record("batch_started", {"step_count": len(steps)})
+
+        for index, step in enumerate(steps, start=1):
+            if not isinstance(step, dict):
+                step_result = {"status": "failed", "message": "Step must be an object", "index": index}
+            else:
+                action = step.get("action", "")
+                step_payload = step.get("payload", {}) or {}
+                task.record("batch_step_started", {"index": index, "action": action})
+                step_result = self._execute_action(action, step_payload, task)
+                step_result = {
+                    "index": index,
+                    "action": action,
+                    "status": step_result.get("status", "unknown"),
+                    "result": step_result,
+                }
+
+                rollback_info = step_result.get("result", {}).get("rollback")
+                if isinstance(rollback_info, dict) and rollback_info.get("available"):
+                    rollback_stack.append(rollback_info)
+
+            report["steps"].append(step_result)
+            if step_result.get("status") in {"error", "failed", "blocked"}:
+                report["failed"] += 1
+                task.record("batch_step_failed", step_result)
+                if rollback_on_error:
+                    report["rollback_results"] = self.rollback_batch(rollback_stack, task)
+                if stop_on_error:
+                    report["status"] = "failed"
+                    task.record("batch_stopped", {"failed_at": index})
+                    return report
+            else:
+                report["completed"] += 1
+                task.record("batch_step_done", {"index": index, "status": step_result.get("status")})
+
+        report["status"] = "done" if report["failed"] == 0 else "failed"
+        task.record("batch_finished", report)
+        return report
+
+    def rollback_batch(self, rollback_stack: List[Dict[str, Any]], task: DeveloperTask) -> List[Dict[str, Any]]:
+        results: List[Dict[str, Any]] = []
+        for item in reversed(rollback_stack):
+            previous_content = item.get("previous_content")
+            path = item.get("path")
+            if not path or previous_content is None:
+                results.append({"status": "skipped", "message": "Missing rollback path or previous_content"})
+                continue
+            result = self.rollback_file(
+                payload={
+                    "path": path,
+                    "previous_content": previous_content,
+                    "message": f"Rollback batch change for {path}",
+                },
+                task=task,
+            )
+            results.append(result)
+        return results
 
     def patch_file(self, payload: Dict[str, Any], task: DeveloperTask) -> Dict[str, Any]:
         path = payload.get("path", "")
