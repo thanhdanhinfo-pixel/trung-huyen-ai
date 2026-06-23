@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import ast
+import difflib
+import hashlib
 from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional
 
@@ -23,8 +25,8 @@ class TransformResult:
 class CodeTransformer:
     """Small, safe code transformation engine.
 
-    This avoids rewriting large files manually. It performs targeted text/AST
-    aware operations and validates Python syntax before commit.
+    Targeted code changes with Python syntax validation, diff previews,
+    changed-line metadata, and commit verification.
     """
 
     def insert_import(
@@ -111,11 +113,7 @@ class CodeTransformer:
             new_content = "\n".join(new_lines) + ("\n" if old_content.endswith("\n") else "")
             return self._finalize(path, old_content, new_content, current.get("sha"), commit, message)
         except Exception as exc:  # noqa: BLE001
-            return TransformResult(
-                path=path,
-                status="failed",
-                message=f"{type(exc).__name__}: {exc}",
-            ).to_dict()
+            return TransformResult(path=path, status="failed", message=f"{type(exc).__name__}: {exc}").to_dict()
 
     def register_router(
         self,
@@ -163,6 +161,38 @@ class CodeTransformer:
             details={"steps": changed_steps},
         )
 
+    def _diff_metadata(self, path: str, old_content: str, new_content: str) -> Dict[str, Any]:
+        before_lines = old_content.splitlines()
+        after_lines = new_content.splitlines()
+        diff_lines = list(
+            difflib.unified_diff(
+                before_lines,
+                after_lines,
+                fromfile=f"before/{path}",
+                tofile=f"after/{path}",
+                lineterm="",
+            )
+        )
+        changed_lines: List[int] = []
+        after_line = 0
+        for line in diff_lines:
+            if line.startswith("@@"):
+                marker = line.split(" ")[2]
+                start = marker.split(",")[0].replace("+", "")
+                after_line = int(start) - 1
+            elif line.startswith("+") and not line.startswith("+++"):  # added line
+                after_line += 1
+                changed_lines.append(after_line)
+            elif not line.startswith("-") and not line.startswith("---"):
+                after_line += 1
+
+        return {
+            "before_hash": hashlib.sha256(old_content.encode()).hexdigest(),
+            "after_hash": hashlib.sha256(new_content.encode()).hexdigest(),
+            "changed_lines": changed_lines,
+            "diff": "\n".join(diff_lines),
+        }
+
     def _finalize(
         self,
         path: str,
@@ -173,10 +203,13 @@ class CodeTransformer:
         message: str,
         details: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
+        details = details or {}
         warnings: List[str] = []
+        syntax = "not_python"
         if path.endswith(".py"):
             try:
                 ast.parse(new_content)
+                syntax = "ok"
             except SyntaxError as exc:
                 return TransformResult(
                     path=path,
@@ -184,12 +217,15 @@ class CodeTransformer:
                     changed=new_content != old_content,
                     message=f"python_syntax_error: line {exc.lineno}: {exc.msg}",
                     warnings=["python_syntax_error"],
-                    details=details or {},
+                    details={**details, "syntax": "error"},
                 ).to_dict()
 
         changed = new_content != old_content
         if not changed:
-            return TransformResult(path=path, status="noop", changed=False, message="No changes", details=details or {}).to_dict()
+            return TransformResult(path=path, status="noop", changed=False, message="No changes", details={**details, "syntax": syntax}).to_dict()
+
+        diff_info = self._diff_metadata(path, old_content, new_content)
+        final_details = {**details, "syntax": syntax, **diff_info}
 
         if not commit:
             return TransformResult(
@@ -198,7 +234,7 @@ class CodeTransformer:
                 changed=True,
                 message="Preview only",
                 warnings=warnings,
-                details=details or {},
+                details=final_details,
             ).to_dict()
 
         result = github_runtime.update_file(path=path, content=new_content, message=message, sha=sha)
@@ -209,7 +245,7 @@ class CodeTransformer:
             changed=True,
             message=message,
             warnings=warnings,
-            details={"commit": result.get("commit", {}), **(details or {})},
+            details={"commit": result.get("commit", {}), **final_details},
         ).to_dict()
 
 
