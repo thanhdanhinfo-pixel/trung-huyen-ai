@@ -1,6 +1,7 @@
 from typing import Any, Dict, List
 from api.github import router as github_router
 from api.developer import router as developer_router
+from api.repo import router as repo_router
 from fastapi import FastAPI, Query
 from api.knowledge import router as knowledge_router
 from fastapi.middleware.cors import CORSMiddleware
@@ -62,6 +63,7 @@ if admin_router:
     app.include_router(admin_router)
 app.include_router(github_router)
 app.include_router(developer_router)
+app.include_router(repo_router)
 
 if mcp_router:
     app.include_router(mcp_router)
