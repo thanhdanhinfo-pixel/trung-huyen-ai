@@ -27,6 +27,7 @@ def _ensure_runtime_model_loaded() -> None:
 
 @router.get('/summary')
 def system_awareness_summary():
+    _ensure_runtime_model_loaded()
     return {'status': 'ok','awareness': kernel.self_awareness(),'summary': kernel.system_summary(),'discovery': kernel.discovery_status()}
 
 @router.get('/model')
