@@ -14,8 +14,8 @@ def _now() -> str:
 class AIWorker:
     """AI Worker runtime tick.
 
-    Worker is now migrating to Kernel-first architecture.
-    It no longer owns Registry or Health state. Those belong to AIKernel.
+    Worker uses AIKernel as the system state owner. It does not own Registry,
+    Runtime, Queue, Health or Governance state.
     """
 
     def __init__(self):
@@ -37,11 +37,21 @@ class AIWorker:
             "kernel": self.kernel.boot_status(),
         }
 
-    def tick(self, tasks: Optional[List[Dict[str, Any]]] = None) -> Dict[str, Any]:
+    def _tasks_from_kernel_queue(self, limit: int = 1) -> List[Dict[str, Any]]:
+        tasks: List[Dict[str, Any]] = []
+        for _ in range(max(limit, 1)):
+            task = self.kernel.runtime.queue.pop()
+            if not task:
+                break
+            tasks.append(task.to_dict())
+        return tasks
+
+    def tick(self, tasks: Optional[List[Dict[str, Any]]] = None, max_queue_tasks: int = 1) -> Dict[str, Any]:
         """Run one worker cycle.
 
-        In this migration phase, tasks may still be passed in directly.
-        The next migration step will move task retrieval to kernel.runtime.queue.
+        If tasks are provided, the worker executes them for compatibility.
+        If tasks are omitted, the worker pulls pending tasks from
+        kernel.runtime.queue, making Kernel Runtime the queue owner.
         """
         tick_state = self.kernel.runtime.begin_tick()
         boot_state = self.boot()
@@ -58,14 +68,18 @@ class AIWorker:
             self.last_tick = ended.as_dict()
             return self.last_tick
 
-        if not tasks:
+        source = "provided" if tasks is not None else "kernel.runtime.queue"
+        tasks_to_run = tasks if tasks is not None else self._tasks_from_kernel_queue(limit=max_queue_tasks)
+
+        if not tasks_to_run:
             result = {
                 "status": "idle",
                 "boot": boot_state,
                 "health": health,
+                "task_source": source,
                 "workflow": {
                     "status": "idle",
-                    "message": "No tasks supplied for this tick. Queue migration is next.",
+                    "message": "No pending tasks in Kernel Runtime Queue.",
                 },
             }
             ended = self.kernel.runtime.end_tick(tick_state, status="idle", result=result)
@@ -82,6 +96,7 @@ class AIWorker:
                 "status": "blocked",
                 "boot": boot_state,
                 "health": health,
+                "task_source": source,
                 "governance": action_validation,
                 "workflow": None,
             }
@@ -89,11 +104,13 @@ class AIWorker:
             self.last_tick = ended.as_dict()
             return self.last_tick
 
-        workflow = self.orchestrator.run_workflow(tasks)
+        workflow = self.orchestrator.run_workflow(tasks_to_run)
         result = {
             "status": workflow.get("status", "ok"),
             "boot": boot_state,
             "health": health,
+            "task_source": source,
+            "task_count": len(tasks_to_run),
             "governance": action_validation,
             "workflow": workflow,
         }
