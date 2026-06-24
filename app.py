@@ -4,6 +4,7 @@ from api.developer import router as developer_router
 from api.repo import router as repo_router
 from fastapi import FastAPI, Query
 from api.knowledge import router as knowledge_router
+from api.execute import router as execute_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -70,6 +71,7 @@ if mcp_router:
 app.include_router(workspace_router)
     
 app.include_router(knowledge_router)
+app.include_router(execute_router)
 
 from api.system import router as system_router
 
