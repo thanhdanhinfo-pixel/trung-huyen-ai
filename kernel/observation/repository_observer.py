@@ -26,17 +26,38 @@ class RepositoryObserver:
         by_type = summary.get("by_type", {}) or {}
         by_status = summary.get("by_status", {}) or {}
 
+        connected_nodes = set()
+        incoming_count: Dict[str, int] = {node_id: 0 for node_id in nodes}
+        outgoing_count: Dict[str, int] = {node_id: 0 for node_id in nodes}
+
+        for rel in relationships:
+            source = rel.get("source")
+            target = rel.get("target")
+            if source:
+                connected_nodes.add(source)
+                outgoing_count[source] = outgoing_count.get(source, 0) + 1
+            if target:
+                connected_nodes.add(target)
+                incoming_count[target] = incoming_count.get(target, 0) + 1
+
         high_coupling_nodes = []
         orphan_candidates = []
+        isolated_nodes = []
 
         for node_id, node in nodes.items():
             dependencies = node.get("dependencies", []) or []
-            if len(dependencies) >= 8:
+            total_outgoing = outgoing_count.get(node_id, 0)
+            total_incoming = incoming_count.get(node_id, 0)
+
+            if len(dependencies) >= 8 or total_outgoing >= 8:
                 high_coupling_nodes.append({
                     "node_id": node_id,
                     "dependency_count": len(dependencies),
+                    "outgoing_relationship_count": total_outgoing,
                 })
-            if not dependencies:
+
+            if node_id not in connected_nodes:
+                isolated_nodes.append(node_id)
                 orphan_candidates.append(node_id)
 
         metrics = {
@@ -48,6 +69,8 @@ class RepositoryObserver:
             "resource_count": by_type.get("resource", 0),
             "active_count": by_status.get("active", 0),
             "discovered_count": by_status.get("discovered", 0),
+            "connected_node_count": len(connected_nodes),
+            "isolated_node_count": len(isolated_nodes),
             "high_coupling_count": len(high_coupling_nodes),
             "orphan_candidate_count": len(orphan_candidates),
         }
@@ -58,6 +81,12 @@ class RepositoryObserver:
                 "code": "HIGH_COUPLING_NODES",
                 "count": len(high_coupling_nodes),
                 "nodes": high_coupling_nodes[:10],
+            })
+        if isolated_nodes:
+            warnings.append({
+                "code": "ISOLATED_NODES",
+                "count": len(isolated_nodes),
+                "nodes": isolated_nodes[:20],
             })
 
         return ObservationResult(
