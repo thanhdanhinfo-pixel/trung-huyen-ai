@@ -17,7 +17,12 @@ class RefreshSystemModelRequest(BaseModel):
 
 @router.get('/summary')
 def system_awareness_summary():
-    return {'status': 'ok', 'summary': kernel.system_summary(), 'discovery': kernel.discovery_status()}
+    return {
+        'status': 'ok',
+        'awareness': kernel.self_awareness(),
+        'summary': kernel.system_summary(),
+        'discovery': kernel.discovery_status(),
+    }
 
 
 @router.get('/model')
