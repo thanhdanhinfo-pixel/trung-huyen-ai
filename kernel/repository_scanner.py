@@ -33,12 +33,6 @@ class RepositoryScanResult:
 
 @dataclass
 class RepositoryScanner:
-    """Normalize repository file trees into paths DiscoveryEngine can understand.
-
-    This scanner is intentionally provider-neutral. It can receive paths from
-    GitHub API, local filesystem, Cloud Run, or future adapters.
-    """
-
     ignored_prefixes: List[str] = field(default_factory=lambda: [
         ".git/",
         "__pycache__/",
@@ -52,6 +46,7 @@ class RepositoryScanner:
         ".pyc",
         ".pyo",
         ".DS_Store",
+        ".gitkeep",
     ])
     last_scan: RepositoryScanResult | None = None
 
