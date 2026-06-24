@@ -78,8 +78,11 @@ app.include_router(system_awareness_router)
 app.include_router(system_awareness_router)
 
 from api.system import router as system_router
+from api.debug import router as debug_router
 
 app.include_router(system_router)
+app.include_router(debug_router)
+
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1)
     limit: int = Field(default=5, ge=1, le=20)
