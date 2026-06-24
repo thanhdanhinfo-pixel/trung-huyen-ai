@@ -4,6 +4,7 @@ from typing import Any, Dict, List
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from kernel.kernel import kernel
+from kernel.observation.system_observer import system_observer
 from services.repository_tree_loader import repository_tree_loader
 
 router = APIRouter(prefix='/system-awareness', tags=['System Awareness'])
@@ -22,6 +23,11 @@ def system_awareness_summary():
 @router.get('/model')
 def export_system_model():
     return {'status': 'ok', 'system_model': kernel.export_system_model()}
+
+
+@router.get('/observe')
+def observe_system():
+    return {'status': 'ok', 'observation': system_observer.observe(kernel)}
 
 
 @router.get('/health')
