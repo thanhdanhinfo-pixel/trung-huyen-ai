@@ -1,14 +1,20 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from services.github_runtime import github_runtime
 import difflib
 import ast
+import re
 import time
 from typing import Any
 
 router = APIRouter(prefix="/github", tags=["GitHub Runtime"])
 
-
+class RefactorImportsRequest(BaseModel):
+    mapping: dict[str, str]
+    paths: list[str] = Field(default_factory=list)
+    message: str = "Refactor Python imports"
+    commit: bool = False
+    
 class ReadFile(BaseModel):
     path: str
 
@@ -52,12 +58,170 @@ class PatchFile(BaseModel):
     message: str = "Safe patch update"
     commit: bool = False
 
+class MoveBatchRequest(BaseModel):
+    moves: list[dict[str, str]] = Field(default_factory=list)
+    message: str = "Batch move files"
+    
+class MkdirRequest(BaseModel):
+    paths: list[str] = Field(default_factory=list)
+    message: str = "Create repository directories"
+    
+class PatchBatchItem(BaseModel):
+    path: str
+    operations: list[PatchOperation] = Field(default_factory=list)
 
+    
+class PatchBatchRequest(BaseModel):
+    files: list[PatchBatchItem] = Field(default_factory=list)
+    message: str = "Batch patch files"
+    commit: bool = False
+
+@router.post("/refactor-imports")
+def refactor_imports(req: RefactorImportsRequest):
+    paths = req.paths
+
+    if not paths:
+        all_files = github_runtime.list_files("")
+        paths = [
+            item["path"]
+            for item in all_files
+            if item.get("type") == "file" and item.get("path", "").endswith(".py")
+        ]
+
+    results = []
+
+    for path in paths:
+        current = github_runtime.read_file(path)
+        old_content = current.get("content", "")
+        new_content = old_content
+
+        for old, new in req.mapping.items():
+            old_escaped = re.escape(old)
+
+            new_content = re.sub(
+                rf"(^|\n)(\s*)from {old_escaped} import ",
+                rf"\1\2from {new} import ",
+                new_content,
+            )
+
+            new_content = re.sub(
+                rf"(^|\n)(\s*)import {old_escaped}(\s+as\s+\w+)?(\s*(?:#.*)?)(?=\n|$)",
+                rf"\1\2import {new}\3\4",
+                new_content,
+            )
+
+        if new_content == old_content:
+            results.append({
+                "path": path,
+                "changed": False,
+            })
+            continue
+
+        if req.commit:
+            result = github_runtime.update_file(
+                path=path,
+                content=new_content,
+                message=req.message,
+                sha=current.get("sha"),
+            )
+        else:
+            result = {
+                "status": "preview",
+                "changed": True,
+            }
+
+        results.append({
+                "path": path,
+                "changed": True,
+                "result": result,
+        })
+
+    return {
+        "status": "ok",
+        "commit": req.commit,
+        "count": len(results),
+        "results": results,
+    }
+
+@router.post("/move-batch")
+def move_batch(req: MoveBatchRequest):
+    results = []
+
+    for item in req.moves:
+        source = item.get("from") or item.get("source")
+        destination = item.get("to") or item.get("destination")
+
+        if not source or not destination:
+            results.append({
+                "status": "error",
+                "message": "source and destination are required",
+                "item": item,
+            })
+            continue
+
+        result = github_runtime.move_file(
+            source=source,
+            destination=destination,
+            message=req.message,
+        )
+        results.append(result)
+
+    return {
+        "status": "ok",
+        "count": len(results),
+        "results": results,
+    }
+    
+@router.post("/patch-batch")
+def patch_batch(req: PatchBatchRequest):
+    results = []
+
+    for item in req.files:
+        patch_request = PatchFile(
+            path=item.path,
+            operations=item.operations,
+            message=req.message,
+            commit=req.commit,
+        )
+
+        result = patch(patch_request)
+
+        results.append({
+            "path": item.path,
+            "result": result,
+        })
+
+    return {
+        "status": "ok",
+        "count": len(results),
+        "results": results,
+    }
+    
 @router.get('/runtime/status')
 def runtime_status():
     return github_runtime.status()
 
+@router.post("/mkdir")
+def mkdir(req: MkdirRequest):
+    operations = []
 
+    for path in req.paths:
+        clean = path.strip("/")
+
+        if not clean:
+            continue
+
+        operations.append({
+            "type": "upsert",
+            "path": f"{clean}/.gitkeep",
+            "content": "",
+        })
+
+    return github_runtime.batch_commit(
+        operations=operations,
+        message=req.message,
+    )
+    
 @router.get('/list')
 def list_files(path: str = ''):
     return {'status': 'ok', 'files': github_runtime.list_files(path)}
