@@ -1,0 +1,23 @@
+version: 1.0
+
+active_tasks:
+  - id: TASK-001
+    title: Xây dựng Persistent Identity Layer
+    status: completed
+
+  - id: TASK-002
+    title: Xây dựng Self State
+    status: completed
+
+  - id: TASK-003
+    title: Xây dựng Task Registry
+    status: in_progress
+
+backlog:
+
+completed:
+  - TASK-001
+  - TASK-002
+
+blocked:
+  []
