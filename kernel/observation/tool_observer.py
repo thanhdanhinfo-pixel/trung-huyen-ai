@@ -24,9 +24,10 @@ class ToolObserver:
 
         warnings = []
 
+        repository_adapter_status = None
         if repository_adapter is not None:
             try:
-                metrics["repository_adapter_status"] = repository_adapter.status()
+                repository_adapter_status = repository_adapter.status()
             except Exception as exc:
                 warnings.append({"code": "REPOSITORY_ADAPTER_STATUS_FAILED", "message": str(exc)})
 
@@ -39,6 +40,15 @@ class ToolObserver:
             github_status["read_ok"] = True
         except Exception as exc:
             github_status["error"] = str(exc)
+
+        if repository_adapter_status is not None:
+            if github_status["configured"] and github_status["read_ok"]:
+                repository_adapter_status = {
+                    **repository_adapter_status,
+                    "status": "ok",
+                    "verified_by": "github_runtime.read_file",
+                }
+            metrics["repository_adapter_status"] = repository_adapter_status
 
         metrics["github"] = github_status
 
