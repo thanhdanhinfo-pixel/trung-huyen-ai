@@ -8,6 +8,7 @@ from .capability_observer import capability_observer
 from .configuration_observer import configuration_observer
 from ..self_state import self_state
 from ..runtime_observer import runtime_observer
+from ..observation.system_observer import system_observer
 
 
 def utc_now() -> str:
@@ -26,6 +27,7 @@ class AwarenessSnapshot:
     repository_adapter: Dict[str, Any] = field(default_factory=dict)
     configuration: Dict[str, Any] = field(default_factory=dict)
     self_state: Dict[str, Any] = field(default_factory=dict)
+    observations: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -37,6 +39,7 @@ class AwarenessSnapshot:
             "system_model": self.system_model,
             "discovery": self.discovery,
             "repository_adapter": self.repository_adapter,
+            "observations": self.observations,
         }
 
 
@@ -53,6 +56,7 @@ class AwarenessManager:
     capability: Any = field(default_factory=lambda: capability_observer)
     configuration: Any = field(default_factory=lambda: configuration_observer)
     self_state: Any = field(default_factory=lambda: self_state)
+    observer: Any = field(default_factory=lambda: system_observer)
     last_snapshot: AwarenessSnapshot | None = None
 
     def observe(self, kernel: Any) -> AwarenessSnapshot:
@@ -64,6 +68,7 @@ class AwarenessManager:
             system_model=kernel.system_model.summary(),
             discovery=kernel.discovery_status(),
             repository_adapter=kernel.repository_adapter.status(),
+            observations=self.observer.observe(kernel),
         )
         self.last_snapshot = snapshot
         return snapshot
