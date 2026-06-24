@@ -9,15 +9,7 @@ from .system_node import NodeStatus, NodeType, SystemNode
 
 @dataclass
 class SystemModel:
-    """Digital Twin of TRUNG_HUYEN_AI_OS.
-
-    This model is the Kernel's internal understanding of the system.
-    It answers:
-    - What components exist?
-    - Who owns what?
-    - What depends on what?
-    - What is impacted if a component changes?
-    """
+    """Digital Twin of TRUNG_HUYEN_AI_OS."""
 
     nodes: Dict[str, SystemNode] = field(default_factory=dict)
     relationships: List[SystemRelationship] = field(default_factory=list)
@@ -27,6 +19,11 @@ class SystemModel:
         return node
 
     def add_relationship(self, relationship: SystemRelationship) -> SystemRelationship:
+        key = (relationship.source, relationship.target, relationship.relation.value)
+        for existing in self.relationships:
+            existing_key = (existing.source, existing.target, existing.relation.value)
+            if existing_key == key:
+                return existing
         self.relationships.append(relationship)
         return relationship
 
@@ -37,29 +34,33 @@ class SystemModel:
         return [node.to_dict() for node in self.nodes.values() if node.node_type == node_type]
 
     def dependencies(self, node_id: str) -> List[Dict[str, Any]]:
-        targets = [
-            rel.target
-            for rel in self.relationships
-            if rel.source == node_id and rel.relation in {RelationshipType.DEPENDS_ON, RelationshipType.USES}
-        ]
+        targets = self._dependency_targets(node_id)
         return [self.nodes[target].to_dict() for target in targets if target in self.nodes]
 
     def dependents(self, node_id: str) -> List[Dict[str, Any]]:
-        sources = [
-            rel.source
-            for rel in self.relationships
-            if rel.target == node_id and rel.relation in {RelationshipType.DEPENDS_ON, RelationshipType.USES}
-        ]
+        sources = self._dependent_sources(node_id)
         return [self.nodes[source].to_dict() for source in sources if source in self.nodes]
 
     def owned_by(self, owner: str) -> List[Dict[str, Any]]:
         return [node.to_dict() for node in self.nodes.values() if node.owner == owner]
 
     def impact(self, node_id: str) -> Dict[str, Any]:
+        node = self.nodes.get(node_id)
+        direct_dependencies = self._dependency_targets(node_id)
+        direct_dependents = self._dependent_sources(node_id)
+        transitive_dependencies = self._walk_dependencies(node_id)
+        transitive_dependents = self._walk_dependents(node_id)
+
         return {
-            "node": self.nodes[node_id].to_dict() if node_id in self.nodes else None,
-            "direct_dependents": self.dependents(node_id),
-            "direct_dependencies": self.dependencies(node_id),
+            "node": node.to_dict() if node else None,
+            "exists": node is not None,
+            "direct_dependencies": [self.nodes[item].to_dict() for item in direct_dependencies if item in self.nodes],
+            "direct_dependents": [self.nodes[item].to_dict() for item in direct_dependents if item in self.nodes],
+            "transitive_dependencies": [self.nodes[item].to_dict() for item in transitive_dependencies if item in self.nodes],
+            "transitive_dependents": [self.nodes[item].to_dict() for item in transitive_dependents if item in self.nodes],
+            "impact_radius": len(transitive_dependents),
+            "dependency_depth": len(transitive_dependencies),
+            "risk_level": self._impact_risk_level(len(transitive_dependents)),
         }
 
     def relationships_for(self, node_id: str) -> List[Dict[str, Any]]:
@@ -90,6 +91,50 @@ class SystemModel:
             "nodes": {node_id: node.to_dict() for node_id, node in self.nodes.items()},
             "relationships": [relationship.to_dict() for relationship in self.relationships],
         }
+
+    def _dependency_targets(self, node_id: str) -> List[str]:
+        return sorted({
+            rel.target
+            for rel in self.relationships
+            if rel.source == node_id and rel.relation in {RelationshipType.DEPENDS_ON, RelationshipType.USES}
+        })
+
+    def _dependent_sources(self, node_id: str) -> List[str]:
+        return sorted({
+            rel.source
+            for rel in self.relationships
+            if rel.target == node_id and rel.relation in {RelationshipType.DEPENDS_ON, RelationshipType.USES}
+        })
+
+    def _walk_dependencies(self, node_id: str) -> List[str]:
+        return self._walk_graph(start=node_id, next_nodes=self._dependency_targets)
+
+    def _walk_dependents(self, node_id: str) -> List[str]:
+        return self._walk_graph(start=node_id, next_nodes=self._dependent_sources)
+
+    def _walk_graph(self, start: str, next_nodes: Any) -> List[str]:
+        visited: set[str] = set()
+        ordered: List[str] = []
+        queue: List[str] = list(next_nodes(start))
+
+        while queue:
+            current = queue.pop(0)
+            if current == start or current in visited:
+                continue
+            visited.add(current)
+            ordered.append(current)
+            queue.extend(next_nodes(current))
+
+        return ordered
+
+    def _impact_risk_level(self, impact_radius: int) -> str:
+        if impact_radius >= 10:
+            return "high"
+        if impact_radius >= 4:
+            return "medium"
+        if impact_radius >= 1:
+            return "low"
+        return "none"
 
 
 def build_foundation_system_model() -> SystemModel:
