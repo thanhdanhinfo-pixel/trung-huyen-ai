@@ -163,57 +163,57 @@ class SystemModel:
         return "\n".join(lines)
 
     def architecture_report(self) -> Dict[str, Any]:
-    cycles = self.detect_cycles()
+        cycles = self.detect_cycles()
 
-    critical_nodes = sorted(
-        [self.criticality_score(node_id) for node_id in self.nodes],
-        key=lambda item: item["score"],
-        reverse=True,
-    )
+        critical_nodes = sorted(
+            [self.criticality_score(node_id) for node_id in self.nodes],
+            key=lambda item: item["score"],
+            reverse=True,
+        )
 
-    orphans = self._orphan_nodes()
-    risks = self.risk_nodes()
+        orphans = self._orphan_nodes()
+        risks = self.risk_nodes()
 
-    architecture_risk_nodes = [
-        item
-        for item in critical_nodes
-        if item["level"] == "critical"
-    ]
+        architecture_risk_nodes = [
+            item
+            for item in critical_nodes
+            if item["level"] == "critical"
+        ]
 
-    risk_score = (
-        len(cycles) * 50
-        + len(orphans) * 5
-        + len(architecture_risk_nodes) * 10
-    )
+        risk_score = (
+            len(cycles) * 50
+            + len(orphans) * 5
+            + len(architecture_risk_nodes) * 10
+        )
 
-    if risk_score >= 200:
-        health = "critical"
-    elif risk_score >= 80:
-        health = "warning"
-    else:
-        health = "good"
+        if risk_score >= 200:
+            health = "critical"
+        elif risk_score >= 80:
+            health = "warning"
+        else:
+            health = "good"
 
-    high_criticality = [
-        item
-        for item in critical_nodes
-        if item["level"] in {"critical", "high"}
-    ]
+        high_criticality = [
+            item
+            for item in critical_nodes
+            if item["level"] in {"critical", "high"}
+        ]
 
-    return {
-        "summary": self.summary(),
-        "health": health,
-        "risk_score": risk_score,
-        "cycles": cycles,
-        "cycle_count": len(cycles),
-        "orphans": orphans,
-        "orphan_count": len(orphans),
-        "risk_nodes": risks,
-        "risk_node_count": len(risks),
-        "critical_nodes": critical_nodes[:10],
-        "high_criticality_count": len(high_criticality),
-        "high_risk_count": len(architecture_risk_nodes),
-        "mermaid": self.mermaid_graph(),
-    }
+        return {
+            "summary": self.summary(),
+            "health": health,
+            "risk_score": risk_score,
+            "cycles": cycles,
+            "cycle_count": len(cycles),
+            "orphans": orphans,
+            "orphan_count": len(orphans),
+            "risk_nodes": risks,
+            "risk_node_count": len(risks),
+            "critical_nodes": critical_nodes[:10],
+            "high_criticality_count": len(high_criticality),
+            "high_risk_count": len(architecture_risk_nodes),
+            "mermaid": self.mermaid_graph(),
+        }
 
     def _orphan_nodes(self) -> List[str]:
         connected_nodes = set()
