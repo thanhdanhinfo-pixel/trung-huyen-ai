@@ -26,6 +26,47 @@ def export_system_model():
     return {"status": "ok", "system_model": kernel.export_system_model()}
 
 
+@router.get("/graph")
+def architecture_graph():
+    model = kernel.export_system_model()
+    nodes = []
+    edges = []
+
+    for node_id, node in model.get("nodes", {}).items():
+        nodes.append({
+            "id": node_id,
+            "label": node.get("name") or node_id,
+            "type": node.get("type"),
+            "status": node.get("status"),
+            "owner": node.get("owner"),
+            "role": node.get("role"),
+            "metadata": node.get("metadata", {}),
+        })
+
+    for index, relationship in enumerate(model.get("relationships", [])):
+        source = relationship.get("source")
+        target = relationship.get("target")
+        relation = relationship.get("relation")
+        if not source or not target:
+            continue
+        edges.append({
+            "id": f"edge-{index}-{source}-{target}-{relation}",
+            "source": source,
+            "target": target,
+            "label": relation,
+            "type": relation,
+            "description": relationship.get("description", ""),
+            "metadata": relationship.get("metadata", {}),
+        })
+
+    return {
+        "status": "ok",
+        "summary": model.get("summary", {}),
+        "nodes": nodes,
+        "edges": edges,
+    }
+
+
 @router.get("/node/{node_id}")
 def find_node(node_id: str):
     node = kernel.find_node(node_id)
