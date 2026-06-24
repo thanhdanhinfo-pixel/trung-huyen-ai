@@ -1,6 +1,6 @@
 import io
-import os
 import json
+import os
 import unicodedata
 from typing import Any, Dict, List, Optional
 
@@ -30,47 +30,59 @@ GOOGLE_SHEET = "application/vnd.google-apps.spreadsheet"
 GOOGLE_FOLDER = "application/vnd.google-apps.folder"
 
 
-def _credentials():
+def credential_source() -> Dict[str, Any]:
+    auth_mode = os.getenv("DRIVE_AUTH_MODE", "service_account").strip().lower()
+    return {
+        "auth_mode": auth_mode,
+        "oauth_configured": bool(
+            GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET and GOOGLE_REFRESH_TOKEN
+        ),
+        "service_account_configured": bool(GOOGLE_SERVICE_ACCOUNT_JSON),
+    }
 
-    auth_mode = os.getenv(
-        "DRIVE_AUTH_MODE",
-        "service_account"
-    )
+
+def _credentials():
+    auth_mode = os.getenv("DRIVE_AUTH_MODE", "service_account").strip().lower()
 
     if auth_mode == "oauth":
-
-        if (
+        if not (
             GOOGLE_CLIENT_ID
             and GOOGLE_CLIENT_SECRET
             and GOOGLE_REFRESH_TOKEN
         ):
-            return Credentials(
-                None,
-                refresh_token=GOOGLE_REFRESH_TOKEN,
-                token_uri="https://oauth2.googleapis.com/token",
-                client_id=GOOGLE_CLIENT_ID,
-                client_secret=GOOGLE_CLIENT_SECRET,
-                scopes=SCOPES,
+            raise RuntimeError(
+                "DRIVE_AUTH_MODE=oauth but OAuth credentials are incomplete."
             )
 
+        return Credentials(
+            None,
+            refresh_token=GOOGLE_REFRESH_TOKEN,
+            token_uri="https://oauth2.googleapis.com/token",
+            client_id=GOOGLE_CLIENT_ID,
+            client_secret=GOOGLE_CLIENT_SECRET,
+            scopes=SCOPES,
+        )
+
+    if auth_mode not in {"service_account", "service-account", "sa"}:
         raise RuntimeError(
-            "OAuth mode enabled but credentials missing."
+            f"Unsupported DRIVE_AUTH_MODE={auth_mode!r}. "
+            "Use 'service_account' or 'oauth'."
         )
 
     if not GOOGLE_SERVICE_ACCOUNT_JSON:
-        raise RuntimeError(
-            "Missing GOOGLE_SERVICE_ACCOUNT_JSON"
-        )
+        raise RuntimeError("Missing GOOGLE_SERVICE_ACCOUNT_JSON")
 
-    info = json.loads(
-        GOOGLE_SERVICE_ACCOUNT_JSON
-    )
+    try:
+        info = json.loads(GOOGLE_SERVICE_ACCOUNT_JSON)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(
+            "GOOGLE_SERVICE_ACCOUNT_JSON is not valid JSON."
+        ) from exc
 
     return service_account.Credentials.from_service_account_info(
         info,
         scopes=SCOPES,
     )
-
 
 def get_drive_service():
     return build("drive", "v3", credentials=_credentials(), cache_discovery=False)
