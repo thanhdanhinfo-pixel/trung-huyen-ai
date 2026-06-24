@@ -3,6 +3,7 @@ from typing import Any, Dict, List
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from openai import OpenAI
+import os
 import requests
 
 from services.github_service import github_list_files, github_read_file, github_update_file
@@ -16,9 +17,14 @@ from drive import (
     create_google_doc,
 )
 from fastapi import Header, HTTPException
-from config import MCP_API_KEY
+from config import MCP_API_KEY, DRIVE_FOLDER_ID, drive_root_sources
 
 router = APIRouter(prefix="/mcp", tags=["MCP Gateway"])
+
+APPS_SCRIPT_CREATE_DOCUMENT_URL = os.getenv(
+    "APPS_SCRIPT_CREATE_DOCUMENT_URL",
+    "https://script.google.com/macros/s/AKfycbySbNlbkHiferUvBGd2pvChnTbIEgswDMcDcU1X6pngDD57FN1XIP3X6zInjgboEhYohA/exec",
+)
 
 
 class MCPCall(BaseModel):
@@ -53,6 +59,56 @@ def build_context(files: List[Dict[str, Any]]) -> str:
         used += len(block)
 
     return "\n---\n".join(blocks)
+
+
+def _default_create_folder_id(parent_id: str | None = None) -> str:
+    if parent_id:
+        return parent_id
+    if DRIVE_FOLDER_ID:
+        return DRIVE_FOLDER_ID
+    roots = drive_root_sources()
+    if roots:
+        return roots[0]["id"]
+    raise RuntimeError("Missing parent_id, DRIVE_FOLDER_ID or KNOWLEDGE_SOURCES drive root.")
+
+
+def create_document_via_apps_script(
+    title: str,
+    content: str = "",
+    parent_id: str | None = None,
+) -> Dict[str, Any]:
+    folder_id = _default_create_folder_id(parent_id)
+
+    response = requests.post(
+        APPS_SCRIPT_CREATE_DOCUMENT_URL,
+        json={
+            "folderId": folder_id,
+            "title": title,
+            "content": content or "",
+        },
+        timeout=60,
+    )
+
+    try:
+        data = response.json()
+    except Exception:
+        data = {"raw_response": response.text}
+
+    if not response.ok:
+        return {
+            "status": "error",
+            "provider": "apps_script",
+            "status_code": response.status_code,
+            "folderId": folder_id,
+            "response": data,
+        }
+
+    return {
+        "status": "ok",
+        "provider": "apps_script",
+        "folderId": folder_id,
+        **data,
+    }
 
 
 @router.get("/tools")
@@ -309,9 +365,13 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             }
 
         try:
-            result = create_google_doc(name=title, content=content, parent_id=parent_id)
+            result = create_document_via_apps_script(
+                title=title,
+                content=content,
+                parent_id=parent_id,
+            )
             return {
-                "status": "ok",
+                "status": result.get("status", "ok"),
                 "tool": tool,
                 "result": result,
             }
