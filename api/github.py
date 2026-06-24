@@ -203,7 +203,7 @@ def runtime_status():
 
 @router.post("/mkdir")
 def mkdir(req: MkdirRequest):
-    operations = []
+    results = []
 
     for path in req.paths:
         clean = path.strip("/")
@@ -211,16 +211,32 @@ def mkdir(req: MkdirRequest):
         if not clean:
             continue
 
-        operations.append({
-            "type": "upsert",
-            "path": f"{clean}/.gitkeep",
-            "content": "",
-        })
+        try:
+            result = github_runtime.update_file(
+                path=f"{clean}/.gitkeep",
+                content="",
+                message=req.message,
+                sha=None,
+            )
 
-    return github_runtime.batch_commit(
-        operations=operations,
-        message=req.message,
-    )
+            results.append({
+                "path": clean,
+                "status": "ok",
+                "result": result,
+            })
+
+        except Exception as exc:
+            results.append({
+                "path": clean,
+                "status": "error",
+                "message": str(exc),
+            })
+
+    return {
+        "status": "ok",
+        "count": len(results),
+        "results": results,
+    }
     
 @router.get('/list')
 def list_files(path: str = ''):
