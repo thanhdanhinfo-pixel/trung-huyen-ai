@@ -190,11 +190,12 @@ class SystemModel:
             key=lambda item: item["score"],
             reverse=True,
         )
-        orphans = [
-            node_id
-            for node_id in self.nodes
-            if not self._dependency_targets(node_id) and not self._dependent_sources(node_id)
-        ]
+        connected_nodes = set()
+        for rel in self.relationships:
+            connected_nodes.add(rel.source)
+            connected_nodes.add(rel.target)
+
+        orphans = [node_id for node_id in self.nodes if node_id not in connected_nodes]
         high_risk = [item for item in critical_nodes if item["level"] in {"critical", "high"}]
 
         risk_score = len(cycles) * 10 + len(orphans) + sum(item["score"] for item in high_risk[:10])
