@@ -8,78 +8,136 @@ from services.repository_tree_loader import repository_tree_loader
 
 router = APIRouter(prefix='/system-awareness', tags=['System Awareness'])
 
+
 class RefreshSystemModelRequest(BaseModel):
     paths: List[str] | None = Field(default=None)
     files: List[Dict[str, Any]] | None = Field(default=None)
 
+
 @router.get('/summary')
 def system_awareness_summary():
-    return {'status':'ok','summary':kernel.system_summary(),'discovery':kernel.discovery_status()}
+    return {'status': 'ok', 'summary': kernel.system_summary(), 'discovery': kernel.discovery_status()}
+
 
 @router.get('/model')
 def export_system_model():
-    return {'status':'ok','system_model':kernel.export_system_model()}
+    return {'status': 'ok', 'system_model': kernel.export_system_model()}
+
 
 @router.get('/health')
 def architecture_health():
-    model = kernel.export_system_model()
-    nodes = model.get('nodes', {})
-    cycles = []
-    orphan_nodes = []
-    max_depth = 0
-
-    for node_id, node in nodes.items():
-        deps = node.get('dependencies', [])
-        if not deps:
-            orphan_nodes.append(node_id)
-        max_depth = max(max_depth, len(deps))
-        for dep in deps:
-            dep_node = nodes.get(dep, {})
-            if node_id in dep_node.get('dependencies', []):
-                cycles.append([node_id, dep])
-
-    risk_score = len(cycles) * 10 + len(orphan_nodes)
-
+    report = kernel.system_model.architecture_report()
     return {
-        'status':'ok',
-        'node_count': len(nodes),
-        'orphan_nodes': orphan_nodes[:50],
-        'orphan_count': len(orphan_nodes),
-        'circular_dependencies': cycles,
-        'circular_count': len(cycles),
-        'max_dependency_depth': max_depth,
-        'risk_score': risk_score,
-        'health': 'good' if risk_score < 20 else 'warning' if risk_score < 50 else 'critical'
+        'status': 'ok',
+        'health': report.get('health'),
+        'risk_score': report.get('risk_score'),
+        'summary': report.get('summary'),
+        'cycle_count': report.get('cycle_count'),
+        'orphan_count': report.get('orphan_count'),
+        'high_risk_count': report.get('high_risk_count'),
+        'critical_nodes': report.get('critical_nodes', [])[:5],
     }
+
+
+@router.get('/cycles')
+def architecture_cycles():
+    cycles = kernel.system_model.detect_cycles()
+    return {'status': 'ok', 'cycle_count': len(cycles), 'cycles': cycles}
+
+
+@router.get('/criticality/{node_id}')
+def node_criticality(node_id: str):
+    return {'status': 'ok', 'criticality': kernel.system_model.criticality_score(node_id)}
+
+
+@router.get('/mermaid')
+def mermaid_graph():
+    return {'status': 'ok', 'mermaid': kernel.system_model.mermaid_graph()}
+
+
+@router.get('/report')
+def architecture_report():
+    return {'status': 'ok', 'report': kernel.system_model.architecture_report()}
+
 
 @router.get('/recommendations')
 def architecture_recommendations():
-    model = kernel.export_system_model(); nodes=model.get('nodes',{})
-    rec=[]; central=[]
-    for nid,node in nodes.items():
-        deps=node.get('dependencies',[])
-        if not deps: rec.append({'type':'orphan_candidate','node':nid})
-        if len(deps)>=8: rec.append({'type':'high_coupling','node':nid,'dependency_count':len(deps)})
-        central.append((nid,len(deps)))
-    central.sort(key=lambda x:x[1], reverse=True)
-    return {'status':'ok','recommendations':rec[:50],'central_components':[n for n,_ in central[:10]]}
+    report = kernel.system_model.architecture_report()
+    recommendations = []
+
+    for node in report.get('orphans', [])[:50]:
+        recommendations.append({'type': 'orphan_candidate', 'node': node})
+
+    for item in report.get('critical_nodes', []):
+        if item.get('level') in {'critical', 'high'}:
+            recommendations.append({
+                'type': 'high_criticality',
+                'node': item.get('node_id'),
+                'score': item.get('score'),
+                'level': item.get('level'),
+            })
+
+    for cycle in report.get('cycles', []):
+        recommendations.append({'type': 'circular_dependency', 'cycle': cycle})
+
+    return {
+        'status': 'ok',
+        'recommendations': recommendations[:50],
+        'central_components': [item.get('node_id') for item in report.get('critical_nodes', [])[:10]],
+        'recommendation_count': len(recommendations),
+    }
+
 
 @router.get('/graph')
 def architecture_graph():
-    model=kernel.export_system_model()
-    return {'status':'ok','summary':model.get('summary',{}),'nodes':list(model.get('nodes',{}).values()),'edges':model.get('relationships',[])}
+    model = kernel.export_system_model()
+    return {
+        'status': 'ok',
+        'summary': model.get('summary', {}),
+        'nodes': list(model.get('nodes', {}).values()),
+        'edges': model.get('relationships', []),
+    }
+
+
+@router.get('/node/{node_id}')
+def find_node(node_id: str):
+    node = kernel.find_node(node_id)
+    if not node:
+        return {'status': 'not_found', 'node_id': node_id}
+    return {'status': 'ok', 'node': node}
+
+
+@router.get('/node/{node_id}/dependencies')
+def node_dependencies(node_id: str):
+    return {'status': 'ok', **kernel.dependencies(node_id)}
+
+
+@router.get('/node/{node_id}/dependents')
+def node_dependents(node_id: str):
+    return {'status': 'ok', **kernel.dependents(node_id)}
+
+
+@router.get('/node/{node_id}/impact')
+def node_impact(node_id: str):
+    return {'status': 'ok', 'impact': kernel.impact(node_id)}
+
 
 @router.get('/impact/{node_id}')
-def impact_alias(node_id:str):
-    return {'status':'ok','impact':kernel.impact(node_id)}
+def impact_alias(node_id: str):
+    return {'status': 'ok', 'impact': kernel.impact(node_id)}
+
 
 @router.post('/refresh')
 def refresh_system_model(req: RefreshSystemModelRequest):
-    if req.files: return kernel.refresh_system_model(files=req.files)
+    if req.files:
+        return kernel.refresh_system_model(files=req.files)
+
     if req.paths:
         try:
-            loaded=repository_tree_loader.load(req.paths)
-            if loaded.files: return kernel.refresh_system_model(files=loaded.files)
+            loaded = repository_tree_loader.load(req.paths)
+            if loaded.files:
+                return kernel.refresh_system_model(files=loaded.files)
         except Exception:
             pass
+
     return kernel.refresh_system_model(paths=req.paths, files=req.files)
