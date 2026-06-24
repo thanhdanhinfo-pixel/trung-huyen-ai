@@ -1,76 +1,45 @@
 from __future__ import annotations
-
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Dict
-
+from .registry import load_registry
+from .runtime import runtime as kernel_runtime
+from .capability import load_capabilities
+from .memory import load_memory
 
 @dataclass
 class AIKernelIdentity:
-    """Identity layer of TRUNG_HUYEN_AI_OS.
-
-    This answers the first Kernel question:
-    "Who am I inside this system?"
-    """
-
-    system_name: str = "TRUNG_HUYEN_AI_OS"
-    role: str = "AI Chief Architect / AI CTO"
-    mission: str = "Understand, operate and evolve the Trung Huyen AI OS."
-    owner: str = "Trung Huyen"
-    architecture_version: str = "AI_OS_V1_KERNEL_FIRST"
-
-    def as_dict(self) -> Dict[str, Any]:
-        return {
-            "system_name": self.system_name,
-            "role": self.role,
-            "mission": self.mission,
-            "owner": self.owner,
-            "architecture_version": self.architecture_version,
-        }
-
+    system_name:str="TRUNG_HUYEN_AI_OS"
+    role:str="AI Chief Architect / AI CTO"
+    mission:str="Understand, operate and evolve the AI OS"
+    owner:str="Trung Huyen"
+    architecture_version:str="AI_OS_V2_KERNEL"
+    def as_dict(self)->Dict[str,Any]: return self.__dict__.copy()
 
 @dataclass
 class AIKernel:
-    """Single entry point for the future AI OS Kernel.
-
-    The Kernel is intentionally minimal at this stage. It establishes the
-    stable boot contract first, then registry/capability/runtime/memory/
-    governance/health will be attached incrementally.
-    """
-
-    identity: AIKernelIdentity = field(default_factory=AIKernelIdentity)
-    booted_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-
-    def boot_status(self) -> Dict[str, Any]:
+    identity:AIKernelIdentity=field(default_factory=AIKernelIdentity)
+    registry:any=field(default_factory=load_registry)
+    runtime:any=field(default_factory=lambda: kernel_runtime)
+    capabilities:any=field(default_factory=load_capabilities)
+    memory:any=field(default_factory=load_memory)
+    booted_at:str=field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    def boot_status(self)->Dict[str,Any]:
         return {
-            "status": "ok",
-            "kernel": "booted",
-            "booted_at": self.booted_at,
-            "identity": self.identity.as_dict(),
-            "next_layers": [
-                "registry",
-                "capability",
-                "runtime",
-                "memory",
-                "governance",
-                "health",
-            ],
+            "status":"ok",
+            "booted_at":self.booted_at,
+            "identity":self.identity.as_dict(),
+            "registry":self.registry.validate(),
+            "runtime":self.runtime.snapshot(),
+            "capabilities":self.capabilities.validate(),
+            "memory":self.memory.as_dict()
         }
-
-    def answer_self_question(self) -> Dict[str, Any]:
-        """Return the Kernel's current self-understanding."""
+    def self_awareness(self)->Dict[str,Any]:
         return {
-            "who_am_i": self.identity.as_dict(),
-            "what_stage": "kernel_foundation_refactor",
-            "what_is_missing": [
-                "registry layer",
-                "capability layer",
-                "runtime layer",
-                "memory layer",
-                "governance layer",
-                "health layer",
-            ],
+            "identity":self.identity.as_dict(),
+            "registry":self.registry.as_dict(),
+            "runtime":self.runtime.snapshot(),
+            "capabilities":self.capabilities.summary(),
+            "memory_records":self.memory.as_dict()["record_count"]
         }
-
-
-kernel = AIKernel()
+kernel=AIKernel()
