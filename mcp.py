@@ -1,47 +1,39 @@
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import APIKeyHeader
+from fastapi import APIRouter, Header, HTTPException
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
 from config import MCP_API_KEY, OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
-from drive import list_files, read_file_content, search_and_read
+from drive import (
+    list_files,
+    read_file_content,
+    search_and_read,
+    create_folder,
+    create_google_doc,
+    append_google_doc,
+)
+from services.github_service import github_list_files, github_read_file, github_update_file
+from services.execution_engine import execution_engine, execution_plan_from_dict
 
 
 router = APIRouter(prefix="/mcp", tags=["MCP Gateway"])
 
-api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
-
-
-def verify_mcp_key(x_api_key: Optional[str] = Depends(api_key_header)) -> None:
-    if MCP_API_KEY and x_api_key != MCP_API_KEY:
-        raise HTTPException(status_code=401, detail="Invalid MCP API key")
-
-
-class ListDocumentsArgs(BaseModel):
-    limit: int = Field(default=50, ge=1, le=200)
-
-
-class SearchDocumentsArgs(BaseModel):
-    q: str = Field(..., min_length=1)
-    limit: int = Field(default=5, ge=1, le=20)
-    max_chars_per_file: int = Field(default=6000, ge=1000, le=20000)
-
-
-class ReadDocumentArgs(BaseModel):
-    file_id: str = Field(..., min_length=1)
-
-
-class AskKnowledgeArgs(BaseModel):
-    question: str = Field(..., min_length=1)
-    limit: int = Field(default=5, ge=1, le=20)
-    max_chars_per_file: int = Field(default=6000, ge=1000, le=20000)
-
 
 class MCPCall(BaseModel):
-    tool: Literal["list_documents", "search_documents", "read_document", "ask_knowledge"]
+    tool: str = Field(..., min_length=1)
     arguments: Dict[str, Any] = Field(default_factory=dict)
+
+
+class BackendCallRequest(BaseModel):
+    method: str = "GET"
+    path: str
+    body: Dict[str, Any] = Field(default_factory=dict)
+
+
+def verify_mcp_key(x_api_key: str = "") -> None:
+    if MCP_API_KEY and x_api_key != MCP_API_KEY:
+        raise HTTPException(status_code=401, detail="Invalid MCP API key")
 
 
 def build_context(files: List[Dict[str, Any]]) -> str:
@@ -70,6 +62,25 @@ def build_context(files: List[Dict[str, Any]]) -> str:
     return "\n---\n".join(blocks)
 
 
+def tool_names() -> List[str]:
+    return [
+        "list_documents",
+        "search_documents",
+        "read_document",
+        "ask_knowledge",
+        "github_list_files",
+        "github_read_file",
+        "github_update_file",
+        "execute_plan",
+        "backend_call",
+        "system_tree",
+        "workspace_bootstrap",
+        "create_folder",
+        "create_document",
+        "append_document",
+    ]
+
+
 @router.get("/ping")
 def ping():
     return {"status": "ok", "mcp": "alive"}
@@ -77,135 +88,264 @@ def ping():
 
 @router.get("/tools")
 def tools():
-    return {
-        "status": "ok",
-        "tools": [
-            {
-                "name": "list_documents",
-                "description": "Liệt kê tài liệu trong Google Drive",
-            },
-            {
-                "name": "search_documents",
-                "description": "Tìm tài liệu liên quan và trả về nội dung/snippet",
-            },
-            {
-                "name": "read_document",
-                "description": "Đọc nội dung đầy đủ của một tài liệu theo file_id",
-            },
-            {
-                "name": "ask_knowledge",
-                "description": "Trả lời câu hỏi dựa trên kho tri thức Google Drive",
-            },
-        ],
-    }
+    return {"status": "ok", "tools": tool_names()}
 
 
 @router.get("/manifest")
 def manifest():
     return {
         "name": "TRUNG_HUYEN_CORE_MCP",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "description": "MCP Gateway cho Bộ Não Gốc Trung Huyền Academy",
-        "tools": tools()["tools"],
+        "tools": [
+            {"name": "list_documents", "description": "Liệt kê tài liệu trong kho tri thức"},
+            {"name": "search_documents", "description": "Tìm và đọc tài liệu liên quan từ Google Drive"},
+            {"name": "read_document", "description": "Đọc nội dung một tài liệu theo file_id"},
+            {"name": "ask_knowledge", "description": "Trả lời câu hỏi dựa trên kho tri thức"},
+            {"name": "github_list_files", "description": "Liệt kê file trong GitHub repository"},
+            {"name": "github_read_file", "description": "Đọc file trong GitHub repository"},
+            {"name": "github_update_file", "description": "Cập nhật file GitHub sau khi được phê duyệt"},
+            {"name": "execute_plan", "description": "Thực thi kế hoạch chỉnh sửa sau khi được phê duyệt"},
+            {"name": "backend_call", "description": "Gọi endpoint nội bộ của backend"},
+            {"name": "system_tree", "description": "Lấy cây thư mục Google Drive"},
+            {"name": "workspace_bootstrap", "description": "Nạp trạng thái workspace ban đầu"},
+            {"name": "create_folder", "description": "Tạo thư mục Google Drive sau khi được phê duyệt"},
+            {"name": "create_document", "description": "Tạo Google Docs mới sau khi được phê duyệt"},
+            {"name": "append_document", "description": "Thêm nội dung vào cuối Google Docs sau khi được phê duyệt"},
+        ],
     }
 
 
-@router.post("/call", dependencies=[Depends(verify_mcp_key)])
-def call_tool(req: MCPCall):
+@router.post("/call")
+def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
+    verify_mcp_key(x_api_key)
+
     tool = req.tool
     args = req.arguments or {}
 
     if tool == "list_documents":
-        parsed = ListDocumentsArgs(**args)
-        return {
-            "status": "ok",
-            "tool": tool,
-            "files": list_files(limit=parsed.limit),
-        }
+        limit = int(args.get("limit", 50))
+        return {"status": "ok", "tool": tool, "files": list_files(limit=limit)}
 
     if tool == "search_documents":
-        parsed = SearchDocumentsArgs(**args)
-        files = search_and_read(
-            q=parsed.q,
-            limit=parsed.limit,
-            max_chars_per_file=parsed.max_chars_per_file,
-        )
-        return {
-            "status": "ok",
-            "tool": tool,
-            "query": parsed.q,
-            "files": files,
-        }
+        q = args.get("q", "")
+        limit = int(args.get("limit", 5))
+        max_chars = int(args.get("max_chars_per_file", 6000))
+        files = search_and_read(q=q, limit=limit, max_chars_per_file=max_chars)
+        return {"status": "ok", "tool": tool, "query": q, "files": files}
 
     if tool == "read_document":
-        parsed = ReadDocumentArgs(**args)
-        content = read_file_content(file_id=parsed.file_id)
+        file_id = args.get("file_id", "")
+        if not file_id:
+            return {"status": "error", "tool": tool, "message": "file_id is required"}
+        content = read_file_content(file_id=file_id)
         return {
             "status": "ok",
             "tool": tool,
-            "file_id": parsed.file_id,
+            "file_id": file_id,
             "content_length": len(content),
             "content": content,
         }
 
     if tool == "ask_knowledge":
-        parsed = AskKnowledgeArgs(**args)
-        files = search_and_read(
-            q=parsed.question,
-            limit=parsed.limit,
-            max_chars_per_file=parsed.max_chars_per_file,
-        )
+        question = args.get("question", "")
+        limit = int(args.get("limit", 5))
+        max_chars = int(args.get("max_chars_per_file", 6000))
 
+        if not question:
+            return {"status": "error", "tool": tool, "message": "question is required"}
+
+        files = search_and_read(q=question, limit=limit, max_chars_per_file=max_chars)
         context = build_context(files)
+
         if not context:
             return {
                 "status": "ok",
                 "tool": tool,
                 "answer": "Chưa đủ dữ liệu để kết luận.",
                 "sources": files,
+                "mode": "drive_first_no_context",
             }
 
         if not OPENAI_API_KEY:
-            raise HTTPException(status_code=500, detail="Missing OPENAI_API_KEY.")
+            return {"status": "error", "tool": tool, "message": "Missing OPENAI_API_KEY."}
 
         client = OpenAI(api_key=OPENAI_API_KEY)
-
         response = client.responses.create(
             model=OPENAI_MODEL,
             input=[
                 {
                     "role": "system",
                     "content": (
-                        "Bạn là AI Kiến Trúc Sư Trưởng của Hệ Điều Hành Bộ Não Gốc Trung Huyền Academy. "
-                        "Chỉ trả lời dựa trên dữ liệu được cung cấp. Nếu chưa đủ dữ liệu, nói: "
-                        "Chưa đủ dữ liệu để kết luận."
+                        "Bạn là AI của Trung Huyền Academy. "
+                        "Chỉ trả lời dựa trên dữ liệu Google Drive được cung cấp. "
+                        "Nếu dữ liệu chưa đủ, nói: Chưa đủ dữ liệu để kết luận."
                     ),
                 },
                 {
                     "role": "user",
-                    "content": f"CÂU HỎI:\n{parsed.question}\n\nDỮ LIỆU:\n{context}",
+                    "content": f"CÂU HỎI:\n{question}\n\nDỮ LIỆU GOOGLE DRIVE:\n{context}",
                 },
             ],
         )
-
         return {
             "status": "ok",
             "tool": tool,
             "answer": response.output_text,
             "sources": files,
+            "mode": "google_drive_only",
         }
 
-    raise HTTPException(status_code=400, detail=f"Unknown tool: {tool}")
+    if tool == "github_list_files":
+        path = args.get("path", "")
+        return {"status": "ok", "tool": tool, "result": github_list_files(path)}
+
+    if tool == "github_read_file":
+        path = args.get("path", "")
+        if not path:
+            return {"status": "error", "tool": tool, "message": "path is required"}
+        return {"status": "ok", "tool": tool, "result": github_read_file(path)}
+
+    if tool == "github_update_file":
+        approved = bool(args.get("approved", False))
+        if not approved:
+            return {"status": "error", "tool": tool, "message": "User approval is required"}
+        path = args.get("path", "")
+        content = args.get("content", "")
+        sha = args.get("sha", "")
+        message = args.get("message", "")
+        if not path or not content or not sha or not message:
+            return {"status": "error", "tool": tool, "message": "path, content, sha and message are required"}
+        return {"status": "ok", "tool": tool, "result": github_update_file(path, content, sha, message)}
+
+    if tool == "execute_plan":
+        approved = bool(args.get("approved", False))
+        plan_data = args.get("plan") or {}
+        if not isinstance(plan_data, dict):
+            return {"status": "error", "tool": tool, "message": "plan must be an object"}
+        plan = execution_plan_from_dict(plan_data)
+        result = execution_engine.execute(plan=plan, approved=approved)
+        return {"status": result.get("status"), "tool": tool, "result": result}
+
+    if tool == "backend_call":
+        method = args.get("method", "GET").upper()
+        path = args.get("path", "")
+        body = args.get("body", None)
+        return _backend_call(method=method, path=path, body=body)
+
+    if tool == "system_tree":
+        from drive import list_recursive
+        return {
+            "status": "ok",
+            "tool": tool,
+            "files": [
+                {"name": f.get("name"), "path": f.get("path"), "mimeType": f.get("mimeType")}
+                for f in list_recursive()
+            ],
+        }
+
+    if tool == "workspace_bootstrap":
+        from drive import list_recursive, read_by_path
+        files = list_recursive()
+        protocol_path = "09_INFRASTRUCTURE/AI_PROTOCOLS/00_AI_PROTOCOL"
+        state_path = "07_AI_FACTORY/00_AI_STATE.md"
+        kernel_path = "07_AI_FACTORY/00_AI_KERNEL"
+        return {
+            "status": "ok",
+            "tool": tool,
+            "workspace": {
+                "protocol_path": protocol_path,
+                "state_path": state_path,
+                "kernel_path": kernel_path,
+                "protocol": read_by_path(protocol_path),
+                "state": read_by_path(state_path),
+                "kernel": read_by_path(kernel_path),
+                "tree": [
+                    {"name": f.get("name"), "path": f.get("path"), "mimeType": f.get("mimeType")}
+                    for f in files
+                ],
+            },
+        }
+
+    if tool == "create_folder":
+        approved = bool(args.get("approved", False))
+        if not approved:
+            return {"status": "error", "tool": tool, "message": "Create denied. User approval is required."}
+        name = args.get("name", "")
+        parent_id = args.get("parent_id")
+        if not name:
+            return {"status": "error", "tool": tool, "message": "name is required"}
+        folder = create_folder(name=name, parent_id=parent_id)
+        return {"status": "ok", "tool": tool, "folder": folder}
+
+    if tool == "create_document":
+        approved = bool(args.get("approved", False))
+        if not approved:
+            return {"status": "error", "tool": tool, "message": "Create denied. User approval is required."}
+        title = args.get("title") or args.get("name") or ""
+        content = args.get("content", "")
+        parent_id = args.get("parent_id")
+        if not title:
+            return {"status": "error", "tool": tool, "message": "title is required"}
+        doc = create_google_doc(name=title, content=content, parent_id=parent_id)
+        return {"status": "ok", "tool": tool, "document": doc}
+
+    if tool == "append_document":
+        approved = bool(args.get("approved", False))
+        if not approved:
+            return {"status": "error", "tool": tool, "message": "Append denied. User approval is required."}
+        file_id = args.get("file_id", "")
+        content = args.get("content", "")
+        if not file_id or not content:
+            return {"status": "error", "tool": tool, "message": "file_id and content are required"}
+        result = append_google_doc(file_id=file_id, content=content)
+        return {"status": "ok", "tool": tool, "result": result}
+
+    return {"status": "error", "message": f"Unknown tool: {tool}"}
+
+
+def _backend_call(method: str, path: str, body: Optional[Dict[str, Any]] = None):
+    import requests
+
+    if not path.startswith("/"):
+        return {"status": "error", "message": "path must start with /"}
+
+    url = f"http://127.0.0.1:8080{path}"
+    method = method.upper()
+
+    try:
+        if method == "GET":
+            response = requests.get(url, timeout=60)
+        elif method == "POST":
+            response = requests.post(url, json=body, timeout=60)
+        else:
+            return {"status": "error", "message": f"Unsupported method: {method}"}
+
+        try:
+            data = response.json()
+        except Exception:
+            data = response.text
+
+        return {"status": "ok" if response.ok else "error", "status_code": response.status_code, "result": data}
+    except Exception as exc:
+        return {"status": "error", "message": str(exc)}
+
+
+@router.post("/backend-call")
+def backend_call_direct(req: BackendCallRequest, x_api_key: str = Header(default="")):
+    verify_mcp_key(x_api_key)
+    return _backend_call(method=req.method, path=req.path, body=req.body)
 
 
 @router.get("/test-search")
 def test_search(q: str = "Hệ quan sát", limit: int = 3):
-    files = search_and_read(q=q, limit=limit, max_chars_per_file=3000)
-    return {
-        "status": "ok",
-        "query": q,
-        "files": files,
-    }
+    return call_tool(
+        MCPCall(
+            tool="search_documents",
+            arguments={"q": q, "limit": limit, "max_chars_per_file": 3000},
+        ),
+        x_api_key=MCP_API_KEY,
+    )
 
 
 @router.get("/test-ask")
@@ -213,10 +353,7 @@ def test_ask(q: str = "Hệ quan sát là gì?"):
     return call_tool(
         MCPCall(
             tool="ask_knowledge",
-            arguments={
-                "question": q,
-                "limit": 3,
-                "max_chars_per_file": 6000,
-            },
-        )
+            arguments={"question": q, "limit": 3, "max_chars_per_file": 6000},
+        ),
+        x_api_key=MCP_API_KEY,
     )
