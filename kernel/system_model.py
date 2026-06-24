@@ -59,8 +59,9 @@ class SystemModel:
             "transitive_dependencies": [self.nodes[item].to_dict() for item in transitive_dependencies if item in self.nodes],
             "transitive_dependents": [self.nodes[item].to_dict() for item in transitive_dependents if item in self.nodes],
             "impact_radius": len(transitive_dependents),
-            "dependency_depth": len(transitive_dependencies),
+            "dependency_depth": self.dependency_depth(node_id),
             "risk_level": self._impact_risk_level(len(transitive_dependents)),
+            "criticality": self.criticality_score(node_id),
         }
 
     def relationships_for(self, node_id: str) -> List[Dict[str, Any]]:
@@ -90,6 +91,126 @@ class SystemModel:
             "summary": self.summary(),
             "nodes": {node_id: node.to_dict() for node_id, node in self.nodes.items()},
             "relationships": [relationship.to_dict() for relationship in self.relationships],
+        }
+
+    def detect_cycles(self) -> List[List[str]]:
+        graph = {node_id: self._dependency_targets(node_id) for node_id in self.nodes}
+        cycles: List[List[str]] = []
+        visiting: List[str] = []
+        visited: set[str] = set()
+        cycle_keys: set[tuple[str, ...]] = set()
+
+        def normalize_cycle(cycle: List[str]) -> tuple[str, ...]:
+            body = cycle[:-1]
+            if not body:
+                return tuple(cycle)
+            rotations = [tuple(body[i:] + body[:i]) for i in range(len(body))]
+            best = min(rotations)
+            return best + (best[0],)
+
+        def dfs(node: str) -> None:
+            if node in visiting:
+                idx = visiting.index(node)
+                cycle = visiting[idx:] + [node]
+                key = normalize_cycle(cycle)
+                if key not in cycle_keys:
+                    cycle_keys.add(key)
+                    cycles.append(cycle)
+                return
+            if node in visited:
+                return
+
+            visiting.append(node)
+            for nxt in graph.get(node, []):
+                if nxt in self.nodes:
+                    dfs(nxt)
+            visiting.pop()
+            visited.add(node)
+
+        for node_id in graph:
+            dfs(node_id)
+
+        return cycles
+
+    def dependency_depth(self, node_id: str) -> int:
+        def dfs(current: str, seen: set[str]) -> int:
+            deps = self._dependency_targets(current)
+            if not deps:
+                return 0
+            depth = 0
+            for dep in deps:
+                if dep in seen or dep not in self.nodes:
+                    continue
+                depth = max(depth, 1 + dfs(dep, seen | {dep}))
+            return depth
+
+        return dfs(node_id, {node_id})
+
+    def criticality_score(self, node_id: str) -> Dict[str, Any]:
+        direct_dependents = self._dependent_sources(node_id)
+        transitive_dependents = self._walk_dependents(node_id)
+        dependencies = self._dependency_targets(node_id)
+        depth = self.dependency_depth(node_id)
+
+        score = (len(direct_dependents) * 3) + len(transitive_dependents) + len(dependencies) + depth
+
+        if score > 20:
+            level = "critical"
+        elif score > 10:
+            level = "high"
+        elif score > 3:
+            level = "medium"
+        else:
+            level = "low"
+
+        return {
+            "node_id": node_id,
+            "score": score,
+            "level": level,
+            "direct_dependents": len(direct_dependents),
+            "transitive_dependents": len(transitive_dependents),
+            "dependencies": len(dependencies),
+            "dependency_depth": depth,
+        }
+
+    def mermaid_graph(self) -> str:
+        lines = ["graph TD"]
+        for rel in self.relationships:
+            if rel.relation in {RelationshipType.USES, RelationshipType.DEPENDS_ON, RelationshipType.OWNS}:
+                source = self._mermaid_id(rel.source)
+                target = self._mermaid_id(rel.target)
+                label = rel.relation.value
+                lines.append(f"    {source}[\"{rel.source}\"] -- {label} --> {target}[\"{rel.target}\"]")
+        return "\n".join(lines)
+
+    def architecture_report(self) -> Dict[str, Any]:
+        cycles = self.detect_cycles()
+        critical_nodes = sorted(
+            [self.criticality_score(node_id) for node_id in self.nodes],
+            key=lambda item: item["score"],
+            reverse=True,
+        )
+        orphans = [
+            node_id
+            for node_id in self.nodes
+            if not self._dependency_targets(node_id) and not self._dependent_sources(node_id)
+        ]
+        high_risk = [item for item in critical_nodes if item["level"] in {"critical", "high"}]
+
+        risk_score = len(cycles) * 10 + len(orphans) + sum(item["score"] for item in high_risk[:10])
+        health = "good" if risk_score < 20 else "warning" if risk_score < 80 else "critical"
+
+        return {
+            "summary": self.summary(),
+            "health": health,
+            "risk_score": risk_score,
+            "cycles": cycles,
+            "cycle_count": len(cycles),
+            "orphans": orphans,
+            "orphan_count": len(orphans),
+            "critical_nodes": critical_nodes[:10],
+            "high_risk_count": len(high_risk),
+            "mermaid": self.mermaid_graph(),
         }
 
     def _dependency_targets(self, node_id: str) -> List[str]:
@@ -135,6 +256,9 @@ class SystemModel:
         if impact_radius >= 1:
             return "low"
         return "none"
+
+    def _mermaid_id(self, node_id: str) -> str:
+        return node_id.replace(".", "_").replace("-", "_").replace("/", "_")
 
 
 def build_foundation_system_model() -> SystemModel:
