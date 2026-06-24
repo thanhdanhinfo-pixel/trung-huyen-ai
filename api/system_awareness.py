@@ -49,6 +49,11 @@ def node_impact(node_id: str):
     return {"status": "ok", "impact": kernel.impact(node_id)}
 
 
+@router.get("/impact/{node_id}")
+def impact_alias(node_id: str):
+    return {"status": "ok", "impact": kernel.impact(node_id)}
+
+
 @router.post("/refresh")
 def refresh_system_model(req: RefreshSystemModelRequest):
     if req.files:
