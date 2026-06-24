@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from .capability import load_capabilities
 from .discovery import discovery_engine
@@ -10,6 +10,7 @@ from .governance import load_governance
 from .health import load_health
 from .memory import load_memory
 from .registry import load_registry
+from .repository_adapter import repository_adapter
 from .runtime import runtime as kernel_runtime
 from .system_model import system_model
 
@@ -37,6 +38,7 @@ class AIKernel:
     health: Any = field(default_factory=load_health)
     system_model: Any = field(default_factory=lambda: system_model)
     discovery: Any = field(default_factory=lambda: discovery_engine)
+    repository_adapter: Any = field(default_factory=lambda: repository_adapter)
     booted_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def boot_status(self) -> Dict[str, Any]:
@@ -53,6 +55,7 @@ class AIKernel:
             "health": health_report,
             "system_model": self.system_model.summary(),
             "discovery": self.discovery_status(),
+            "repository_adapter": self.repository_adapter.status(),
         }
 
     def self_awareness(self) -> Dict[str, Any]:
@@ -65,6 +68,8 @@ class AIKernel:
             "governance": self.governance.as_dict(),
             "health": self.health.check(self),
             "system_model": self.system_model.summary(),
+            "discovery": self.discovery_status(),
+            "repository_adapter": self.repository_adapter.status(),
         }
 
     def can(self, capability: str) -> bool:
@@ -98,9 +103,44 @@ class AIKernel:
     def export_system_model(self) -> Dict[str, Any]:
         return self.system_model.export()
 
-    def discover(self, paths: list[str]) -> Dict[str, Any]:
+    def discover(self, paths: List[str]) -> Dict[str, Any]:
         result = self.discovery.discover_from_paths(paths)
         return self.discovery.apply_to_model(self.system_model, result)
+
+    def refresh_system_model(
+        self,
+        paths: List[str] | None = None,
+        files: List[Dict[str, Any]] | None = None,
+    ) -> Dict[str, Any]:
+        """Run the repository awareness pipeline in one Kernel call.
+
+        Accepts provider-neutral paths or GitHub-style file items. The Kernel
+        normalizes observations through RepositoryAdapter, discovers nodes and
+        relationships, then updates the shared SystemModel.
+        """
+        if files is not None:
+            scan = self.repository_adapter.scan_files(files)
+            source = "files"
+        elif paths is not None:
+            scan = self.repository_adapter.scan_paths(paths)
+            source = "paths"
+        else:
+            return {
+                "status": "error",
+                "message": "paths or files is required",
+            }
+
+        discovery_result = self.discovery.discover_from_paths(scan.paths)
+        applied = self.discovery.apply_to_model(self.system_model, discovery_result)
+
+        return {
+            "status": "ok",
+            "source": source,
+            "scan": scan.to_dict(),
+            "discovery": discovery_result.to_dict(),
+            "applied": applied,
+            "system_model": self.system_model.summary(),
+        }
 
     def discovery_status(self) -> Dict[str, Any]:
         if not self.discovery.last_result:
