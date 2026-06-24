@@ -15,6 +15,7 @@ from drive import (
     search_and_read,
     append_google_doc,
     create_google_doc,
+    create_folder,
 )
 from fastapi import Header, HTTPException
 from config import MCP_API_KEY, DRIVE_FOLDER_ID, drive_root_sources
@@ -132,7 +133,35 @@ def tools():
             "append_document",
         ]
     }
+    if tool == "create_folder":
+    name = args.get("name", "")
+    parent_id = args.get("parent_id", None)
+    approved = bool(args.get("approved", False))
 
+    if not approved:
+        return {
+            "status": "error",
+            "tool": tool,
+            "message": "Create denied. User approval is required.",
+        }
+
+    if not name:
+        return {
+            "status": "error",
+            "tool": tool,
+            "message": "name is required.",
+        }
+
+    result = create_folder(
+        name=name,
+        parent_id=parent_id,
+    )
+
+    return {
+        "status": "ok",
+        "tool": tool,
+        "result": result,
+    }
 @router.post("/call")
 def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
     if MCP_API_KEY and x_api_key != MCP_API_KEY:
