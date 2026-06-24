@@ -1,0 +1,270 @@
+version: 1.0
+
+index_name: CORE_BRAIN_INDEX
+
+purpose:
+  Provide the master knowledge map for Bộ Não Gốc Nguyễn Duy Trung, Trung Huyền Academy and TRUNG_HUYEN_AI_OS.
+
+root:
+  name: Bộ Não Gốc Nguyễn Duy Trung
+  role:
+    - Lưu giữ nhận thức
+    - Hệ thống hóa tri thức
+    - Kết nối khái niệm
+    - Kiểm chứng mô hình
+    - Phát triển hệ tư tưởng
+    - Bảo vệ tính nhất quán nhận thức dài hạn
+
+knowledge_tree:
+  "00_NGUON_GOC":
+    title: Nguồn gốc hình thành
+    status: defined
+    documents:
+      - 00_NGUỒN GỐC HÌNH THÀNH TRUNG HUYỀN ACADEMY
+    purpose:
+      Làm rõ nguồn gốc của Hệ Tư Tưởng Nguyễn Duy Trung, Bộ Não Gốc và Trung Huyền Academy.
+
+  "01_HE_TU_TUONG":
+    title: Hệ tư tưởng Trung Huyền Academy
+    status: defined
+    documents:
+      - 01_HỆ TƯ TƯỞNG TRUNG HUYỀN ACADEMY
+    core_axis:
+      - Nhận Thức
+      - Quy Luật
+      - Con Người
+      - Phát Triển
+
+  "02_TRIET_LY":
+    title: Triết lý Trung Huyền Academy
+    status: defined
+    documents:
+      - 02_TRIẾT LÝ TRUNG HUYỀN ACADEMY
+    principles:
+      - Lấy nhận thức làm nền tảng
+      - Lấy quy luật làm hệ quy chiếu
+      - Lấy giá trị làm phương hướng
+      - Lấy phát triển làm hành trình
+      - Lấy phụng sự làm động lực
+      - Lấy di sản làm đích đến dài hạn
+
+  "03_SU_MENH":
+    title: Sứ mệnh Trung Huyền Academy
+    status: defined
+    documents:
+      - 03_SỨ MỆNH TRUNG HUYỀN ACADEMY
+    mission:
+      - Khai mở nhận thức
+      - Định hướng cuộc đời
+      - Dẫn dắt phát triển con người toàn diện
+
+  "04_TAM_NHIN":
+    title: Tầm nhìn Trung Huyền Academy
+    status: defined
+    documents:
+      - 04_TẦM NHÌN TRUNG HUYỀN ACADEMY
+    vision:
+      Xây dựng hệ sinh thái nhận thức, tri thức và phát triển con người có khả năng tạo giá trị bền vững và được kế thừa lâu dài.
+
+  "05_HE_GIA_TRI":
+    title: Hệ giá trị cốt lõi
+    status: defined
+    documents:
+      - 05_HỆ GIÁ TRỊ CỐT LÕI TRUNG HUYỀN ACADEMY
+    values:
+      - Nhận thức
+      - Tôn trọng quy luật
+      - Chính trực
+      - Trách nhiệm
+      - Tâm tốt
+      - Phát triển và học hỏi suốt đời
+      - Tạo giá trị
+      - Hệ thống
+      - Kết nối và đồng hành
+      - Di sản
+
+  "10_TON_TAI":
+    title: Tồn Tại
+    status: defined
+    documents:
+      - TỒN TẠI
+    role:
+      Điểm khởi đầu của hành trình nhận thức.
+    concepts:
+      - Tồn tại hữu hình
+      - Tồn tại vô hình
+      - Vũ trụ
+      - Cấu trúc
+      - Giới hạn
+      - Mối liên hệ
+      - Ảnh hưởng
+
+  "11_QUY_LUAT":
+    title: Quy Luật
+    status: defined
+    documents:
+      - QUY LUẬT
+    role:
+      Hệ quy chiếu vận hành khách quan của sự tồn tại, con người và hệ thống.
+    laws:
+      - Thay Đổi
+      - Kết Nối
+      - Nhân Quả
+      - Cân Bằng
+      - Thích Nghi
+      - Hệ Thống
+
+  "11_01_QUY_LUAT_THAY_DOI":
+    title: Quy luật Thay Đổi
+    status: defined
+    principle:
+      Mọi tồn tại đều thay đổi theo thời gian; không phải mọi thay đổi đều là phát triển.
+
+  "11_02_QUY_LUAT_KET_NOI":
+    title: Quy luật Kết Nối
+    status: defined
+    principle:
+      Không có tồn tại hoàn toàn độc lập; mọi tồn tại đều nằm trong kết nối.
+
+  "11_03_QUY_LUAT_NHAN_QUA":
+    title: Quy luật Nhân Quả
+    status: defined
+    principle:
+      Mọi hệ quả đều có nguyên nhân; nhân quả vận hành qua điều kiện, kết nối và hệ thống.
+
+  "11_04_QUY_LUAT_CAN_BANG":
+    title: Quy luật Cân Bằng
+    status: defined
+    principle:
+      Cân bằng là trạng thái ổn định tương đối thông qua điều chỉnh liên tục.
+
+  "11_05_QUY_LUAT_THICH_NGHI":
+    title: Quy luật Thích Nghi
+    status: defined
+    principle:
+      Thích nghi là khả năng quan sát, học hỏi và điều chỉnh để phù hợp với thay đổi.
+
+  "11_06_QUY_LUAT_HE_THONG":
+    title: Quy luật Hệ Thống
+    status: defined
+    principle:
+      Kết quả là sản phẩm của hệ thống; muốn thay đổi kết quả bền vững cần thay đổi hệ thống tạo ra kết quả.
+
+  "20_BOI_CANH":
+    title: Bối cảnh xã hội
+    status: defined
+    documents:
+      - BC_01_BỐI CẢNH XÃ HỘI THẾ GIỚI
+      - BC_02_BỐI CẢNH XÃ HỘI VIỆT NAM
+    concepts:
+      - Thời đại tri thức
+      - Thời đại công nghệ
+      - Thời đại AI
+      - Việt Nam chuyển đổi nhanh
+      - Nhiều thời đại nhận thức cùng tồn tại
+
+  "21_NGUYEN_NHAN":
+    title: Nguyên nhân thực trạng hiện nay
+    status: defined
+    documents:
+      - NN_01_NGUYÊN NHÂN CỦA NHỮNG THỰC TRẠNG HIỆN NAY
+    root_cause:
+      Tốc độ thay đổi của xã hội lớn hơn tốc độ thích nghi của nhiều con người.
+
+  "22_THUC_TRANG":
+    title: Thực trạng phổ biến của con người hiện nay
+    status: defined
+    documents:
+      - TT_01_THỰC TRẠNG PHỔ BIẾN CỦA CON NGƯỜI HIỆN NAY
+    areas:
+      - Giáo dục
+      - Nhận thức và định hướng
+      - Công việc và sự nghiệp
+      - Khởi nghiệp, kinh doanh và doanh nghiệp
+      - Tài chính
+      - Sức khỏe và sự sống
+      - Gia đình và các mối quan hệ
+      - Hệ thống
+      - Cuộc sống
+
+  "23_HAU_QUA":
+    title: Hậu quả của thực trạng hiện nay
+    status: defined
+    documents:
+      - HQ_01_HẬU QUẢ CỦA NHỮNG THỰC TRẠNG HIỆN NAY
+    affected_layers:
+      - Cá nhân
+      - Sức khỏe và sự sống
+      - Gia đình
+      - Sự nghiệp
+      - Tài chính
+      - Doanh nghiệp và tổ chức
+      - Xã hội
+      - Thế hệ sau
+      - Tương lai
+
+  "24_NHU_CAU":
+    title: Nhu cầu phát triển con người trong thời đại mới
+    status: defined
+    documents:
+      - NC_01_NHU CẦU PHÁT TRIỂN CON NGƯỜI TRONG THỜI ĐẠI MỚI
+    needs:
+      - Khai mở
+      - Định hướng
+      - Dẫn dắt
+      - Phát triển toàn diện
+      - Hệ điều hành bên trong
+      - Môi trường phát triển
+      - Hệ sinh thái phát triển
+
+  "30_CON_NGUOI":
+    title: Con Người
+    status: planned
+    purpose:
+      Xây dựng mô hình con người nhiều tầng gồm thân, tâm, trí, nhận thức, tư duy, niềm tin, giá trị, hành vi, quan hệ, vai trò xã hội, sự nghiệp và cuộc sống.
+
+  "40_CUOC_DOI":
+    title: Cuộc Đời
+    status: planned
+    purpose:
+      Xây dựng mô hình cuộc đời như một hệ thống phát triển toàn diện.
+
+  "50_SU_NGHIEP":
+    title: Sự Nghiệp
+    status: planned
+    purpose:
+      Xây dựng mô hình sự nghiệp dựa trên giá trị, năng lực, thời đại và hệ thống.
+
+  "60_DOANH_NGHIEP":
+    title: Doanh Nghiệp
+    status: planned
+    purpose:
+      Xây dựng mô hình doanh nghiệp như hệ thống tạo giá trị bền vững.
+
+  "70_LANH_DAO":
+    title: Lãnh Đạo
+    status: planned
+    purpose:
+      Xây dựng mô hình lãnh đạo như năng lực xây dựng hệ thống, dẫn dắt con người và tạo giá trị.
+
+  "80_DI_SAN":
+    title: Di Sản
+    status: planned
+    purpose:
+      Xây dựng mô hình di sản tri thức, giá trị, hệ thống và ảnh hưởng có khả năng được kế thừa.
+
+navigation_rules:
+  - Ưu tiên đọc SYSTEM_CONTINUITY_CORE trước khi diễn giải Bộ Não Gốc.
+  - Dùng SYSTEM_MODEL để hiểu mô hình thế giới.
+  - Dùng ACADEMY_MODEL để hiểu vai trò Trung Huyền Academy.
+  - Dùng CORE_BRAIN_INDEX để định vị tri thức.
+  - Không xem index là tri thức đầy đủ; index chỉ là bản đồ điều hướng.
+
+next_expansion_priorities:
+  - Xây dựng module CON_NGUOI
+  - Xây dựng module CUOC_DOI
+  - Xây dựng module SU_NGHIEP
+  - Xây dựng module DOANH_NGHIEP
+  - Xây dựng module DI_SAN
+
+last_updated: 2026-06-24
