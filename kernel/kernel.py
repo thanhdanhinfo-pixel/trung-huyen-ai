@@ -12,6 +12,7 @@ from .memory import load_memory
 from .registry import load_registry
 from .repository_adapter import repository_adapter
 from .runtime import runtime as kernel_runtime
+from .runtime_observer import runtime_observer
 from .system_model import system_model
 
 
@@ -39,6 +40,7 @@ class AIKernel:
     system_model: Any = field(default_factory=lambda: system_model)
     discovery: Any = field(default_factory=lambda: discovery_engine)
     repository_adapter: Any = field(default_factory=lambda: repository_adapter)
+    runtime_observer: Any = field(default_factory=lambda: runtime_observer)
     booted_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def boot_status(self) -> Dict[str, Any]:
@@ -56,6 +58,7 @@ class AIKernel:
             "system_model": self.system_model.summary(),
             "discovery": self.discovery_status(),
             "repository_adapter": self.repository_adapter.status(),
+            "runtime_awareness": self.runtime_awareness(),
         }
 
     def self_awareness(self) -> Dict[str, Any]:
@@ -141,6 +144,9 @@ class AIKernel:
             "applied": applied,
             "system_model": self.system_model.summary(),
         }
+
+    def runtime_awareness(self) -> Dict[str, Any]:
+        return self.runtime_observer.observe(self).to_dict()
 
     def discovery_status(self) -> Dict[str, Any]:
         if not self.discovery.last_result:
