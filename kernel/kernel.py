@@ -10,6 +10,7 @@ from .health import load_health
 from .memory import load_memory
 from .registry import load_registry
 from .runtime import runtime as kernel_runtime
+from .system_model import system_model
 
 
 @dataclass
@@ -33,6 +34,7 @@ class AIKernel:
     memory: Any = field(default_factory=load_memory)
     governance: Any = field(default_factory=load_governance)
     health: Any = field(default_factory=load_health)
+    system_model: Any = field(default_factory=lambda: system_model)
     booted_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def boot_status(self) -> Dict[str, Any]:
@@ -47,6 +49,7 @@ class AIKernel:
             "memory": self.memory.as_dict(),
             "governance": self.governance.as_dict(),
             "health": health_report,
+            "system_model": self.system_model.summary(),
         }
 
     def self_awareness(self) -> Dict[str, Any]:
@@ -58,6 +61,7 @@ class AIKernel:
             "memory_records": self.memory.as_dict()["record_count"],
             "governance": self.governance.as_dict(),
             "health": self.health.check(self),
+            "system_model": self.system_model.summary(),
         }
 
     def can(self, capability: str) -> bool:
@@ -65,6 +69,31 @@ class AIKernel:
 
     def validate_action(self, action: Dict[str, Any]) -> Dict[str, Any]:
         return self.governance.validate_action(action)
+
+    def find_node(self, node_id: str) -> Dict[str, Any] | None:
+        node = self.system_model.get_node(node_id)
+        return node.to_dict() if node else None
+
+    def dependencies(self, node_id: str) -> Dict[str, Any]:
+        return {
+            "node_id": node_id,
+            "dependencies": self.system_model.dependencies(node_id),
+        }
+
+    def dependents(self, node_id: str) -> Dict[str, Any]:
+        return {
+            "node_id": node_id,
+            "dependents": self.system_model.dependents(node_id),
+        }
+
+    def impact(self, node_id: str) -> Dict[str, Any]:
+        return self.system_model.impact(node_id)
+
+    def system_summary(self) -> Dict[str, Any]:
+        return self.system_model.summary()
+
+    def export_system_model(self) -> Dict[str, Any]:
+        return self.system_model.export()
 
 
 kernel = AIKernel()
