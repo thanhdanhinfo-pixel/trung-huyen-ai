@@ -41,4 +41,17 @@ def debug_env():
         "has_google_refresh_token": bool(
             os.getenv("GOOGLE_REFRESH_TOKEN")
         ),
+
+        "drive_auth_mode": os.getenv(
+            "DRIVE_AUTH_MODE",
+            "service_account"
+        ),
+
+        "has_master_document_id": bool(
+            os.getenv("MASTER_DOCUMENT_ID")
+        ),
+
+        "has_knowledge_sources": bool(
+            os.getenv("KNOWLEDGE_SOURCES")
+        ),
     }
