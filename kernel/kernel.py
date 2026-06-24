@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List
 
 from .awareness_manager import awareness_manager
+from .planner import planner_engine
 from .capability import load_capabilities
 from .discovery import discovery_engine
 from .governance import load_governance
@@ -41,6 +42,7 @@ class AIKernel:
     discovery: Any = field(default_factory=lambda: discovery_engine)
     repository_adapter: Any = field(default_factory=lambda: repository_adapter)
     awareness: Any = field(default_factory=lambda: awareness_manager)
+    planner: Any = field(default_factory=lambda: planner_engine)
     booted_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def boot_status(self) -> Dict[str, Any]:
@@ -130,6 +132,12 @@ class AIKernel:
         if not self.discovery.last_result:
             return {"status": "idle"}
         return self.discovery.last_result.to_dict()
+
+    def plan(self, goal: str, target: str | None = None, context: Dict[str, Any] | None = None) -> Dict[str, Any]:
+        return self.planner.create_plan(self, goal=goal, target=target, context=context)
+
+    def plan_next_action(self) -> Dict[str, Any]:
+        return self.planner.plan_next_action(self)
 
 
 kernel = AIKernel()
