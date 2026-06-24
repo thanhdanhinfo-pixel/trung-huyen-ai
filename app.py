@@ -5,6 +5,7 @@ from api.repo import router as repo_router
 from fastapi import FastAPI, Query
 from api.knowledge import router as knowledge_router
 from api.execute import router as execute_router
+from api.system_awareness import router as system_awareness_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -72,6 +73,7 @@ app.include_router(workspace_router)
     
 app.include_router(knowledge_router)
 app.include_router(execute_router)
+app.include_router(system_awareness_router)
 
 from api.system import router as system_router
 
