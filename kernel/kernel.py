@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Dict, List
 
+from .awareness_manager import awareness_manager
 from .capability import load_capabilities
 from .discovery import discovery_engine
 from .governance import load_governance
@@ -12,8 +13,6 @@ from .memory import load_memory
 from .registry import load_registry
 from .repository_adapter import repository_adapter
 from .runtime import runtime as kernel_runtime
-from .runtime_observer import runtime_observer
-from .awareness_manager import awareness_manager
 from .system_model import system_model
 
 
@@ -41,7 +40,6 @@ class AIKernel:
     system_model: Any = field(default_factory=lambda: system_model)
     discovery: Any = field(default_factory=lambda: discovery_engine)
     repository_adapter: Any = field(default_factory=lambda: repository_adapter)
-    runtime_observer: Any = field(default_factory=lambda: runtime_observer)
     awareness: Any = field(default_factory=lambda: awareness_manager)
     booted_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
@@ -51,33 +49,12 @@ class AIKernel:
             "status": "ok" if health_report.get("status") == "ok" else "warning",
             "booted_at": self.booted_at,
             "identity": self.identity.as_dict(),
-            "registry": self.registry.validate(),
-            "runtime": self.runtime.snapshot(),
-            "capabilities": self.capabilities.validate(),
-            "memory": self.memory.as_dict(),
-            "governance": self.governance.as_dict(),
             "health": health_report,
-            "system_model": self.system_model.summary(),
-            "discovery": self.discovery_status(),
-            "repository_adapter": self.repository_adapter.status(),
-            "awareness": self.awareness.summary(self),
-            "runtime_awareness": self.runtime_awareness(),
             "awareness": self.awareness.summary(self),
         }
 
     def self_awareness(self) -> Dict[str, Any]:
-        return {
-            "identity": self.identity.as_dict(),
-            "registry": self.registry.as_dict(),
-            "runtime": self.runtime.snapshot(),
-            "capabilities": self.capabilities.summary(),
-            "memory_records": self.memory.as_dict()["record_count"],
-            "governance": self.governance.as_dict(),
-            "health": self.health.check(self),
-            "system_model": self.system_model.summary(),
-            "discovery": self.discovery_status(),
-            "repository_adapter": self.repository_adapter.status(),
-        }
+        return self.awareness.summary(self)
 
     def can(self, capability: str) -> bool:
         return self.capabilities.can(capability)
@@ -148,9 +125,6 @@ class AIKernel:
             "applied": applied,
             "system_model": self.system_model.summary(),
         }
-
-    def runtime_awareness(self) -> Dict[str, Any]:
-        return self.runtime_observer.observe(self).to_dict()
 
     def discovery_status(self) -> Dict[str, Any]:
         if not self.discovery.last_result:
