@@ -6,8 +6,8 @@ from typing import Any, Dict
 
 from .capability_observer import capability_observer
 from .configuration_observer import configuration_observer
-from .self_state import self_state
-from .runtime_observer import runtime_observer
+from ..self_state import self_state
+from ..runtime_observer import runtime_observer
 
 
 def utc_now() -> str:
@@ -32,6 +32,8 @@ class AwarenessSnapshot:
             "observed_at": self.observed_at,
             "runtime": self.runtime,
             "capability": self.capability,
+            "configuration": self.configuration,
+            "self_state": self.self_state,
             "system_model": self.system_model,
             "discovery": self.discovery,
             "repository_adapter": self.repository_adapter,
