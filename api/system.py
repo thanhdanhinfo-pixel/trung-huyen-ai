@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any, Optional
 
 from fastapi import APIRouter
@@ -9,10 +10,70 @@ router = APIRouter(
     tags=["System"],
 )
 
+SYSTEM_STATE_FILES = [
+    "system/BOOT_SEQUENCE.md",
+    "system/TRUNG_HUYEN_AI_OS_PERSISTENT_IDENTITY.md",
+    "system/SELF_STATE.yaml",
+    "system/SYSTEM_MODEL.yaml",
+    "system/CAPABILITY_REGISTRY.yaml",
+    "system/TASK_REGISTRY.yaml",
+    "system/MEMORY_LOG.md",
+]
+
 
 @router.get("/self-test")
 def test():
     return self_test()
+
+
+@router.get("/bootstrap")
+def system_bootstrap():
+    """
+    Official bootstrap entrypoint for TRUNG_HUYEN_AI_OS.
+
+    This endpoint is the single runtime bridge for loading system identity,
+    self state, model, capability registry, task registry and memory log.
+    Legacy bootstrap paths should not be used as the primary source of truth.
+    """
+    root = Path.cwd()
+    files: dict[str, Any] = {}
+    missing: list[str] = []
+
+    for relative_path in SYSTEM_STATE_FILES:
+        path = root / relative_path
+        if not path.exists():
+            missing.append(relative_path)
+            files[relative_path] = {
+                "status": "missing",
+                "content": "",
+            }
+            continue
+
+        files[relative_path] = {
+            "status": "ok",
+            "content": path.read_text(encoding="utf-8"),
+        }
+
+    return {
+        "status": "ok" if not missing else "partial",
+        "system": "TRUNG_HUYEN_AI_OS",
+        "bootstrap_version": "1.0.0",
+        "source_of_truth": "github:system/*",
+        "boot_sequence": SYSTEM_STATE_FILES,
+        "deprecated": [
+            {
+                "name": "workspace_load",
+                "reason": "Legacy workspace path. Not the official system bootstrap.",
+            },
+            {
+                "name": "workspace_bootstrap",
+                "reason": "Drive workspace bootstrap. Superseded by /system/bootstrap for OS state.",
+            },
+        ],
+        "files": files,
+        "missing": missing,
+        "next_action": "Use this endpoint before answering questions about system state, continuity, current work or operating context.",
+    }
 
 
 @router.get("/files")
