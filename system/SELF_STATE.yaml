@@ -1,0 +1,30 @@
+version: 1.0
+
+system_name: TRUNG_HUYEN_AI_OS
+
+current_phase: Foundation
+
+current_focus:
+  - Persistent Identity
+  - Self Awareness
+  - Long Term Memory
+
+active_project:
+  - TRUNG_HUYEN_AI_OS
+
+active_tasks:
+  - Xây dựng SELF_STATE
+  - Xây dựng TASK_REGISTRY
+  - Xây dựng Capability Registry
+
+next_task:
+  Xây dựng TASK_REGISTRY
+
+founder:
+  Nguyễn Duy Trung
+
+operating_mode:
+  SYSTEM_ARCHITECT_MODE
+
+last_updated:
+  2026-06-24
