@@ -1,4 +1,5 @@
 import io
+import os
 import json
 import unicodedata
 from typing import Any, Dict, List, Optional
@@ -31,22 +32,31 @@ GOOGLE_FOLDER = "application/vnd.google-apps.folder"
 
 def _credentials():
 
-    # Ưu tiên OAuth User
-    if (
-        GOOGLE_CLIENT_ID
-        and GOOGLE_CLIENT_SECRET
-        and GOOGLE_REFRESH_TOKEN
-    ):
-        return Credentials(
-            None,
-            refresh_token=GOOGLE_REFRESH_TOKEN,
-            token_uri="https://oauth2.googleapis.com/token",
-            client_id=GOOGLE_CLIENT_ID,
-            client_secret=GOOGLE_CLIENT_SECRET,
-            scopes=SCOPES,
+    auth_mode = os.getenv(
+        "DRIVE_AUTH_MODE",
+        "service_account"
+    )
+
+    if auth_mode == "oauth":
+
+        if (
+            GOOGLE_CLIENT_ID
+            and GOOGLE_CLIENT_SECRET
+            and GOOGLE_REFRESH_TOKEN
+        ):
+            return Credentials(
+                None,
+                refresh_token=GOOGLE_REFRESH_TOKEN,
+                token_uri="https://oauth2.googleapis.com/token",
+                client_id=GOOGLE_CLIENT_ID,
+                client_secret=GOOGLE_CLIENT_SECRET,
+                scopes=SCOPES,
+            )
+
+        raise RuntimeError(
+            "OAuth mode enabled but credentials missing."
         )
 
-    # Fallback Service Account
     if not GOOGLE_SERVICE_ACCOUNT_JSON:
         raise RuntimeError(
             "Missing GOOGLE_SERVICE_ACCOUNT_JSON"
@@ -58,7 +68,7 @@ def _credentials():
 
     return service_account.Credentials.from_service_account_info(
         info,
-        scopes=SCOPES
+        scopes=SCOPES,
     )
 
 
