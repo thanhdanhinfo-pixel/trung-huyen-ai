@@ -2,11 +2,59 @@
   "openapi": "3.1.0",
   "info": {
     "title": "TRUNG HUYEN CORE MCP",
-    "version": "1.0.0"
+    "version": "2.0.0",
+    "description": "OpenAPI schema for TRUNG_HUYEN_CORE_MCP Gateway with Google Drive, GitHub and execution tools."
   },
   "servers": [
     {
       "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      }
+    },
+    "schemas": {
+      "McpCallRequest": {
+        "type": "object",
+        "required": [
+          "tool",
+          "arguments"
+        ],
+        "properties": {
+          "tool": {
+            "type": "string",
+            "enum": [
+              "list_documents",
+              "search_documents",
+              "read_document",
+              "ask_knowledge",
+              "github_list_files",
+              "github_read_file",
+              "github_update_file",
+              "execute_plan",
+              "backend_call",
+              "system_tree",
+              "workspace_bootstrap",
+              "create_document",
+              "append_document"
+            ]
+          },
+          "arguments": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
     }
   ],
   "paths": {
@@ -14,14 +62,9 @@
       "post": {
         "operationId": "callMcpTool",
         "summary": "Call Trung Huyen MCP Tool",
-        "parameters": [
+        "security": [
           {
-            "name": "x-api-key",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "ApiKeyAuth": []
           }
         ],
         "requestBody": {
@@ -29,22 +72,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": ["tool", "arguments"],
-                "properties": {
-                  "tool": {
-                    "type": "string",
-                    "enum": [
-                      "list_documents",
-                      "search_documents",
-                      "read_document",
-                      "ask_knowledge"
-                    ]
-                  },
-                  "arguments": {
-                    "type": "object"
-                  }
-                }
+                "$ref": "#/components/schemas/McpCallRequest"
               }
             }
           }
@@ -53,8 +81,44 @@
           "200": {
             "description": "Successful response"
           },
+          "400": {
+            "description": "Invalid request or unknown tool"
+          },
           "401": {
             "description": "Invalid MCP API key"
+          }
+        }
+      }
+    },
+    "/mcp/tools": {
+      "get": {
+        "operationId": "listMcpTools",
+        "summary": "List available MCP tools",
+        "responses": {
+          "200": {
+            "description": "Available tools"
+          }
+        }
+      }
+    },
+    "/mcp/manifest": {
+      "get": {
+        "operationId": "getMcpManifest",
+        "summary": "Get MCP manifest",
+        "responses": {
+          "200": {
+            "description": "MCP manifest"
+          }
+        }
+      }
+    },
+    "/mcp/ping": {
+      "get": {
+        "operationId": "pingMcp",
+        "summary": "Ping MCP gateway",
+        "responses": {
+          "200": {
+            "description": "MCP alive"
           }
         }
       }
