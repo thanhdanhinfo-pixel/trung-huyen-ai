@@ -6,6 +6,7 @@ from openai import OpenAI
 import requests
 
 from services.github_service import github_list_files, github_read_file, github_update_file
+from services.execution_engine import execution_engine, execution_plan_from_dict
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
 from drive import (
     list_files,
@@ -67,6 +68,7 @@ def tools():
             "github_read_file",
             "system_self_test",
             "github_update_file",
+            "execute_plan",
             "backend_call",
             "system_tree",
             "workspace_bootstrap",
@@ -231,6 +233,25 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "status": "ok",
             "tool": tool,
             "result": github_update_file(path, content, sha, message),
+        }
+    if tool == "execute_plan":
+        approved = bool(args.get("approved", False))
+        plan_data = args.get("plan") or {}
+
+        if not isinstance(plan_data, dict):
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "plan must be an object",
+            }
+
+        plan = execution_plan_from_dict(plan_data)
+        result = execution_engine.execute(plan=plan, approved=approved)
+
+        return {
+            "status": result.get("status"),
+            "tool": tool,
+            "result": result,
         }
     if tool == "search_documents":
         try:
@@ -470,6 +491,10 @@ def manifest():
             {
                 "name": "ask_knowledge",
                 "description": "Trả lời câu hỏi dựa trên kho tri thức"
+            },
+            {
+                "name": "execute_plan",
+                "description": "Thực thi một kế hoạch chỉnh sửa GitHub qua Execution Engine sau khi người dùng phê duyệt"
             },
             {
                 "name": "create_document",
