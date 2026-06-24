@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict
 
 from .capability import load_capabilities
+from .discovery import discovery_engine
 from .governance import load_governance
 from .health import load_health
 from .memory import load_memory
@@ -35,6 +36,7 @@ class AIKernel:
     governance: Any = field(default_factory=load_governance)
     health: Any = field(default_factory=load_health)
     system_model: Any = field(default_factory=lambda: system_model)
+    discovery: Any = field(default_factory=lambda: discovery_engine)
     booted_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def boot_status(self) -> Dict[str, Any]:
@@ -50,6 +52,7 @@ class AIKernel:
             "governance": self.governance.as_dict(),
             "health": health_report,
             "system_model": self.system_model.summary(),
+            "discovery": self.discovery_status(),
         }
 
     def self_awareness(self) -> Dict[str, Any]:
@@ -94,6 +97,15 @@ class AIKernel:
 
     def export_system_model(self) -> Dict[str, Any]:
         return self.system_model.export()
+
+    def discover(self, paths: list[str]) -> Dict[str, Any]:
+        result = self.discovery.discover_from_paths(paths)
+        return self.discovery.apply_to_model(self.system_model, result)
+
+    def discovery_status(self) -> Dict[str, Any]:
+        if not self.discovery.last_result:
+            return {"status": "idle"}
+        return self.discovery.last_result.to_dict()
 
 
 kernel = AIKernel()
