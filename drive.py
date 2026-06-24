@@ -4,12 +4,16 @@ import unicodedata
 from typing import Any, Dict, List, Optional
 
 from google.oauth2 import service_account
+from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
 from config import (
     DRIVE_FOLDER_ID,
     GOOGLE_SERVICE_ACCOUNT_JSON,
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
+    GOOGLE_REFRESH_TOKEN,
     drive_root_sources,
     master_document_source,
 )
@@ -26,15 +30,36 @@ GOOGLE_FOLDER = "application/vnd.google-apps.folder"
 
 
 def _credentials():
+
+    # Ưu tiên OAuth User
+    if (
+        GOOGLE_CLIENT_ID
+        and GOOGLE_CLIENT_SECRET
+        and GOOGLE_REFRESH_TOKEN
+    ):
+        return Credentials(
+            None,
+            refresh_token=GOOGLE_REFRESH_TOKEN,
+            token_uri="https://oauth2.googleapis.com/token",
+            client_id=GOOGLE_CLIENT_ID,
+            client_secret=GOOGLE_CLIENT_SECRET,
+            scopes=SCOPES,
+        )
+
+    # Fallback Service Account
     if not GOOGLE_SERVICE_ACCOUNT_JSON:
-        raise RuntimeError("Missing GOOGLE_SERVICE_ACCOUNT_JSON environment variable.")
+        raise RuntimeError(
+            "Missing GOOGLE_SERVICE_ACCOUNT_JSON"
+        )
 
-    try:
-        info = json.loads(GOOGLE_SERVICE_ACCOUNT_JSON)
-    except json.JSONDecodeError as exc:
-        raise RuntimeError("GOOGLE_SERVICE_ACCOUNT_JSON is not valid JSON.") from exc
+    info = json.loads(
+        GOOGLE_SERVICE_ACCOUNT_JSON
+    )
 
-    return service_account.Credentials.from_service_account_info(info, scopes=SCOPES)
+    return service_account.Credentials.from_service_account_info(
+        info,
+        scopes=SCOPES
+    )
 
 
 def get_drive_service():
