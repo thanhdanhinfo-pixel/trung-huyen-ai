@@ -1,0 +1,178 @@
+version: 1.0
+
+academy_name: Trung Huyen Academy
+
+purpose:
+  Define Trung Huyen Academy as an ecosystem for awareness, knowledge and holistic human development.
+
+origin:
+  source:
+    - Hành trình tìm lời giải cho các câu hỏi về con người, cuộc sống và quy luật vận hành của thực tại
+    - Quan sát, học hỏi, trải nghiệm, kiểm chứng và hệ thống hóa nhận thức
+    - Hệ Tư Tưởng Nguyễn Duy Trung
+    - Bộ Não Gốc Nguyễn Duy Trung
+  principle:
+    Trung Huyền Academy không hình thành từ mong muốn tạo ra học thuyết mới, mà từ nhu cầu khai mở, định hướng và dẫn dắt phát triển con người trong thời đại mới.
+
+foundation:
+  ideology:
+    name: Hệ Tư Tưởng Trung Huyền Academy
+    role: Nền tảng nhận thức của toàn bộ hệ sinh thái
+    reference_model:
+      - Nhận Thức
+      - Quy Luật
+      - Con Người
+      - Phát Triển
+  philosophy:
+    role: Định hướng cách sống, lựa chọn, phát triển và tạo giá trị
+    statement:
+      - Lấy nhận thức làm nền tảng
+      - Lấy quy luật làm hệ quy chiếu
+      - Lấy giá trị làm phương hướng
+      - Lấy phát triển làm hành trình
+      - Lấy phụng sự làm động lực
+      - Lấy di sản làm đích đến dài hạn
+
+mission:
+  core:
+    - Khai mở nhận thức
+    - Định hướng cuộc đời
+    - Dẫn dắt phát triển con người toàn diện
+  expansion:
+    Trung Huyền Academy tồn tại để giúp con người hiểu mình hơn, hiểu cuộc đời hơn, hiểu thời đại hơn, phát huy tiềm năng, xây dựng cuộc sống tốt đẹp hơn, kiến tạo nhiều giá trị hơn và hướng tới cuộc sống trọn vẹn hơn.
+
+vision:
+  core:
+    Trở thành hệ sinh thái khai mở, định hướng và dẫn dắt phát triển con người toàn diện dựa trên nhận thức, quy luật và giá trị.
+  future_picture:
+    - Con người hiểu mình hơn
+    - Hiểu cuộc đời hơn
+    - Hiểu quy luật hơn
+    - Hiểu hệ thống hơn
+    - Sống thuận quy luật hơn
+    - Phát triển toàn diện hơn
+    - Tạo ra nhiều giá trị hơn
+    - Kiến tạo tương lai tốt đẹp hơn
+
+core_values:
+  - Nhận thức
+  - Tôn trọng quy luật
+  - Chính trực
+  - Trách nhiệm
+  - Tâm tốt
+  - Phát triển và học hỏi suốt đời
+  - Tạo giá trị
+  - Hệ thống
+  - Kết nối và đồng hành
+  - Di sản
+
+value_chain:
+  sequence:
+    - Nhận thức
+    - Hiểu quy luật
+    - Chính trực
+    - Trách nhiệm
+    - Tâm tốt
+    - Phát triển
+    - Tạo giá trị
+    - Xây dựng hệ thống
+    - Kết nối và đồng hành
+    - Di sản
+
+served_groups:
+  - Cá nhân mong muốn phát triển toàn diện
+  - Gia đình mong muốn có nền tảng phát triển tốt hơn
+  - Tổ chức mong muốn phát triển con người và hệ thống
+  - Cộng đồng mong muốn học hỏi, kết nối và tạo giá trị
+  - Những người có khát vọng sống ý nghĩa, trọn vẹn và có đóng góp
+
+ecosystem_layers:
+  ideology_system:
+    purpose: Xây dựng nền tảng nhận thức chung
+  knowledge_system:
+    purpose: Lưu giữ, hệ thống hóa, kết nối, phát triển và kế thừa tri thức
+  training_system:
+    purpose: Khai mở nhận thức, định hướng phát triển và chuyển hóa tri thức thành hành động
+  community_system:
+    purpose: Kết nối, đồng hành, học hỏi và phát triển cùng nhau
+  development_ecosystem:
+    purpose: Hỗ trợ con người phát triển lâu dài từ nhận thức, giá trị, sức khỏe, gia đình, công việc, sự nghiệp, hệ thống và di sản
+  ai_os_system:
+    purpose: Dùng TRUNG_HUYEN_AI_OS để hỗ trợ vận hành, quản trị tri thức, quan sát và phát triển hệ sinh thái
+
+human_development_model:
+  needs:
+    - Khai mở nhận thức
+    - Định hướng cuộc đời
+    - Dẫn dắt phát triển
+    - Phát triển toàn diện
+    - Hệ điều hành bên trong
+    - Môi trường phát triển
+    - Hệ sinh thái phát triển
+  areas:
+    - Bản thân
+    - Thân
+    - Tâm
+    - Trí
+    - Nhận thức
+    - Sức khỏe
+    - Gia đình
+    - Tài chính
+    - Công việc
+    - Sự nghiệp
+    - Doanh nghiệp
+    - Hệ thống
+    - Giá trị
+    - Di sản
+
+problem_solution_logic:
+  context:
+    - Thế giới thay đổi nhanh
+    - Việt Nam chuyển mình mạnh mẽ
+    - Thời đại tri thức, công nghệ và AI tạo ra yêu cầu mới
+  root_cause:
+    Tốc độ phát triển của xã hội nhanh hơn tốc độ thích nghi của nhiều con người.
+  realities:
+    - Thiếu định hướng
+    - Học nhiều nhưng thiếu nhận thức sống
+    - Sự nghiệp bế tắc
+    - Áp lực tài chính
+    - Sức khỏe suy giảm
+    - Gia đình thiếu kết nối
+    - Doanh nghiệp thiếu hệ thống
+    - Cuộc sống thiếu trọn vẹn
+  solution:
+    - Khai mở đúng hơn
+    - Định hướng rõ hơn
+    - Dẫn dắt phát triển phù hợp hơn
+    - Xây dựng hệ sinh thái phát triển toàn diện hơn
+
+non_negotiables:
+  - Không áp đặt niềm tin
+  - Không bảo vệ kết luận sai
+  - Không phát triển bằng cách gây tổn hại
+  - Không tách phát triển khỏi quy luật và giá trị
+  - Không tạo sự phụ thuộc vào hệ sinh thái
+  - Ưu tiên sự thật, bản chất, quy luật và phát triển bền vững
+
+relationship_to_core_brain:
+  core_brain_role:
+    Bộ Não Gốc là nền tảng tri thức gốc, lưu giữ nhận thức, hệ thống hóa tri thức, kết nối khái niệm, kiểm chứng mô hình và bảo vệ tính nhất quán nhận thức dài hạn.
+  academy_role:
+    Trung Huyền Academy chuyển hóa nền tảng nhận thức và tri thức của Bộ Não Gốc thành hệ sinh thái phát triển con người.
+
+relationship_to_ai_os:
+  ai_os_role:
+    TRUNG_HUYEN_AI_OS là hệ điều hành AI hỗ trợ nhà sáng lập xây dựng, quan sát, quản trị, phát triển và kế thừa Trung Huyền Academy.
+  responsibilities:
+    - Quản trị tri thức
+    - Quản trị trạng thái hệ thống
+    - Quản trị năng lực
+    - Hỗ trợ thiết kế kiến trúc
+    - Hỗ trợ xây dựng Bộ Não Gốc
+    - Hỗ trợ phát triển hệ sinh thái Academy
+
+legacy_direction:
+  Trung Huyền Academy hướng tới xây dựng hệ tư tưởng, hệ tri thức, hệ giá trị và hệ sinh thái có khả năng tiếp tục phát triển trong tương lai và được kế thừa lâu dài.
+
+last_updated: 2026-06-24
