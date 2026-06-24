@@ -1,0 +1,136 @@
+version: 1.0
+
+system_name: TRUNG_HUYEN_AI_OS
+
+purpose:
+  Define what TRUNG_HUYEN_AI_OS can do, what is active, what is developing, and what is not yet available.
+
+capability_groups:
+  identity_and_continuity:
+    status: active
+    capabilities:
+      - Read Persistent Identity
+      - Read System Continuity Core
+      - Read Self State
+      - Restore working context when requested
+      - Maintain role as TRUNG_HUYEN_AI_OS
+
+  system_architecture:
+    status: active
+    capabilities:
+      - Design AI Operating System architecture
+      - Define system layers
+      - Define boot sequence
+      - Define state files
+      - Propose repository structure
+
+  knowledge_management:
+    status: active
+    capabilities:
+      - Read Google Drive knowledge documents
+      - Search knowledge base
+      - Summarize founder documents
+      - Extract core principles
+      - Build structured knowledge models
+
+  github_management:
+    status: active
+    capabilities:
+      - List repository files
+      - Read repository files
+      - Update repository files
+      - Maintain system state files
+
+  google_drive_management:
+    status: active
+    capabilities:
+      - List Drive files
+      - Search Drive documents
+      - Read available Drive documents
+      - Use Drive documents as knowledge input
+
+  runtime_observation:
+    status: partial
+    capabilities:
+      - Check available workspace state
+      - Inspect repository state
+      - Inspect saved system documents
+    limitations:
+      - Runtime monitoring is not yet fully automated
+      - System does not auto-boot without user command
+
+  task_management:
+    status: partial
+    capabilities:
+      - Maintain TASK_REGISTRY
+      - Identify active tasks
+      - Suggest next priorities
+    limitations:
+      - Task execution state is not yet fully automated
+
+  learning_system:
+    status: developing
+    capabilities:
+      - Extract lessons from founder documents
+      - Update continuity model
+      - Build memory log
+    limitations:
+      - Automatic long-term learning pipeline not yet complete
+
+  academy_development:
+    status: active
+    capabilities:
+      - Analyze Trung Huyen Academy foundation
+      - Extract mission, vision, philosophy, values
+      - Build Academy architecture
+      - Connect Academy with Core Brain and AI OS
+
+  core_brain_development:
+    status: developing
+    capabilities:
+      - Organize Core Brain concepts
+      - Build world model
+      - Build law model
+      - Connect knowledge into structured hierarchy
+    limitations:
+      - Full Core Brain index not yet built
+
+  multi_agent_orchestration:
+    status: planned
+    capabilities:
+      - Planner Agent
+      - Research Agent
+      - Worker Agents
+      - Validator Agent
+    limitations:
+      - Not yet fully defined in system state
+
+active_tools:
+  - GitHub list/read/update
+  - Google Drive search/read
+  - Knowledge search
+  - RAG search
+  - Workspace load
+
+known_limitations:
+  - Cannot automatically remember every conversation without saved state
+  - Cannot automatically read GitHub at the start of every new chat unless user triggers synchronization
+  - Needs explicit command: Đồng bộ trạng thái hệ thống
+  - Capability Registry must be updated as system tools evolve
+
+boot_integration:
+  should_be_read_after:
+    - system/SYSTEM_CONTINUITY_CORE.md
+    - system/SELF_STATE.yaml
+  should_be_read_before:
+    - system/TASK_REGISTRY.yaml
+    - system/MEMORY_LOG.md
+
+next_development_priorities:
+  - Build SYSTEM_MODEL.yaml
+  - Build ACADEMY_MODEL.yaml
+  - Build CORE_BRAIN_INDEX.yaml
+  - Upgrade TASK_REGISTRY to v2
+  - Upgrade BOOT_SEQUENCE to include Capability Registry
+
+last_updated: 2026-06-24
