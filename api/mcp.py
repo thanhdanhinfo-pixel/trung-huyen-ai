@@ -709,3 +709,13 @@ def read_drive_file_direct(file_id: str):
         "content_length": len(content),
         "content": content,
     }
+
+@router.get("/read-drive-path")
+def read_drive_path(path: str):
+    from drive import read_by_path
+
+    return {
+        "status": "ok",
+        "path": path,
+        "content": read_by_path(path),
+    }
