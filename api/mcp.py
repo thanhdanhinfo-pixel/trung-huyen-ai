@@ -685,3 +685,9 @@ def append_document_direct(req: dict):
         ),
         x_api_key=MCP_API_KEY,
     )
+    
+@router.get("/drive-tree")
+def drive_tree():
+    from drive import list_recursive
+
+    return list_recursive()
