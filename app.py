@@ -6,7 +6,7 @@ from fastapi import FastAPI, Query
 from api.knowledge import router as knowledge_router
 from api.execute import router as execute_router
 from api.system_awareness import router as system_awareness_router
-from api.system_awareness import router as system_awareness_router
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -26,6 +26,15 @@ from config import (
     QDRANT_API_KEY,
 )
 from drive import search_files, read_file_content, search_and_read, list_files
+try:
+    from rag.indexer import index_drive
+except Exception:
+    index_drive = None
+
+try:
+    from rag.search import search_knowledge
+except Exception:
+    search_knowledge = None
 
 
 SERVER_URL = "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
@@ -74,7 +83,6 @@ app.include_router(workspace_router)
     
 app.include_router(knowledge_router)
 app.include_router(execute_router)
-app.include_router(system_awareness_router)
 app.include_router(system_awareness_router)
 
 from api.system import router as system_router
@@ -198,6 +206,15 @@ def health():
 
 @app.post("/rag/index")
 def rag_index(limit: int = 10):
+    if index_drive is None:
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "error",
+                "message": "index_drive not available"
+            }
+        )
+
     try:
         return index_drive(limit=limit)
     except Exception as exc:
@@ -508,6 +525,15 @@ def drive_search(q: str, limit: int = Query(default=20, ge=1, le=200)):
 
 @app.get("/rag/search")
 def rag_search(q: str, limit: int = 5):
+    if search_knowledge is None:
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "error",
+                "message": "search_knowledge not available"
+            }
+        )
+
     try:
         return {
             "status": "ok",
