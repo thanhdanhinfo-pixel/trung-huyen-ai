@@ -189,3 +189,24 @@
     }
   }
 }
+"/mcp/read-drive-file": {
+  "get": {
+    "operationId": "readDriveFile",
+    "summary": "Read Google Drive file content by file id",
+    "parameters": [
+      {
+        "name": "file_id",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Drive file content"
+      }
+    }
+  }
+}
