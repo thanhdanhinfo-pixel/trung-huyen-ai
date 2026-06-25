@@ -1,7 +1,6 @@
 from drive import list_recursive, read_file_content
 from config import drive_root_sources
 
-
 CORE_NAMES = [
     "01_CURRENT_STATE.md",
     "02_CAPABILITY_REGISTRY.md",
@@ -23,9 +22,9 @@ def bootstrap_system():
     roots = drive_root_sources()
     files = list_recursive()
 
-    core_files = [
+    system_files = [
         f for f in files
-        if f.get("name") in CORE_NAMES
+        if "00_SYSTEM_STATE" in f.get("path", "")
     ]
 
     return {
@@ -34,24 +33,20 @@ def bootstrap_system():
         "drive_memory_root": "Google Drive",
         "roots": roots,
         "root_count": len(roots),
-
-        "files": [
+        "system_state_files": [
             {
                 "name": f.get("name"),
                 "path": f.get("path"),
                 "mimeType": f.get("mimeType"),
                 "id": f.get("id"),
             }
-            for f in files
-        ][:300],
-
-        "core_files_content": [
-            {
-                "name": f.get("name"),
-                "path": f.get("path"),
-                "id": f.get("id"),
-                "content": safe_read_file(f.get("id")),
-            }
-            for f in core_files
+            for f in system_files
+        ],
+        "available_tools": [
+            "pingMcp",
+            "createFolder",
+            "createDocument",
+            "appendDocument",
+            "bootstrapSystem",
         ],
     }
