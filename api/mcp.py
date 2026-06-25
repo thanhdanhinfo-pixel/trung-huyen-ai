@@ -696,3 +696,16 @@ def drive_tree():
 def bootstrap_system_direct():
     from services.bootstrap_service import bootstrap_system
     return bootstrap_system()
+
+@router.get("/read-drive-file")
+def read_drive_file_direct(file_id: str):
+    from drive import read_file_content
+
+    content = read_file_content(file_id=file_id)
+
+    return {
+        "status": "ok",
+        "file_id": file_id,
+        "content_length": len(content),
+        "content": content,
+    }
