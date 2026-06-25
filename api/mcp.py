@@ -636,3 +636,50 @@ def backend_call_direct(req: BackendCallRequest, x_api_key: str = Header(default
         "status_code": response.status_code,
         "result": data,
     }
+
+@router.post("/create-folder")
+def create_folder_direct(
+    req: dict,
+    x_api_key: str = Header(default="")
+):
+    verify_mcp_key(x_api_key)
+
+    return call_tool(
+        MCPCall(
+            tool="create_folder",
+            arguments=req,
+        ),
+        x_api_key=x_api_key,
+    )
+
+
+@router.post("/create-document")
+def create_document_direct(
+    req: dict,
+    x_api_key: str = Header(default="")
+):
+    verify_mcp_key(x_api_key)
+
+    return call_tool(
+        MCPCall(
+            tool="create_document",
+            arguments=req,
+        ),
+        x_api_key=x_api_key,
+    )
+
+
+@router.post("/append-document")
+def append_document_direct(
+    req: dict,
+    x_api_key: str = Header(default="")
+):
+    verify_mcp_key(x_api_key)
+
+    return call_tool(
+        MCPCall(
+            tool="append_document",
+            arguments=req,
+        ),
+        x_api_key=x_api_key,
+    )
