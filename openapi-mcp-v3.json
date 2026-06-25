@@ -173,5 +173,26 @@
         }
       }
     }
-  }
+  },
+  "/mcp/read-drive-path": {
+    "get": {
+      "operationId": "readDrivePath",
+      "summary": "Read Google Drive file by logical path",
+      "parameters": [
+        {
+          "name": "path",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
           }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Drive file content"
+        }
+      }
+    }
+  }        
+
