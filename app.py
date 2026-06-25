@@ -614,21 +614,26 @@ def rag_count():
 @app.get("/drive/read-path")
 def drive_read_path(path: str):
     try:
-        item = find_file_by_path(path)
+        content = read_by_path(path)
+
+        if content is None:
+            return JSONResponse(
+                status_code=404,
+                content={"status": "error", "message": "Path not found", "path": path}
+            )
 
         return {
-            "input_path": path,
-            "found": item is not None,
-            "item": item,
+            "status": "ok",
+            "path": path,
+            "content_length": len(content),
+            "content": content,
         }
 
     except Exception as exc:
-        return {
-            "status": "error",
-            "type": type(exc).__name__,
-            "message": str(exc),
-        }
-
+        return JSONResponse(
+            status_code=500,
+            content={"status": "error", "message": str(exc), "type": type(exc).__name__}
+        )
 
 @app.get("/drive/list-path")
 def drive_list_path(path: str = "/"):
