@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "TRUNG_HUYEN_AI_OS_DRIVE",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "description": "Clean Drive Actions for TRUNG_HUYEN_AI_OS"
   },
   "servers": [
@@ -23,28 +23,17 @@
                 "type": "object",
                 "required": ["name", "approved"],
                 "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "parent_id": {
-                    "type": "string"
-                  },
-                  "approved": {
-                    "type": "boolean"
-                  }
+                  "name": { "type": "string" },
+                  "parent_id": { "type": "string" },
+                  "approved": { "type": "boolean" }
                 }
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "OK" } }
       }
     },
-
     "/mcp/create-document": {
       "post": {
         "operationId": "createDocument",
@@ -57,31 +46,18 @@
                 "type": "object",
                 "required": ["title", "approved"],
                 "properties": {
-                  "title": {
-                    "type": "string"
-                  },
-                  "content": {
-                    "type": "string"
-                  },
-                  "parent_id": {
-                    "type": "string"
-                  },
-                  "approved": {
-                    "type": "boolean"
-                  }
+                  "title": { "type": "string" },
+                  "content": { "type": "string" },
+                  "parent_id": { "type": "string" },
+                  "approved": { "type": "boolean" }
                 }
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "OK" } }
       }
     },
-
     "/mcp/append-document": {
       "post": {
         "operationId": "appendDocument",
@@ -92,40 +68,70 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "file_id",
-                  "content",
-                  "approved"
-                ],
+                "required": ["file_id", "content", "approved"],
                 "properties": {
-                  "file_id": {
-                    "type": "string"
-                  },
-                  "content": {
-                    "type": "string"
-                  },
-                  "approved": {
-                    "type": "boolean"
-                  }
+                  "file_id": { "type": "string" },
+                  "content": { "type": "string" },
+                  "approved": { "type": "boolean" }
                 }
               }
             }
           }
         },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/mcp/ping": {
+      "get": {
+        "operationId": "pingMcp",
+        "summary": "Ping MCP runtime",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Alive"
           }
         }
       }
     },
-
-    "/mcp/ping": {
+    "/mcp/bootstrap-system": {
       "get": {
-        "operationId": "pingMcp",
+        "operationId": "bootstrapSystem",
+        "summary": "Bootstrap TRUNG_HUYEN_AI_OS from Google Drive",
+        "description": "Load system memory, current context, capability registry, system awareness and active projects from Google Drive.",
         "responses": {
           "200": {
-            "description": "Alive"
+            "description": "System state loaded from Google Drive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" },
+                    "system_name": { "type": "string" },
+                    "drive_memory_root": { "type": "string" },
+                    "self_state": { "type": "string" },
+                    "capability_registry": { "type": "string" },
+                    "current_context": { "type": "string" },
+                    "system_awareness": { "type": "string" },
+                    "active_projects": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "recent_documents": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "current_tasks": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "available_tools": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
