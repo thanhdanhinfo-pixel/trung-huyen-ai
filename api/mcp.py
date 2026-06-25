@@ -691,3 +691,8 @@ def drive_tree():
     from drive import list_recursive
 
     return list_recursive()
+
+@router.get("/bootstrap-system")
+def bootstrap_system_direct():
+    from services.bootstrap_service import bootstrap_system
+    return bootstrap_system()
