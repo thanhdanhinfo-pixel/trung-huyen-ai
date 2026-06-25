@@ -417,6 +417,10 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 "message": str(exc),
                 "error_type": type(exc).__name__,
             }
+        return {
+            ...
+            "result": result,
+        }
 
     if tool == "append_document":
         file_id = args.get("file_id", "")
