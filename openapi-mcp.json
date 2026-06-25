@@ -41,6 +41,7 @@
               "system_tree",
               "workspace_bootstrap",
               "create_document",
+              "create_folder",
               "append_document"
             ]
           },
@@ -58,6 +59,86 @@
     }
   ],
   "paths": {
+    "/mcp/create-folder": {
+  "post": {
+    "operationId": "createFolder",
+    "summary": "Create Google Drive folder",
+    "security": [{ "ApiKeyAuth": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["name", "approved"],
+            "properties": {
+              "name": { "type": "string" },
+              "parent_id": { "type": "string" },
+              "approved": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "OK" }
+    }
+  }
+},
+"/mcp/create-document": {
+  "post": {
+    "operationId": "createDocument",
+    "summary": "Create Google Document",
+    "security": [{ "ApiKeyAuth": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["title", "approved"],
+            "properties": {
+              "title": { "type": "string" },
+              "name": { "type": "string" },
+              "content": { "type": "string" },
+              "parent_id": { "type": "string" },
+              "approved": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "OK" }
+    }
+  }
+},
+"/mcp/append-document": {
+  "post": {
+    "operationId": "appendDocument",
+    "summary": "Append Google Document",
+    "security": [{ "ApiKeyAuth": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["file_id", "content", "approved"],
+            "properties": {
+              "file_id": { "type": "string" },
+              "content": { "type": "string" },
+              "approved": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "OK" }
+    }
+  }
+},
     "/mcp/call": {
       "post": {
         "operationId": "callMcpTool",
