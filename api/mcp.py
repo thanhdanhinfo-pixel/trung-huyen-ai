@@ -33,8 +33,14 @@ class MCPCall(BaseModel):
     tool: str = Field(..., min_length=1)
     arguments: Dict[str, Any] = Field(default_factory=dict)
 
-def verify_mcp_key(x_api_key: str = Header(default="")):
-    if MCP_API_KEY and x_api_key != MCP_API_KEY:
+def verify_mcp_key(
+    x_api_key: str = "",
+    authorization: str = "",
+):
+    bearer_key = authorization.replace("Bearer ", "").strip()
+    provided_key = x_api_key or bearer_key
+
+    if MCP_API_KEY and provided_key != MCP_API_KEY:
         raise HTTPException(status_code=401, detail="Invalid MCP API key")
 
 def build_context(files: List[Dict[str, Any]]) -> str:
@@ -370,7 +376,11 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             name=name,
             parent_id=parent_id,
         )
-
+        return {
+        "status": "ok",
+        "tool": tool,
+        "result": result,
+        }
     
     if tool == "create_document":
         title = args.get("title") or args.get("name") or ""
@@ -638,46 +648,40 @@ def backend_call_direct(req: BackendCallRequest, x_api_key: str = Header(default
 @router.post("/create-folder")
 def create_folder_direct(
     req: dict,
-    x_api_key: str = Header(default="")
+    x_api_key: str = Header(default=""),
+    authorization: str = Header(default=""),
 ):
-    verify_mcp_key(x_api_key)
+    verify_mcp_key(x_api_key=x_api_key, authorization=authorization)
 
     return call_tool(
-        MCPCall(
-            tool="create_folder",
-            arguments=req,
-        ),
-        x_api_key=x_api_key,
+        MCPCall(tool="create_folder", arguments=req),
+        x_api_key=x_api_key or authorization.replace("Bearer ", "").strip(),
     )
 
 
 @router.post("/create-document")
 def create_document_direct(
     req: dict,
-    x_api_key: str = Header(default="")
+    x_api_key: str = Header(default=""),
+    authorization: str = Header(default=""),
 ):
-    verify_mcp_key(x_api_key)
+    verify_mcp_key(x_api_key=x_api_key, authorization=authorization)
 
     return call_tool(
-        MCPCall(
-            tool="create_document",
-            arguments=req,
-        ),
-        x_api_key=x_api_key,
+        MCPCall(tool="create_document", arguments=req),
+        x_api_key=x_api_key or authorization.replace("Bearer ", "").strip(),
     )
 
 
 @router.post("/append-document")
 def append_document_direct(
     req: dict,
-    x_api_key: str = Header(default="")
+    x_api_key: str = Header(default=""),
+    authorization: str = Header(default=""),
 ):
-    verify_mcp_key(x_api_key)
+    verify_mcp_key(x_api_key=x_api_key, authorization=authorization)
 
     return call_tool(
-        MCPCall(
-            tool="append_document",
-            arguments=req,
-        ),
-        x_api_key=x_api_key,
+        MCPCall(tool="append_document", arguments=req),
+        x_api_key=x_api_key or authorization.replace("Bearer ", "").strip(),
     )
