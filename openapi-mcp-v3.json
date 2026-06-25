@@ -138,3 +138,54 @@
     }
   }
 }
+"/mcp/read-file": {
+  "get": {
+    "operationId": "readFile",
+    "summary": "Read a file from GitHub repository",
+    "parameters": [
+      {
+        "name": "path",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "200": { "description": "File content" }
+    }
+  }
+},
+"/mcp/list-directory": {
+  "get": {
+    "operationId": "listDirectory",
+    "summary": "List repository directory",
+    "parameters": [
+      {
+        "name": "path",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "200": { "description": "Directory listing" }
+    }
+  }
+},
+"/mcp/search-code": {
+  "get": {
+    "operationId": "searchCode",
+    "summary": "Search code in repository",
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "200": { "description": "Search result" }
+    }
+  }
+}
