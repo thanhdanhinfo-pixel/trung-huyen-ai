@@ -134,28 +134,28 @@ def tools():
         ]
     }
     if tool == "create_folder":
-    name = args.get("name", "")
-    parent_id = args.get("parent_id", None)
-    approved = bool(args.get("approved", False))
+        name = args.get("name", "")
+        parent_id = args.get("parent_id", None)
+        approved = bool(args.get("approved", False))
 
-    if not approved:
-        return {
-            "status": "error",
-            "tool": tool,
-            "message": "Create denied. User approval is required.",
-        }
+        if not approved:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "Create denied. User approval is required.",
+            }
 
-    if not name:
-        return {
-            "status": "error",
-            "tool": tool,
-            "message": "name is required.",
-        }
+        if not name:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "name is required.",
+            }
 
-    result = create_folder(
-        name=name,
-        parent_id=parent_id,
-    )
+        result = create_folder(
+            name=name,
+            parent_id=parent_id,
+        )
 
     return {
         "status": "ok",
