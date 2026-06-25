@@ -376,6 +376,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         "tool": tool,
         "result": result,
     }      
+    
     if tool == "create_document":
         title = args.get("title") or args.get("name") or ""
         content = args.get("content", "")
@@ -402,11 +403,13 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 content=content,
                 parent_id=parent_id,
             )
+
             return {
                 "status": result.get("status", "ok"),
                 "tool": tool,
                 "result": result,
             }
+
         except Exception as exc:
             return {
                 "status": "error",
