@@ -1,0 +1,134 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "TRUNG_HUYEN_AI_OS_DRIVE",
+    "version": "3.0.0",
+    "description": "Clean Drive Actions for TRUNG_HUYEN_AI_OS"
+  },
+  "servers": [
+    {
+      "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+    }
+  ],
+  "paths": {
+    "/mcp/create-folder": {
+      "post": {
+        "operationId": "createFolder",
+        "summary": "Create Google Drive folder",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "approved"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "parent_id": {
+                    "type": "string"
+                  },
+                  "approved": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+
+    "/mcp/create-document": {
+      "post": {
+        "operationId": "createDocument",
+        "summary": "Create Google Document",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "approved"],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "parent_id": {
+                    "type": "string"
+                  },
+                  "approved": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+
+    "/mcp/append-document": {
+      "post": {
+        "operationId": "appendDocument",
+        "summary": "Append Google Document",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file_id",
+                  "content",
+                  "approved"
+                ],
+                "properties": {
+                  "file_id": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "approved": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+
+    "/mcp/ping": {
+      "get": {
+        "operationId": "pingMcp",
+        "responses": {
+          "200": {
+            "description": "Alive"
+          }
+        }
+      }
+    }
+  }
+}
