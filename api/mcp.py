@@ -135,35 +135,7 @@ def tools():
             "create_folder",
         ]
     }
-    if tool == "create_folder":
-        name = args.get("name", "")
-        parent_id = args.get("parent_id", None)
-        approved = bool(args.get("approved", False))
-
-        if not approved:
-            return {
-                "status": "error",
-                "tool": tool,
-                "message": "Create denied. User approval is required.",
-            }
-
-        if not name:
-            return {
-                "status": "error",
-                "tool": tool,
-                "message": "name is required.",
-            }
-
-        result = create_folder(
-            name=name,
-            parent_id=parent_id,
-        )
-
-    return {
-        "status": "ok",
-        "tool": tool,
-        "result": result,
-    }
+    
 @router.post("/call")
 def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
     if MCP_API_KEY and x_api_key != MCP_API_KEY:
@@ -375,6 +347,35 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "content_length": len(content),
             "content": content,
         }
+    if tool == "create_folder":
+        name = args.get("name", "")
+        parent_id = args.get("parent_id", None)
+        approved = bool(args.get("approved", False))
+
+        if not approved:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "Create denied. User approval is required.",
+            }
+
+        if not name:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "name is required.",
+            }
+
+        result = create_folder(
+            name=name,
+            parent_id=parent_id,
+        )
+
+    return {
+        "status": "ok",
+        "tool": tool,
+        "result": result,
+    }      
     if tool == "create_document":
         title = args.get("title") or args.get("name") or ""
         content = args.get("content", "")
