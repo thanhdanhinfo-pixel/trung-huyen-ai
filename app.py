@@ -29,6 +29,7 @@ from drive import (
     read_by_path,
     read_folder,
 )
+from drive import find_file_by_path
 from drive import search_files, read_file_content, search_and_read, list_files
 try:
     from rag.indexer import index_drive
@@ -613,33 +614,20 @@ def rag_count():
 @app.get("/drive/read-path")
 def drive_read_path(path: str):
     try:
-        content = read_by_path(path)
-
-        if content is None:
-            return JSONResponse(
-                status_code=404,
-                content={
-                    "status": "error",
-                    "message": "Path not found",
-                    "path": path,
-                },
-            )
+        item = find_file_by_path(path)
 
         return {
-            "status": "ok",
-            "path": path,
-            "content_length": len(content),
-            "content": content,
+            "input_path": path,
+            "found": item is not None,
+            "item": item,
         }
 
     except Exception as exc:
-        return JSONResponse(
-            status_code=500,
-            content={
-                "status": "error",
-                "message": str(exc),
-            },
-        )
+        return {
+            "status": "error",
+            "type": type(exc).__name__,
+            "message": str(exc),
+        }
 
 
 @app.get("/drive/list-path")
