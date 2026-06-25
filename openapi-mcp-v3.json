@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "TRUNG_HUYEN_AI_OS_DRIVE",
-    "version": "3.1.0",
+    "version": "3.2.0",
     "description": "Clean Drive Actions for TRUNG_HUYEN_AI_OS"
   },
   "servers": [
@@ -31,7 +31,9 @@
             }
           }
         },
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "200": { "description": "OK" }
+        }
       }
     },
     "/mcp/create-document": {
@@ -55,7 +57,9 @@
             }
           }
         },
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "200": { "description": "OK" }
+        }
       }
     },
     "/mcp/append-document": {
@@ -78,7 +82,9 @@
             }
           }
         },
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "200": { "description": "OK" }
+        }
       }
     },
     "/mcp/ping": {
@@ -86,9 +92,7 @@
         "operationId": "pingMcp",
         "summary": "Ping MCP runtime",
         "responses": {
-          "200": {
-            "description": "Alive"
-          }
+          "200": { "description": "Alive" }
         }
       }
     },
@@ -96,117 +100,78 @@
       "get": {
         "operationId": "bootstrapSystem",
         "summary": "Bootstrap TRUNG_HUYEN_AI_OS from Google Drive",
-        "description": "Load system memory, current context, capability registry, system awareness and active projects from Google Drive.",
         "responses": {
-          "200": {
-            "description": "System state loaded from Google Drive",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": { "type": "string" },
-                    "system_name": { "type": "string" },
-                    "drive_memory_root": { "type": "string" },
-                    "self_state": { "type": "string" },
-                    "capability_registry": { "type": "string" },
-                    "current_context": { "type": "string" },
-                    "system_awareness": { "type": "string" },
-                    "active_projects": {
-                      "type": "array",
-                      "items": { "type": "string" }
-                    },
-                    "recent_documents": {
-                      "type": "array",
-                      "items": { "type": "string" }
-                    },
-                    "current_tasks": {
-                      "type": "array",
-                      "items": { "type": "string" }
-                    },
-                    "available_tools": {
-                      "type": "array",
-                      "items": { "type": "string" }
-                    }
-                  }
-                }
-              }
-            }
+          "200": { "description": "System state loaded from Google Drive" }
+        }
+      }
+    },
+    "/mcp/read-drive-file": {
+      "get": {
+        "operationId": "readDriveFile",
+        "summary": "Read Google Drive file content by file id",
+        "parameters": [
+          {
+            "name": "file_id",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
           }
+        ],
+        "responses": {
+          "200": { "description": "Drive file content" }
+        }
+      }
+    },
+    "/mcp/read-file": {
+      "get": {
+        "operationId": "readFile",
+        "summary": "Read a file from GitHub repository",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "File content" }
+        }
+      }
+    },
+    "/mcp/list-directory": {
+      "get": {
+        "operationId": "listDirectory",
+        "summary": "List repository directory",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Directory listing" }
+        }
+      }
+    },
+    "/mcp/search-code": {
+      "get": {
+        "operationId": "searchCode",
+        "summary": "Search code in repository",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Search result" }
         }
       }
     }
   }
-}
-"/mcp/read-file": {
-  "get": {
-    "operationId": "readFile",
-    "summary": "Read a file from GitHub repository",
-    "parameters": [
-      {
-        "name": "path",
-        "in": "query",
-        "required": true,
-        "schema": { "type": "string" }
-      }
-    ],
-    "responses": {
-      "200": { "description": "File content" }
-    }
-  }
-},
-"/mcp/list-directory": {
-  "get": {
-    "operationId": "listDirectory",
-    "summary": "List repository directory",
-    "parameters": [
-      {
-        "name": "path",
-        "in": "query",
-        "required": true,
-        "schema": { "type": "string" }
-      }
-    ],
-    "responses": {
-      "200": { "description": "Directory listing" }
-    }
-  }
-},
-"/mcp/search-code": {
-  "get": {
-    "operationId": "searchCode",
-    "summary": "Search code in repository",
-    "parameters": [
-      {
-        "name": "query",
-        "in": "query",
-        "required": true,
-        "schema": { "type": "string" }
-      }
-    ],
-    "responses": {
-      "200": { "description": "Search result" }
-    }
-  }
-}
-"/mcp/read-drive-file": {
-  "get": {
-    "operationId": "readDriveFile",
-    "summary": "Read Google Drive file content by file id",
-    "parameters": [
-      {
-        "name": "file_id",
-        "in": "query",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Drive file content"
-      }
-    }
-  }
-}
+          }
