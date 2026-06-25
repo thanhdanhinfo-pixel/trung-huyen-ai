@@ -25,6 +25,10 @@ from config import (
     QDRANT_URL,
     QDRANT_API_KEY,
 )
+from drive import (
+    read_by_path,
+    read_folder,
+)
 from drive import search_files, read_file_content, search_and_read, list_files
 try:
     from rag.indexer import index_drive
@@ -605,6 +609,55 @@ def rag_count():
                 "message": str(exc),
                 "type": type(exc).__name__
             }
+        )
+@app.get("/drive/read-path")
+def drive_read_path(path: str):
+    try:
+        content = read_by_path(path)
+
+        if content is None:
+            return JSONResponse(
+                status_code=404,
+                content={
+                    "status": "error",
+                    "message": "Path not found",
+                    "path": path,
+                },
+            )
+
+        return {
+            "status": "ok",
+            "path": path,
+            "content_length": len(content),
+            "content": content,
+        }
+
+    except Exception as exc:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": str(exc),
+            },
+        )
+
+
+@app.get("/drive/list-path")
+def drive_list_path(path: str = "/"):
+    try:
+        return {
+            "status": "ok",
+            "path": path,
+            "files": read_folder(path),
+        }
+
+    except Exception as exc:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": str(exc),
+            },
         )
 # =====================================
 # CHAT
