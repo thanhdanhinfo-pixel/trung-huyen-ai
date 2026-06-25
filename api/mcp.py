@@ -16,6 +16,7 @@ from drive import (
     append_google_doc,
     create_google_doc,
     create_folder,
+
 )
 from fastapi import Header, HTTPException
 from config import MCP_API_KEY, DRIVE_FOLDER_ID, drive_root_sources
@@ -131,6 +132,7 @@ def tools():
             "workspace_bootstrap",
             "create_document",
             "append_document",
+            "create_folder",
         ]
     }
     if tool == "create_folder":
