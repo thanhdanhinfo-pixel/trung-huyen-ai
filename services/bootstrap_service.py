@@ -1,14 +1,5 @@
-from drive import list_recursive, read_file_content
+from drive import list_recursive,
 from config import drive_root_sources
-
-CORE_NAMES = [
-    "01_CURRENT_STATE.md",
-    "02_CAPABILITY_REGISTRY.md",
-    "03_RUNTIME_STATE.md",
-    "04_SYSTEM_AWARENESS.md",
-    "05_NEXT_OBJECTIVES.md",
-    "06_LOAD_SYSTEM_BOOTSTRAP.md",
-]
 
 
 def safe_read_file(file_id):
