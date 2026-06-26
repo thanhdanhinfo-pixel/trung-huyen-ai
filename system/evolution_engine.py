@@ -5,10 +5,23 @@ from system.knowledge_graph import knowledge_graph
 from system.event_bus import event_bus
 
 class EvolutionEngine:
-    def evolve(self):
-        r=reflection_engine.reflect_on_day(); l=learning_engine.learn(); a=adaptation_engine.adapt(); k=knowledge_graph.snapshot()
-        promoted=l.get('rule_candidates',[])
-        event_bus.publish('EVOLUTION_CYCLE_COMPLETED',{'promoted':promoted})
-        return {'status':'evolving','promoted_rules':promoted,'knowledge':k,'adaptation':a}
+    def evaluate(self):
+        knowledge = knowledge_graph.snapshot()
+        return {
+            'status': 'evaluated',
+            'decision_count': knowledge.get('decision_count', 0),
+            'pattern_count': knowledge.get('pattern_count', 0),
+            'recommendation': 'promote_stable_patterns' if knowledge.get('pattern_count', 0) > 0 else 'observe_more'
+        }
 
-evolution_engine=EvolutionEngine()
+    def evolve(self):
+        r = reflection_engine.reflect_on_day()
+        l = learning_engine.learn()
+        a = adaptation_engine.adapt()
+        k = knowledge_graph.snapshot()
+        e = self.evaluate()
+        promoted = l.get('rule_candidates', []) if e['recommendation'] == 'promote_stable_patterns' else []
+        event_bus.publish('EVOLUTION_CYCLE_COMPLETED', {'promoted': promoted, 'evaluation': e})
+        return {'status': 'evolving', 'evaluation': e, 'promoted_rules': promoted, 'knowledge': k, 'adaptation': a}
+
+evolution_engine = EvolutionEngine()
