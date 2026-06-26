@@ -163,10 +163,67 @@ class ExecutionEngine:
         if compiled["status"] != "ok":
             return compiled
 
+        standard_ops: List[Dict[str, Any]] = []
+        direct_results: List[Dict[str, Any]] = []
+        direct_errors: List[Dict[str, Any]] = []
+
+        for index, operation in enumerate(compiled["operations"]):
+            op_type = operation.get("type")
+            try:
+                if op_type == "copy":
+                    direct_results.append({
+                        "index": index,
+                        "type": op_type,
+                        "status": "ok",
+                        "result": github_copy_file(
+                            operation["source"],
+                            operation["destination"],
+                            operation.get("message") or plan.message,
+                            overwrite=bool(operation.get("overwrite", False)),
+                        ),
+                    })
+                elif op_type == "move":
+                    direct_results.append({
+                        "index": index,
+                        "type": op_type,
+                        "status": "ok",
+                        "result": github_move_file(
+                            operation["source"],
+                            operation["destination"],
+                            operation.get("message") or plan.message,
+                            overwrite=bool(operation.get("overwrite", False)),
+                        ),
+                    })
+                else:
+                    standard_ops.append(operation)
+            except Exception as exc:
+                direct_errors.append({
+                    "index": index,
+                    "type": op_type,
+                    "status": "error",
+                    "error_type": type(exc).__name__,
+                    "message": str(exc),
+                })
+
         result = github_batch_update(
             message=plan.message,
-            operations=compiled["operations"],
-        )
+            operations=standard_ops,
+        ) if standard_ops else {
+            "status": "ok",
+            "message": plan.message,
+            "total": 0,
+            "succeeded": 0,
+            "failed": 0,
+            "results": [],
+            "errors": [],
+        }
+
+        result["results"] = result.get("results", []) + direct_results
+        result["errors"] = result.get("errors", []) + direct_errors
+        result["total"] = result.get("total", 0) + len(direct_results) + len(direct_errors)
+        result["succeeded"] = result.get("succeeded", 0) + len(direct_results)
+        result["failed"] = result.get("failed", 0) + len(direct_errors)
+        result["status"] = "ok" if not result.get("errors") else "partial_error"
 
         return {
             "status": result.get("status"),
