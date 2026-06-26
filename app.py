@@ -233,6 +233,9 @@ def rag_index(limit: int = 10):
                 "type": type(exc).__name__
             }
         ) 
+@app.post("/ping-post")
+def ping_post():
+    return {"status": "ok"}
 # =====================================
 # RAG
 # =====================================
@@ -572,21 +575,38 @@ def drive_read(file_id: str):
                                                 
 @app.post("/drive/search-read")
 def drive_search_read(req: SearchReadRequest):
+
+    print("=== SEARCH READ START ===")
+    print(req.model_dump())
+
     try:
         files = search_and_read(
             q=req.q,
             limit=req.limit,
             max_chars_per_file=req.max_chars_per_file,
         )
+
+        print("=== SEARCH READ DONE ===")
+        print(len(files))
+
         return {
             "status": "ok",
             "query": req.q,
             "files": files,
         }
+
     except Exception as exc:
-        return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
+        import traceback
+        traceback.print_exc()
 
-
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": str(exc),
+                "type": type(exc).__name__,
+            },
+        )
 @app.get("/rag/count")
 def rag_count():
     try:
