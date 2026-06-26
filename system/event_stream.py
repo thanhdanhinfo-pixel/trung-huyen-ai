@@ -9,3 +9,6 @@ def replay(limit=100):
     STORE.parent.mkdir(parents=True,exist_ok=True)
     STORE.write_text(json.dumps(events,ensure_ascii=False,indent=2),encoding='utf-8')
     return {'mode':'replay','persisted':True,'events':events}
+
+def sse_snapshot(limit=20):
+    return {'mode':'sse-foundation','events':event_bus.recent(limit)}
