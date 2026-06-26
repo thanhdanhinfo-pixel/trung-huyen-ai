@@ -71,8 +71,9 @@ except Exception as exc:
 
 @app.on_event('startup')
 async def system_startup_boot():
-    boot()
-    production_scheduler.start()
+    print("=== SAFE STARTUP MODE ===")
+    print("boot() and production_scheduler.start() temporarily disabled")
+    return
 
 app.add_middleware(
     CORSMiddleware,
