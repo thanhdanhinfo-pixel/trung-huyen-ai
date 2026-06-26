@@ -20,7 +20,7 @@
             "description": "Alive",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "additionalProperties": true }
+                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
               }
             }
           }
