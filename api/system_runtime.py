@@ -1,46 +1,37 @@
 from fastapi import APIRouter
-from system import observability, system_awareness, governance, self_healing, policy_engine, rule_engine
+from system import observability, system_awareness, governance, self_healing, policy_engine, rule_engine, event_bus
 
 router = APIRouter(prefix='/system', tags=['system-runtime'])
 
 @router.get('/health')
 def system_health(): return observability.system_snapshot()
-
 @router.get('/snapshot')
 def system_snapshot(): return observability.system_snapshot()
-
 @router.get('/awareness')
 def awareness(): return system_awareness.snapshot()
-
 @router.get('/capabilities')
 def capabilities(): return observability.capability_status()
-
 @router.get('/governance')
 def governance_report(): return governance.health_report()
-
 @router.get('/governance/actions')
 def governance_actions(): return {'actions': governance.recommended_actions()}
-
 @router.get('/self-healing')
 def healing_status(): return self_healing.detect()
-
 @router.post('/self-healing/repair')
 def healing_repair(): return self_healing.auto_repair()
-
 @router.get('/planner')
 def planner_runtime(): return observability.planner_status()
-
 @router.get('/workers')
 def workers_runtime(): return observability.worker_status()
-
 @router.get('/tasks')
 def tasks_runtime(): return observability.task_status()
-
 @router.get('/policies')
 def policies(): return policy_engine.evaluate()
-
 @router.get('/rules')
 def rules(): return rule_engine.evaluate()
-
 @router.post('/rules/execute')
 def execute_rules(): return rule_engine.execute()
+@router.get('/events')
+def events(limit:int=50): return event_bus.recent(limit)
+@router.get('/events/stats')
+def event_stats(): return event_bus.stats()
