@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from system import system_awareness, digital_twin, observability
+from system import system_awareness, digital_twin, observability, event_bus
 
 SNAPSHOT_PATH = Path(__file__).parent / 'runtime' / 'system_snapshot.json'
 
