@@ -11,114 +11,12 @@
     }
   ],
   "paths": {
-    "/mcp/create-folder": {
-      "post": {
-        "operationId": "createFolder",
-        "summary": "Create Google Drive folder",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["name", "approved"],
-                "properties": {
-                  "name": { "type": "string" },
-                  "parent_id": { "type": "string" },
-                  "approved": { "type": "boolean" }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": { "description": "OK" }
-        }
-      }
-    },
-    "/mcp/create-document": {
-      "post": {
-        "operationId": "createDocument",
-        "summary": "Create Google Document",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["title", "approved"],
-                "properties": {
-                  "title": { "type": "string" },
-                  "content": { "type": "string" },
-                  "parent_id": { "type": "string" },
-                  "approved": { "type": "boolean" }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": { "description": "OK" }
-        }
-      }
-    },
-    "/mcp/append-document": {
-      "post": {
-        "operationId": "appendDocument",
-        "summary": "Append Google Document",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["file_id", "content", "approved"],
-                "properties": {
-                  "file_id": { "type": "string" },
-                  "content": { "type": "string" },
-                  "approved": { "type": "boolean" }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": { "description": "OK" }
-        }
-      }
-    },
     "/mcp/ping": {
       "get": {
         "operationId": "pingMcp",
         "summary": "Ping MCP runtime",
         "responses": {
           "200": { "description": "Alive" }
-        }
-      }
-    },
-    "/mcp/bootstrap-system": {
-      "get": {
-        "operationId": "bootstrapSystem",
-        "summary": "Bootstrap TRUNG_HUYEN_AI_OS from Google Drive",
-        "responses": {
-          "200": { "description": "System state loaded from Google Drive" }
-        }
-      }
-    },
-    "/mcp/read-drive-file": {
-      "get": {
-        "operationId": "readDriveFile",
-        "summary": "Read Google Drive file content by file id",
-        "parameters": [
-          {
-            "name": "file_id",
-            "in": "query",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": { "description": "Drive file content" }
         }
       }
     },
@@ -172,27 +70,23 @@
           "200": { "description": "Search result" }
         }
       }
-    }
-  },
-  "/mcp/read-drive-path": {
-    "get": {
-      "operationId": "readDrivePath",
-      "summary": "Read Google Drive file by logical path",
-      "parameters": [
-        {
-          "name": "path",
-          "in": "query",
-          "required": true,
-          "schema": {
-            "type": "string"
+    },
+    "/mcp/read-drive-path": {
+      "get": {
+        "operationId": "readDrivePath",
+        "summary": "Read Google Drive file by logical path",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
           }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Drive file content"
+        ],
+        "responses": {
+          "200": { "description": "Drive file content" }
         }
       }
     }
-  }        
   }
+}
