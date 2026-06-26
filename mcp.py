@@ -73,6 +73,7 @@ def tool_names() -> List[str]:
     return [
             "copy_file",
             "move_file",
+            "run_command",
         "list_documents",
         "search_documents",
         "read_document",
