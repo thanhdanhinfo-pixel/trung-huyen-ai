@@ -1,0 +1,67 @@
+name: SYSTEM_AUTONOMY_CORE_PERMISSION_ENABLEMENT_PLAN
+status: pending_founder_action
+purpose: Enable TRUNG_HUYEN_AI_OS to observe and recover its own runtime safely.
+
+principles:
+  - The AI cannot self-grant external IAM or GitHub token permissions.
+  - External permissions must be granted by the Founder or cloud owner.
+  - Runtime mutation tools require approval gates.
+  - Read-only observability should be enabled before mutation tools.
+
+phase_1_read_only_observability:
+  priority: highest
+  permissions:
+    cloud_run_logs:
+      target: Cloud Logging read access for service trung-huyen-ai
+      required_by: AI log diagnosis
+      risk: low
+    cloud_run_revision_read:
+      target: Cloud Run revision and service read access
+      required_by: detect latest green/broken revision
+      risk: low
+    cloud_build_read:
+      target: Cloud Build build status and logs read access
+      required_by: detect red/green checks without Founder copy-paste
+      risk: low
+    github_checks_read:
+      target: GitHub checks/status API read access
+      required_by: detect commit status automatically
+      risk: low
+
+phase_2_safe_test_execution:
+  priority: high
+  permissions:
+    local_import_test:
+      command_allowlist:
+        - python -c "import app; print('APP_IMPORT_OK')"
+        - python -m compileall .
+      risk: medium
+      mutation_allowed: false
+    import_graph_scanner:
+      access: read-only
+      risk: low
+
+phase_3_controlled_recovery:
+  priority: medium
+  permissions:
+    cloud_run_rollback:
+      target: move traffic to last known green revision
+      requires_founder_approval: true
+      risk: high
+    cloud_build_trigger:
+      target: trigger build for current main commit
+      requires_founder_approval: true
+      risk: medium
+
+phase_4_restricted_command_execution:
+  priority: last
+  permissions:
+    run_command:
+      default: disabled
+      allowed_only_with_approval: true
+      command_allowlist: []
+      forbidden:
+        - secret exfiltration
+        - destructive filesystem operations
+        - arbitrary network mutation
+        - production credential printing
