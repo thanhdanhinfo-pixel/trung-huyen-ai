@@ -6,10 +6,7 @@ from pydantic import BaseModel, Field
 
 from config import MCP_API_KEY, OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
 from drive import (
-    GOOGLE_FOLDER,
     list_files,
-    list_files_recursive,
-    list_recursive,
     read_file_content,
     search_and_read,
     create_folder,
@@ -112,6 +109,9 @@ def manifest():
             {"name": "backend_call", "description": "Gọi endpoint nội bộ của backend"},
             {"name": "system_tree", "description": "Lấy cây thư mục Google Drive"},
             {"name": "workspace_bootstrap", "description": "Nạp trạng thái workspace ban đầu"},
+            {"name": "drive_list_children", "description": "Liệt kê trực tiếp con của một Google Drive folder theo folder_id"},
+            {"name": "drive_tree", "description": "Lấy cây Google Drive có giới hạn depth để tránh response quá lớn"},
+            {"name": "drive_index", "description": "Lập chỉ mục Google Drive có giới hạn theo folder_id và limit"},
             {"name": "create_folder", "description": "Tạo thư mục Google Drive sau khi được phê duyệt"},
             {"name": "create_document", "description": "Tạo Google Docs mới sau khi được phê duyệt"},
             {"name": "append_document", "description": "Thêm nội dung vào cuối Google Docs sau khi được phê duyệt"},
