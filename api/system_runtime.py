@@ -35,3 +35,10 @@ def execute_rules(): return rule_engine.execute()
 def events(limit:int=50): return event_bus.recent(limit)
 @router.get('/events/stats')
 def event_stats(): return event_bus.stats()
+
+@router.get('/events/live')
+def live_events(limit:int=20):
+    return {
+        'mode':'polling-v1',
+        'events': event_bus.recent(limit)
+    }
