@@ -18,6 +18,7 @@ def smoke_test():
         "/mcp/ping",
         "/runtime/errors",
         "/version",
+        "/rag/init",
     ]
 
     results = []
