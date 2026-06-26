@@ -243,6 +243,9 @@ def execution_plan_from_dict(data: Dict[str, Any]) -> ExecutionPlan:
             find=item.get("find", ""),
             replace=item.get("replace", ""),
             message=item.get("message", ""),
+            source=item.get("source", ""),
+            destination=item.get("destination", ""),
+            overwrite=bool(item.get("overwrite", False)),
         )
         for item in data.get("steps", [])
     ]
