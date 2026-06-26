@@ -38,6 +38,8 @@ class RuleEngine:
 
         for rule in rules:
             if rule['action'] == 'trigger_self_healing':
+                from system import event_bus
+                event_bus.publish('RULE_TRIGGERED', rule)
                 executed.append(self_healing.auto_repair())
 
         return {
