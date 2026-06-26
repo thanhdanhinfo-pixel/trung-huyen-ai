@@ -109,9 +109,6 @@ def manifest():
             {"name": "backend_call", "description": "Gọi endpoint nội bộ của backend"},
             {"name": "system_tree", "description": "Lấy cây thư mục Google Drive"},
             {"name": "workspace_bootstrap", "description": "Nạp trạng thái workspace ban đầu"},
-            {"name": "drive_list_children", "description": "Liệt kê trực tiếp con của một Google Drive folder theo folder_id"},
-            {"name": "drive_tree", "description": "Lấy cây Google Drive có giới hạn depth để tránh response quá lớn"},
-            {"name": "drive_index", "description": "Lập chỉ mục Google Drive có giới hạn theo folder_id và limit"},
             {"name": "create_folder", "description": "Tạo thư mục Google Drive sau khi được phê duyệt"},
             {"name": "create_document", "description": "Tạo Google Docs mới sau khi được phê duyệt"},
             {"name": "append_document", "description": "Thêm nội dung vào cuối Google Docs sau khi được phê duyệt"},
@@ -248,7 +245,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         }
 
     if tool == "workspace_bootstrap":
-        from drive import list_recursive, read_by_path
+        from drive import read_by_path
         files = list_recursive()
         protocol_path = "09_INFRASTRUCTURE/AI_PROTOCOLS/00_AI_PROTOCOL"
         state_path = "07_AI_FACTORY/00_AI_STATE.md"
@@ -268,6 +265,81 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                     for f in files
                 ],
             },
+        }
+
+    if tool == "drive_list_children":
+        folder_id = args.get("folder_id") or None
+        limit = min(int(args.get("limit", 100)), 500)
+        files = list_files(limit=limit, folder_id=folder_id)
+        folders = [f for f in files if f.get("mimeType") == GOOGLE_FOLDER]
+        documents = [f for f in files if f.get("mimeType") != GOOGLE_FOLDER]
+        return {
+            "status": "ok",
+            "tool": tool,
+            "folder_id": folder_id,
+            "limit": limit,
+            "count": len(files),
+            "folder_count": len(folders),
+            "document_count": len(documents),
+            "folders": folders,
+            "documents": documents,
+        }
+
+    if tool == "drive_tree":
+        folder_id = args.get("folder_id") or None
+        depth = max(1, min(int(args.get("depth", 2)), 6))
+        limit = min(int(args.get("limit", 300)), 1000)
+        items = list_recursive(parent_id=folder_id)
+        scoped = []
+        for item in items:
+            path = item.get("path", item.get("name", ""))
+            if not path:
+                continue
+            item_depth = len([part for part in path.split("/") if part])
+            if item_depth <= depth:
+                scoped.append({
+                    "id": item.get("id"),
+                    "name": item.get("name"),
+                    "path": path,
+                    "mimeType": item.get("mimeType"),
+                    "modifiedTime": item.get("modifiedTime"),
+                    "webViewLink": item.get("webViewLink"),
+                    "source": item.get("source"),
+                    "source_id": item.get("source_id"),
+                })
+            if len(scoped) >= limit:
+                break
+        return {
+            "status": "ok",
+            "tool": tool,
+            "folder_id": folder_id,
+            "depth": depth,
+            "limit": limit,
+            "count": len(scoped),
+            "items": scoped,
+        }
+
+    if tool == "drive_index":
+        folder_id = args.get("folder_id") or None
+        limit = min(int(args.get("limit", 500)), 2000)
+        files = list_files_recursive(folder_id=folder_id, limit=limit)
+        folders = [f for f in files if f.get("mimeType") == GOOGLE_FOLDER]
+        documents = [f for f in files if f.get("mimeType") != GOOGLE_FOLDER]
+        by_mime = {}
+        for item in files:
+            mime = item.get("mimeType", "unknown")
+            by_mime[mime] = by_mime.get(mime, 0) + 1
+        return {
+            "status": "ok",
+            "tool": tool,
+            "folder_id": folder_id,
+            "limit": limit,
+            "total_count": len(files),
+            "folder_count": len(folders),
+            "document_count": len(documents),
+            "by_mime": by_mime,
+            "folders": folders,
+            "documents": documents,
         }
 
     if tool == "create_folder":
