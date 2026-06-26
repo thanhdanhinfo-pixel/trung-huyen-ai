@@ -19,6 +19,8 @@ class EvolutionEngine:
         evaluation=self.evaluate()
         archive=self.archive_candidates()
         event_bus.publish('EVOLUTION_EVALUATED',evaluation)
+        from system.evolution_history import evolution_history
+        evolution_history.record('EVOLUTION_EVALUATED', evaluation)
         return {'status':'evolving','evaluation':evaluation,'archive':archive,'adaptation':adaptation,'promoted_rules':learning.get('rule_candidates',[])}
 
 evolution_engine=EvolutionEngine()
