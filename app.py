@@ -140,30 +140,6 @@ except Exception as exc:
     print("Graph router not loaded:", exc)
     graph_router = None
 
-try:
-    from api.system_status import router as system_status_router
-except Exception as exc:
-    print("System status router not loaded:", exc)
-    system_status_router = None
-
-try:
-    from api.rag_runtime import router as rag_runtime_router
-except Exception as exc:
-    print("RAG runtime router not loaded:", exc)
-    rag_runtime_router = None
-
-try:
-    from api.command_runner import router as command_runner_router
-except Exception as exc:
-    print("Command runner router not loaded:", exc)
-    command_runner_router = None
-
-try:
-    from api.observability_tools import router as observability_tools_router
-except Exception as exc:
-    print("Observability tools router not loaded:", exc)
-    observability_tools_router = None
-
 app.include_router(system_router)
 app.include_router(debug_router)
 app.include_router(runtime_router)
@@ -174,6 +150,14 @@ if digital_twin_router:
     app.include_router(digital_twin_router)
 if graph_router:
     app.include_router(graph_router)
+if system_status_router:
+    app.include_router(system_status_router)
+if rag_runtime_router:
+    app.include_router(rag_runtime_router)
+if command_runner_router:
+    app.include_router(command_runner_router)
+if observability_tools_router:
+    app.include_router(observability_tools_router)
 app.mount('/dashboard', StaticFiles(directory='static/dashboard', html=True), name='dashboard')
 
 class ChatRequest(BaseModel):
