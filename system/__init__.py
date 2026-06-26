@@ -5,13 +5,9 @@ from .governance import governance
 from .self_healing import self_healing
 from .policy_engine import policy_engine
 from .rule_engine import rule_engine
+from .event_bus import event_bus
 
 __all__ = [
-    'system_awareness',
-    'digital_twin',
-    'observability',
-    'governance',
-    'self_healing',
-    'policy_engine',
-    'rule_engine',
+    'system_awareness','digital_twin','observability','governance',
+    'self_healing','policy_engine','rule_engine','event_bus'
 ]
