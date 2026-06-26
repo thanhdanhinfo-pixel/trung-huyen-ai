@@ -36,6 +36,16 @@ def tasks(): return observability.task_status()
 def events(limit:int=50): return event_bus.recent(limit)
 @router.get('/events/stats')
 def event_stats(): return event_bus.stats()
+@router.get('/events/retention')
+def event_retention_policy():
+    from system.event_retention import event_retention
+    return event_retention.policy()
+
+@router.get('/events/subscriptions')
+def event_subs():
+    from system.event_subscriptions import event_subscriptions
+    return event_subscriptions.snapshot()
+
 @router.get('/events/live')
 def events_live(limit:int=20): return {'mode':'polling-v1','events':event_bus.recent(limit)}
 @router.get('/evolution')
