@@ -58,14 +58,25 @@ def smoke_test():
         "results": results,
     }
 
-
 @router.post("/rollback")
 def rollback():
+    try:
+        subprocess.run(
+            ["git", "revert", "--no-edit", "HEAD"],
+            check=True,
+        )
 
-    return {
-        "status": "not_implemented",
-        "message": "Future capability: revert last commit and redeploy."
-    }
+        return {
+            "status": "ok",
+            "message": "Last commit reverted",
+        }
+
+    except Exception as exc:
+        return {
+            "status": "error",
+            "message": str(exc),
+            "type": type(exc).__name__,
+        }
 
 
 @router.get("/capabilities")
