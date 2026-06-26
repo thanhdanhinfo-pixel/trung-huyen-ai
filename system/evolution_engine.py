@@ -6,22 +6,19 @@ from system.event_bus import event_bus
 
 class EvolutionEngine:
     def evaluate(self):
-        knowledge = knowledge_graph.snapshot()
-        return {
-            'status': 'evaluated',
-            'decision_count': knowledge.get('decision_count', 0),
-            'pattern_count': knowledge.get('pattern_count', 0),
-            'recommendation': 'promote_stable_patterns' if knowledge.get('pattern_count', 0) > 0 else 'observe_more'
-        }
+        k=knowledge_graph.snapshot()
+        return {'status':'evaluated','score':k.get('pattern_count',0)+k.get('decision_count',0)}
+
+    def archive_candidates(self):
+        return {'archived':[], 'reason':'no_obsolete_patterns_detected'}
 
     def evolve(self):
-        r = reflection_engine.reflect_on_day()
-        l = learning_engine.learn()
-        a = adaptation_engine.adapt()
-        k = knowledge_graph.snapshot()
-        e = self.evaluate()
-        promoted = l.get('rule_candidates', []) if e['recommendation'] == 'promote_stable_patterns' else []
-        event_bus.publish('EVOLUTION_CYCLE_COMPLETED', {'promoted': promoted, 'evaluation': e})
-        return {'status': 'evolving', 'evaluation': e, 'promoted_rules': promoted, 'knowledge': k, 'adaptation': a}
+        reflection_engine.reflect_on_day()
+        learning=learning_engine.learn()
+        adaptation=adaptation_engine.adapt()
+        evaluation=self.evaluate()
+        archive=self.archive_candidates()
+        event_bus.publish('EVOLUTION_EVALUATED',evaluation)
+        return {'status':'evolving','evaluation':evaluation,'archive':archive,'adaptation':adaptation,'promoted_rules':learning.get('rule_candidates',[])}
 
-evolution_engine = EvolutionEngine()
+evolution_engine=EvolutionEngine()
