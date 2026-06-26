@@ -228,54 +228,6 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             return {"status": "error", "tool": tool, "message": "path, content, sha and message are required"}
         return {"status": "ok", "tool": tool, "result": github_update_file(path, content, sha, message)}
 
-    if tool == "copy_file":
-        approved = bool(args.get("approved", False))
-        if not approved:
-            return {"status": "error", "tool": tool, "message": "User approval is required"}
-        source = args.get("source", "")
-        destination = args.get("destination", "")
-        if not source or not destination:
-            return {"status": "error", "tool": tool, "message": "source and destination are required"}
-        message = args.get("message") or f"Copy {source} -> {destination}"
-        result = github_copy_file(
-            source=source,
-            destination=destination,
-            message=message,
-            overwrite=bool(args.get("overwrite", False)),
-        )
-        return {"status": "ok", "tool": tool, "result": result}
-
-    if tool == "move_file":
-        approved = bool(args.get("approved", False))
-        if not approved:
-            return {"status": "error", "tool": tool, "message": "User approval is required"}
-        source = args.get("source", "")
-        destination = args.get("destination", "")
-        if not source or not destination:
-            return {"status": "error", "tool": tool, "message": "source and destination are required"}
-        message = args.get("message") or f"Move {source} -> {destination}"
-        result = github_move_file(
-            source=source,
-            destination=destination,
-            message=message,
-            overwrite=bool(args.get("overwrite", False)),
-        )
-        return {"status": "ok", "tool": tool, "result": result}
-
-    if tool == "run_command":
-        approved = bool(args.get("approved", False))
-        if not approved:
-            return {"status": "error", "tool": tool, "message": "User approval is required"}
-        command = args.get("command", "")
-        if not command:
-            return {"status": "error", "tool": tool, "message": "command is required"}
-        result = run_command(
-            command=command,
-            cwd=args.get("cwd"),
-            timeout=int(args.get("timeout", 60)),
-        )
-        return {"status": result.get("status"), "tool": tool, "result": result}
-
     if tool == "execute_plan":
         approved = bool(args.get("approved", False))
         plan_data = args.get("plan") or {}
