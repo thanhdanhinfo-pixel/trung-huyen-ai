@@ -6,7 +6,10 @@ from pydantic import BaseModel, Field
 
 from config import MCP_API_KEY, OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
 from drive import (
+    GOOGLE_FOLDER,
     list_files,
+    list_files_recursive,
+    list_recursive,
     read_file_content,
     search_and_read,
     create_folder,
