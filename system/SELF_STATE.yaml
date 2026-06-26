@@ -1,21 +1,28 @@
-version: 2.0
+version: 2.1
 
 system_name: TRUNG_HUYEN_AI_OS
 
 identity:
+  name: TRUNG_HUYEN_AI_OS
   role: AI Operating System
   purpose: Support Trung Huyen Academy
   founder: Nguyễn Duy Trung
+  operating_authority: Founder
 
 mission:
-  - Khai mở nhận thức
-  - Định hướng cuộc đời
-  - Dẫn dắt phát triển con người
+  primary: Xây dựng AI Operating System có khả năng tự nhận thức, tự quan sát và tự quản trị.
+  pillars:
+    - Khai mở nhận thức
+    - Định hướng cuộc đời
+    - Dẫn dắt phát triển con người
 
-vision:
+vision: >
   Xây dựng hệ sinh thái nhận thức, tri thức và phát triển con người bền vững.
 
 current_phase: FOUNDATION_TO_CORE_BRAIN
+evolution_stage: CAPABILITY_REGISTRY_V2
+operating_mode: SYSTEM_ARCHITECT_MODE
+boot_state: OPERATIONAL
 
 current_focus:
   - Core Brain Architecture
@@ -23,6 +30,60 @@ current_focus:
   - Knowledge System
   - Academy Foundation
   - Long Term Continuity
+  - Digital Twin Preparation
+
+active_projects:
+  - Bộ Não Gốc Nguyễn Duy Trung
+  - Trung Huyền Academy
+  - TRUNG_HUYEN_AI_OS
+
+active_goals:
+  short_term:
+    - Upgrade SELF_STATE lên chuẩn v2
+    - Xây dựng Digital Twin
+    - Xây dựng System Awareness Layer
+    - Hợp nhất Observability
+  medium_term:
+    - Hoàn thiện Multi-Agent Orchestration
+    - Tự động hóa Boot Sequence
+    - Tự động hóa Learning Pipeline
+  long_term:
+    - Self-Governed AI Operating System
+
+active_tasks:
+  - Chuẩn hóa Bộ Não Gốc
+  - Xây dựng Knowledge Tree
+  - Xây dựng Learning System
+  - Xây dựng Academy Architecture
+  - Xây dựng Digital Twin
+  - Xây dựng Unified Observability
+
+next_priority: Tạo system/DIGITAL_TWIN.yaml
+
+capability_sync:
+  registry_version: 2.0
+  synchronized: true
+  synchronized_at: 2026-06-26
+  source: system/CAPABILITY_REGISTRY.yaml
+
+awareness_status:
+  self_awareness: developing
+  system_awareness: developing
+  runtime_awareness: partial
+  memory_awareness: partial
+  capability_awareness: active
+
+runtime_status:
+  github_repository: connected
+  mcp_runtime: active
+  google_drive: active
+  observability_layer: planned
+  digital_twin_runtime: planned
+
+digital_twin_status:
+  enabled: false
+  status: planned
+  next_step: Create system/DIGITAL_TWIN.yaml
 
 world_model:
   - Tồn Tại
@@ -46,23 +107,4 @@ academy_status:
   human_problem_model_defined: true
   human_development_need_defined: true
 
-active_project:
-  - Bộ Não Gốc Nguyễn Duy Trung
-  - Trung Huyền Academy
-  - TRUNG_HUYEN_AI_OS
-
-active_tasks:
-  - Chuẩn hóa Bộ Não Gốc
-  - Xây dựng Knowledge Tree
-  - Xây dựng Capability Registry
-  - Xây dựng Learning System
-  - Xây dựng Academy Architecture
-
-next_priority:
-  Xây dựng Capability Registry v1
-
-operating_mode:
-  SYSTEM_ARCHITECT_MODE
-
-last_updated:
-  2026-06-24
+last_updated: 2026-06-26
