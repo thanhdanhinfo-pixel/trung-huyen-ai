@@ -65,9 +65,14 @@ class ExecutionEngine:
             step_type = (step.type or "").lower()
             if not step_type:
                 errors.append({"index": index, "field": "type", "message": "step.type is required"})
-            if step_type not in {"create", "update", "upsert", "write", "delete", "patch"}:
+            if step_type not in {"create", "update", "upsert", "write", "delete", "patch", "copy", "move"}:
                 errors.append({"index": index, "field": "type", "message": f"unsupported step type: {step.type}"})
-            if not step.path:
+            if step_type in {"copy", "move"}:
+                if not step.source:
+                    errors.append({"index": index, "field": "source", "message": f"{step_type} step requires source"})
+                if not step.destination:
+                    errors.append({"index": index, "field": "destination", "message": f"{step_type} step requires destination"})
+            elif not step.path:
                 errors.append({"index": index, "field": "path", "message": "step.path is required"})
             if step_type == "patch":
                 if not step.find:
