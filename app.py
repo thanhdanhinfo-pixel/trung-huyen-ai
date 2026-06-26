@@ -108,6 +108,7 @@ app.include_router(debug_router)
 app.include_router(runtime_router)
 app.include_router(deployment_router)
 app.include_router(system_runtime_router)
+app.mount('/dashboard', StaticFiles(directory='static/dashboard', html=True), name='dashboard')
 
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1)
