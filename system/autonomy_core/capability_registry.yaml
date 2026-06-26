@@ -21,6 +21,8 @@ drive:
 cloud_run:
   read_logs_directly: false
   rollback_revision_directly: false
+  list_revisions_directly: false
+  inspect_traffic_directly: false
   trigger_build_directly: false
   deploy_directly: false
 
@@ -28,6 +30,12 @@ execution:
   local_import_test: false
   smoke_test_runtime: false
   shell_command: false
+  grep_import_graph: false
+
+github_checks:
+  read_commit_status: false
+  read_check_runs: false
+  read_cloud_build_result: false
 
 safety:
   protected_core_move_allowed: false
