@@ -1,23 +1,28 @@
-version: 1.0
+version: 1.1
 
 active_tasks:
-  - id: TASK-001
-    title: Xây dựng Persistent Identity Layer
-    status: completed
-
-  - id: TASK-002
-    title: Xây dựng Self State
-    status: completed
-
   - id: TASK-003
     title: Xây dựng Task Registry
-    status: in_progress
+    status: completed
+
+  - id: TASK-004
+    title: Runtime Activation Bootstrap
+    status: blocked
+
+  - id: TASK-005
+    title: Drive Visibility 100%
+    status: waiting_runtime_deploy
 
 backlog:
+  - TASK-006
+  - TASK-007
+  - TASK-008
 
 completed:
   - TASK-001
   - TASK-002
+  - TASK-003
 
 blocked:
-  []
+  - BLOCKER-001
+  - BLOCKER-002
