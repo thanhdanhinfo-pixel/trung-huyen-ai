@@ -1,26 +1,11 @@
 from pathlib import Path
 import yaml
-
-BASE = Path(__file__).parent / 'knowledge'
-
+BASE=Path(__file__).parent/'knowledge'
 class KnowledgeGraph:
-    def _load(self, name):
-        p = BASE / name
-        return yaml.safe_load(p.read_text(encoding='utf-8')) or {}
-
+    def _load(self,n): return yaml.safe_load((BASE/n).read_text(encoding='utf-8')) or {}
     def snapshot(self):
-        lessons = self._load('lessons.yaml').get('lessons', [])
-        patterns = self._load('patterns.yaml').get('patterns', [])
-        decisions = self._load('decisions.yaml').get('decisions', [])
-
-        return {
-            'lesson_count': len(lessons),
-            'pattern_count': len(patterns),
-            'decision_count': len(decisions),
-            'links': [
-                {'lesson': l.get('id'), 'pattern': p.get('id')}
-                for l, p in zip(lessons, patterns)
-            ]
-        }
-
-knowledge_graph = KnowledgeGraph()
+        ls=self._load('lessons.yaml').get('lessons',[])
+        ps=self._load('patterns.yaml').get('patterns',[])
+        ds=self._load('decisions.yaml').get('decisions',[])
+        return {'lesson_count':len(ls),'pattern_count':len(ps),'decision_count':len(ds),'links':[{'lesson':l.get('id'),'pattern':p.get('id'),'decision':ds[min(i,len(ds)-1)].get('id') if ds else None} for i,(l,p) in enumerate(zip(ls,ps))]}
+knowledge_graph=KnowledgeGraph()
