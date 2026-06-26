@@ -95,8 +95,13 @@ app.include_router(system_awareness_router)
 from api.system import router as system_router
 from api.debug import router as debug_router
 
+from api.runtime import router as runtime_router, register_error
+from api.deployment import router as deployment_router
+
 app.include_router(system_router)
 app.include_router(debug_router)
+app.include_router(runtime_router)
+app.include_router(deployment_router)
 
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1)
@@ -191,7 +196,11 @@ async def log_requests(request: Request, call_next):
     print("Query:", request.url.query)
     print("Headers:", safe_headers)
 
-    response = await call_next(request)
+    try:
+        response = await call_next(request)
+    except Exception as exc:
+        register_error(exc)
+        raise
 
     print("Status:", response.status_code)
     print("=============================")
