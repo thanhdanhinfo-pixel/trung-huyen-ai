@@ -8,7 +8,7 @@ from google.oauth2 import service_account
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
-
+from functools import lru_cache
 from config import (
     DRIVE_FOLDER_ID,
     GOOGLE_SERVICE_ACCOUNT_JSON,
@@ -274,12 +274,24 @@ def list_recursive(parent_id: Optional[str] = None, current_path: str = "") -> L
     return items
 
 
+@lru_cache(maxsize=1)
+def get_path_index():
+    print("BUILDING DRIVE PATH INDEX...")
+
+    items = list_recursive()
+
+    print(f"TOTAL ITEMS: {len(items)}")
+
+    return {
+        item["path"]: item
+        for item in items
+        if item.get("path")
+    }
+
+
 def find_file_by_path(path: str):
     target = path.strip("/")
-    for item in list_recursive():
-        if item.get("path") == target:
-            return item
-    return None
+    return get_path_index().get(target)
 
 
 def read_by_path(path: str):
@@ -290,9 +302,16 @@ def read_by_path(path: str):
 
 
 def read_folder(path: str):
-    prefix = path.strip("/") + "/"
-    return [item for item in list_recursive() if item.get("path", "").startswith(prefix)]
 
+    prefix = path.strip("/") + "/"
+
+    index = get_path_index()
+
+    return [
+        item
+        for item in index.values()
+        if item.get("path", "").startswith(prefix)
+    ]
 
 def get_file_metadata(file_id: str) -> Dict[str, Any]:
     return get_drive_service().files().get(
