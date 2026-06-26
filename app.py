@@ -83,12 +83,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-import os
-
-if os.path.isdir("static"):
-    app.mount("/static", StaticFiles(directory="static"), name="static")
-else:
-    print("Static directory not mounted: static not found")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 try:
@@ -149,7 +144,8 @@ app.include_router(system_router)
 app.include_router(debug_router)
 app.include_router(runtime_router)
 app.include_router(deployment_router)
-app.include_router(system_runtime_router)
+if system_runtime_router:
+    app.include_router(system_runtime_router)
 if digital_twin_router:
     app.include_router(digital_twin_router)
 if graph_router:
