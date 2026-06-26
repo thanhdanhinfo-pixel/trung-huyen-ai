@@ -72,10 +72,23 @@ def events_sse(limit:int=20):
 
 @router.websocket('/events/ws')
 async def events_ws(websocket: WebSocket):
+    from system.ws_subscriptions import ws_subscriptions
     await websocket.accept()
+    subs=['*']
+    try:
+        first=await websocket.receive_json()
+        subs=first.get('subscribe',['*'])
+    except Exception:
+        pass
     try:
         while True:
-            await websocket.send_json({'events': event_bus.recent(20)})
+            events=event_bus.recent(20)
+            filtered=[]
+            for e in events:
+                et=e.get('type','') if isinstance(e,dict) else ''
+                if subs==['*'] or ws_subscriptions.match(subs,et):
+                    filtered.append(e)
+            await websocket.send_json({'events': filtered})
             await asyncio.sleep(2)
     except Exception:
         await websocket.close()
