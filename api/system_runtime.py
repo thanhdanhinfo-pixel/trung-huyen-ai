@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from system import observability, system_awareness
+from system import observability, system_awareness, governance, self_healing
 
 router = APIRouter(prefix='/system', tags=['system-runtime'])
 
