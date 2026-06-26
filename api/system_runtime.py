@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from system import observability, system_awareness, governance
+from system import observability, system_awareness
 
 router = APIRouter(prefix='/system', tags=['system-runtime'])
 
@@ -23,3 +23,13 @@ def awareness():
 @router.get('/capabilities')
 def capabilities():
     return observability.capability_status()
+
+
+@router.get('/governance')
+def governance_report():
+    return governance.health_report()
+
+
+@router.get('/governance/actions')
+def governance_actions():
+    return {'actions': governance.recommended_actions()}
