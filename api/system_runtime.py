@@ -1,5 +1,14 @@
-from fastapi import APIRouter
+import asyncio
+import json
+from fastapi import APIRouter, WebSocket
+from fastapi.responses import StreamingResponse
 from system import observability, system_awareness, governance, self_healing, policy_engine, rule_engine, event_bus, evolution_engine
+from system.event_ack import event_ack
+from system.distributed_routing import distributed_routing
+from system.scheduler_runtime import scheduler_runtime
+from system.worker_supervision import worker_supervision
+from system.event_retention import event_retention
+from system.event_subscriptions import event_subscriptions
 
 router=APIRouter(prefix='/system',tags=['system-runtime'])
 @router.get('/health')
@@ -36,17 +45,48 @@ def tasks(): return observability.task_status()
 def events(limit:int=50): return event_bus.recent(limit)
 @router.get('/events/stats')
 def event_stats(): return event_bus.stats()
-@router.get('/events/retention')
-def event_retention_policy():
-    from system.event_retention import event_retention
-    return event_retention.policy()
-
-@router.get('/events/subscriptions')
-def event_subs():
-    from system.event_subscriptions import event_subscriptions
-    return event_subscriptions.snapshot()
-
 @router.get('/events/live')
 def events_live(limit:int=20): return {'mode':'polling-v1','events':event_bus.recent(limit)}
+@router.get('/events/retention')
+def event_retention_policy(): return event_retention.policy()
+@router.get('/events/retention/cleanup')
+def event_cleanup(): return event_retention.cleanup_status()
+@router.get('/events/subscriptions')
+def event_subs(): return event_subscriptions.snapshot()
+@router.post('/events/ack')
+def ack(event_id:str, consumer:str): return event_ack.acknowledge(event_id, consumer)
+@router.get('/events/acks')
+def acks(): return event_ack.snapshot()
+@router.get('/events/route')
+def route(event_type:str): return distributed_routing.route(event_type)
+
+async def _sse_generator(limit:int=20):
+    while True:
+        payload=json.dumps({'events': event_bus.recent(limit)}, ensure_ascii=False)
+        yield f'data: {payload}\n\n'
+        await asyncio.sleep(2)
+
+@router.get('/events/sse')
+def events_sse(limit:int=20):
+    return StreamingResponse(_sse_generator(limit), media_type='text/event-stream')
+
+@router.websocket('/events/ws')
+async def events_ws(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        while True:
+            await websocket.send_json({'events': event_bus.recent(20)})
+            await asyncio.sleep(2)
+    except Exception:
+        await websocket.close()
+
+@router.get('/scheduler')
+def scheduler_status(): return scheduler_runtime.status()
+@router.post('/scheduler/run')
+def scheduler_run(): return scheduler_runtime.run_cycle()
+@router.get('/supervision')
+def supervision(): return worker_supervision.inspect()
+@router.post('/supervision/restart')
+def restart_worker(worker_name:str): return worker_supervision.restart(worker_name)
 @router.get('/evolution')
 def evolution(): return evolution_engine.evolve()
