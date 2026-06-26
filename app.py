@@ -12,7 +12,6 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 
-
 from pydantic import BaseModel, Field
 from fastapi import Request
 from api.workspace import router as workspace_router
@@ -32,6 +31,7 @@ from drive import (
     read_file_content,
     read_folder,
     find_file_by_path,
+    get_path_index,
 )
 try:
     from rag.indexer import index_drive
@@ -236,6 +236,18 @@ def rag_index(limit: int = 10):
 @app.post("/ping-post")
 def ping_post():
     return {"status": "ok"}
+
+@app.post("/drive/rebuild-index")
+def rebuild_drive_index():
+
+    get_path_index.cache_clear()
+
+    index = get_path_index()
+
+    return {
+        "status": "ok",
+        "files": len(index)
+    }
 # =====================================
 # RAG
 # =====================================
