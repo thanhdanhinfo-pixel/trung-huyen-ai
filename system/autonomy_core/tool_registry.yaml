@@ -20,10 +20,11 @@ github_operations:
   commit: healthy
 
 missing_tools:
-  cloud_run_logs: unavailable
-  cloud_run_revision_list: unavailable
-  cloud_run_rollback: unavailable
-  github_check_status_reader: unavailable
-  local_shell: unavailable
-  local_python_import_test: unavailable
-  import_graph_scanner: unavailable
+  cloud_run_logs: permission_pack_created_but_not_enabled
+  cloud_run_revision_list: permission_pack_created_but_not_enabled
+  cloud_run_rollback: permission_pack_created_but_not_enabled_requires_approval
+  cloud_build_status_reader: permission_pack_created_but_not_enabled
+  github_check_status_reader: permission_pack_created_but_not_enabled
+  local_shell: unavailable_restricted_design_required
+  local_python_import_test: permission_pack_created_but_not_enabled
+  import_graph_scanner: permission_pack_created_but_not_enabled
