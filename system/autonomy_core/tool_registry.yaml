@@ -21,6 +21,9 @@ github_operations:
 
 missing_tools:
   cloud_run_logs: unavailable
+  cloud_run_revision_list: unavailable
   cloud_run_rollback: unavailable
+  github_check_status_reader: unavailable
   local_shell: unavailable
   local_python_import_test: unavailable
+  import_graph_scanner: unavailable
