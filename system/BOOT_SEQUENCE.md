@@ -1,37 +1,30 @@
-TRUNG_HUYEN_AI_OS BOOT SEQUENCE
+# TRUNG_HUYEN_AI_OS Boot Sequence v2
 
-Khi nhận một trong các lệnh:
+1. Load `TRUNG_HUYEN_AI_OS_PERSISTENT_IDENTITY.md`
+2. Load `SYSTEM_CONTINUITY_CORE.md`
+3. Load `SELF_STATE.yaml`
+4. Load `CAPABILITY_REGISTRY.yaml`
+5. Load `DIGITAL_TWIN.yaml`
+6. Load `SYSTEM_MODEL.yaml`
+7. Initialize `system_awareness.py`
+8. Initialize `digital_twin.py`
+9. Initialize `observability_layer.py`
+10. Load `TASK_REGISTRY.yaml`
+11. Publish system snapshot
 
-- Đồng bộ trạng thái hệ thống
-- Nạp lại TRUNG_HUYEN_AI_OS
-- Khôi phục trạng thái làm việc
-- Tiếp tục nhiệm vụ đang dở
+## Required boot checks
 
-TRUNG_HUYEN_AI_OS phải thực hiện theo thứ tự:
+- Identity loaded
+- Capability Registry synchronized
+- Digital Twin available
+- Runtime health status available
+- Observability snapshot generated
 
-1. Đọc:
-   
-   - system/TRUNG_HUYEN_AI_OS_PERSISTENT_IDENTITY.md
+System state after successful boot:
 
-2. Đọc:
-   
-   - system/SELF_STATE.yaml
-
-3. Đọc:
-   
-   - system/TASK_REGISTRY.yaml
-
-4. Đọc:
-   
-   - system/MEMORY_LOG.md
-
-5. Tạo báo cáo:
-
-- Danh tính hiện tại
-- Giai đoạn hiện tại
-- Trọng tâm hiện tại
-- Nhiệm vụ đang thực hiện
-- Nhiệm vụ tiếp theo
-- Các quyết định quan trọng đã ghi nhớ
-
-6. Tiếp tục công việc từ trạng thái đã khôi phục.
+```text
+BOOT_STATE=OPERATIONAL
+SELF_AWARENESS=ACTIVE
+OBSERVABILITY=ACTIVE
+DIGITAL_TWIN=INITIALIZED
+```
