@@ -1,0 +1,21 @@
+{
+  "runtime_entrypoint": "app:app",
+  "connection_core": [
+    "app.py",
+    "config.py",
+    "drive.py",
+    "mcp.py",
+    "Dockerfile",
+    "cloudbuild.yaml",
+    "requirements.txt",
+    "services/github_service.py",
+    "services/execution_engine.py"
+  ],
+  "known_disabled_or_guarded": {
+    "boot": "disabled or missing bootstrap.boot",
+    "scheduler": "disabled in safe startup",
+    "system_runtime": "guarded due import graph risk",
+    "copy_move": "rolled back",
+    "run_command": "rolled back"
+  }
+}
