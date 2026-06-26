@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from system import observability, system_awareness, governance, self_healing
+from system import observability, system_awareness
 
 router = APIRouter(prefix='/system', tags=['system-runtime'])
 
@@ -33,3 +33,11 @@ def governance_report():
 @router.get('/governance/actions')
 def governance_actions():
     return {'actions': governance.recommended_actions()}
+
+@router.get('/self-healing')
+def healing_status():
+    return self_healing.detect()
+
+@router.post('/self-healing/repair')
+def healing_repair():
+    return self_healing.auto_repair()
