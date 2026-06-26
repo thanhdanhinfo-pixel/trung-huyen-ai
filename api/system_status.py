@@ -1,26 +1,35 @@
 from fastapi import APIRouter
+import os
 
-router = APIRouter(prefix='/system-status', tags=['system-status'])
+router=APIRouter(prefix='/system',tags=['system'])
 
-@router.get('')
-def unified_system_status():
+@router.get('/status')
+def status():
     return {
-        'cloud_run': True,
-        'boot': {'enabled': True, 'mode': 'safe'},
-        'scheduler': {'enabled': True, 'mode': 'safe'},
-        'system_runtime': {'enabled': True, 'mode': 'safe'},
-        'digital_twin': {'enabled': True, 'mode': 'safe'},
-        'graph': {'enabled': True, 'mode': 'safe'},
-        'advanced_rag': {'enabled': True, 'mode': 'safe'},
-        'copy_move': {'enabled': True, 'mode': 'foundation'},
-        'command_runner': {'enabled': True, 'mode': 'dry-run'},
-        'integrations': {
-            'drive': True,
-            'github': True,
-            'openai': True,
-            'qdrant': True,
-            'mcp': True,
-        },
-        'recovery_state': 'stable',
-        'system': 'TRUNG_HUYEN_AI_OS'
+        'system':'TRUNG_HUYEN_AI_OS',
+        'runtime':'online',
+        'revision':os.getenv('K_REVISION'),
+        'capabilities_url':'/system/capabilities',
+        'self_awareness_url':'/system/self-awareness'
+    }
+
+@router.get('/capabilities')
+def capabilities():
+    return {
+        'openai':True,
+        'qdrant':True,
+        'drive':True,
+        'github':True,
+        'cloud_build':True,
+        'cloud_logging':True,
+        'monitoring':True,
+        'mcp':True
+    }
+
+@router.get('/self-awareness')
+def self_awareness():
+    return {
+        'identity':'TRUNG_HUYEN_AI_OS',
+        'mode':'production-self-observed',
+        'health':'green'
     }
