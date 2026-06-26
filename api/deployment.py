@@ -11,6 +11,20 @@ router = APIRouter(
 )
 
 
+class RedeployRequest(BaseModel):
+    approved: bool = Field(default=False, description="Must be true to allow redeploy")
+    reason: Optional[str] = None
+
+
+def _redeploy_config() -> Dict[str, Any]:
+    return {
+        "cloud_build_trigger_url_configured": bool(os.getenv("CLOUD_BUILD_TRIGGER_URL")),
+        "redeploy_command_configured": bool(os.getenv("REDEPLOY_COMMAND")),
+        "service": os.getenv("CLOUD_RUN_SERVICE") or os.getenv("K_SERVICE") or "trung-huyen-ai",
+        "region": os.getenv("CLOUD_RUN_REGION") or "asia-southeast1",
+    }
+
+
 @router.post("/smoke-test")
 def smoke_test():
 
