@@ -41,3 +41,11 @@ def healing_status():
 @router.post('/self-healing/repair')
 def healing_repair():
     return self_healing.auto_repair()
+
+@router.get('/planner')
+def planner_runtime():
+    return observability.planner_status()
+
+@router.get('/workers')
+def workers_runtime():
+    return observability.worker_status()
