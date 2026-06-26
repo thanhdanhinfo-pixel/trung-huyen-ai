@@ -1,0 +1,26 @@
+name: SYSTEM_CONNECTION_CORE
+status: protected
+purpose: Files required to keep TRUNG_HUYEN_AI_OS alive on Cloud Run.
+
+rules:
+  move_requires_approval: true
+  refactor_requires_approval: true
+  mass_edit_forbidden: true
+  require_build_green_before_next_step: true
+
+files:
+  - app.py
+  - config.py
+  - drive.py
+  - mcp.py
+  - Dockerfile
+  - cloudbuild.yaml
+  - requirements.txt
+  - services/github_service.py
+  - services/execution_engine.py
+
+runtime_contract:
+  cloud_run_entrypoint: app:app
+  health_endpoint: /health
+  version_endpoint: /version
+  mcp_ping_endpoint: /mcp/ping
