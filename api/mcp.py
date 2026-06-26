@@ -132,6 +132,9 @@ def tools():
             "github_read_file",
             "system_self_test",
             "github_update_file",
+            "listDirectory",
+            "readFile",
+            "searchCode",
             "execute_plan",
             "backend_call",
             "system_tree",
@@ -229,6 +232,84 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 ],
             },
         }
+    if tool == "listDirectory":
+        path = args.get("path", "")
+        try:
+            return {
+                "status": "ok",
+                "tool": tool,
+                "files": github_list_files(path),
+            }
+        except Exception as exc:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": str(exc),
+                "type": type(exc).__name__,
+            }
+
+    if tool == "readFile":
+        path = args.get("path", "")
+        if not path:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "path is required",
+            }
+        try:
+            return {
+                "status": "ok",
+                "tool": tool,
+                "result": github_read_file(path),
+            }
+        except Exception as exc:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": str(exc),
+                "type": type(exc).__name__,
+            }
+
+    if tool == "searchCode":
+        query = args.get("query", "") or args.get("q", "")
+        if not query:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "query is required",
+            }
+        try:
+            files = github_list_files("")
+            matches = []
+            for item in files:
+                path = item.get("path", "")
+                if not path.endswith(".py"):
+                    continue
+                try:
+                    data = github_read_file(path)
+                    content = data.get("content", "") if isinstance(data, dict) else ""
+                    if query in content or query in path:
+                        matches.append({
+                            "path": path,
+                            "name": item.get("name"),
+                        })
+                except Exception:
+                    continue
+            return {
+                "status": "ok",
+                "tool": tool,
+                "query": query,
+                "matches": matches,
+                "count": len(matches),
+            }
+        except Exception as exc:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": str(exc),
+                "type": type(exc).__name__,
+            }
+
     if tool == "github_list_files":
         path = args.get("path", "")
         return {
