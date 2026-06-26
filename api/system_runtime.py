@@ -36,6 +36,11 @@ def events(limit:int=50): return event_bus.recent(limit)
 @router.get('/events/stats')
 def event_stats(): return event_bus.stats()
 
+@router.get('/evolution')
+def evolution_status():
+    from system import evolution_engine
+    return evolution_engine.evolve()
+
 @router.get('/events/live')
 def live_events(limit:int=20):
     return {
