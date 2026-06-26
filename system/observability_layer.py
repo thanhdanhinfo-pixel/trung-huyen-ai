@@ -33,10 +33,12 @@ class ObservabilityLayer:
         return {'status': 'active'}
 
     def planner_status(self):
-        return {'status': 'partial'}
+        from system.agent_runtime import planner_status
+        return planner_status()
 
     def worker_status(self):
-        return {'status': 'planned'}
+        from system.agent_runtime import worker_status
+        return worker_status()
 
 
 observability = ObservabilityLayer()
