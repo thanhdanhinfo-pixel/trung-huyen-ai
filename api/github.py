@@ -61,6 +61,7 @@ class PatchFile(BaseModel):
 class MoveBatchRequest(BaseModel):
     moves: list[dict[str, str]] = Field(default_factory=list)
     message: str = "Batch move files"
+    commit: bool = False
     
 class MkdirRequest(BaseModel):
     paths: list[str] = Field(default_factory=list)
@@ -159,15 +160,42 @@ def move_batch(req: MoveBatchRequest):
             })
             continue
 
-        result = github_runtime.move_file(
-            source=source,
-            destination=destination,
-            message=req.message,
-        )
-        results.append(result)
+        if source == destination:
+            results.append({
+                "status": "skipped",
+                "message": "source and destination are identical",
+                "source": source,
+                "destination": destination,
+            })
+            continue
+
+        if not req.commit:
+            results.append({
+                "status": "preview",
+                "source": source,
+                "destination": destination,
+                "ready_to_commit": True,
+            })
+            continue
+
+        try:
+            result = github_runtime.move_file(
+                source=source,
+                destination=destination,
+                message=req.message,
+            )
+            results.append(result)
+        except Exception as exc:
+            results.append({
+                "status": "error",
+                "source": source,
+                "destination": destination,
+                "message": str(exc),
+            })
 
     return {
         "status": "ok",
+        "commit": req.commit,
         "count": len(results),
         "results": results,
     }
