@@ -31,11 +31,14 @@ from services.github_service import (
 @dataclass
 class ExecutionStep:
     type: str
-    path: str
+    path: str = ""
     content: str = ""
     find: str = ""
     replace: str = ""
     message: str = ""
+    source: str = ""
+    destination: str = ""
+    overwrite: bool = False
 
 
 @dataclass
