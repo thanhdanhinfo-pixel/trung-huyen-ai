@@ -1,0 +1,52 @@
+name: MODULE_CONTRACTS
+status: active
+purpose: Standard contract for all runtime modules.
+
+contract:
+  required:
+    - health_or_status_endpoint
+    - safe_mode_fallback
+    - no_external_io_at_import_time
+    - no_unbounded_background_loop_at_startup
+    - audit_for_mutating_actions
+
+modules:
+  boot:
+    status: restored
+    mode: safe
+    endpoint: /health
+
+  scheduler:
+    status: restored
+    mode: safe
+    endpoint: /system-status
+
+  system_runtime:
+    status: restored
+    mode: safe
+    endpoint: /system/health
+
+  digital_twin:
+    status: restored
+    mode: safe
+    endpoint: /digital-twin/health
+
+  graph:
+    status: restored
+    mode: safe
+    endpoint: /graph/health
+
+  advanced_rag:
+    status: restored
+    mode: safe
+    endpoint: /rag/status
+
+  copy_move:
+    status: foundation
+    mode: dry-run-first
+    audit_required: true
+
+  command_runner:
+    status: restored
+    mode: dry-run
+    allowlist_required: true
