@@ -1,12 +1,2 @@
-class CapabilityRegistryV3:
-    def metadata(self,name,version='1.0',lifecycle='ACTIVE',confidence=1.0):
-        return {
-            'name':name,
-            'version':version,
-            'lifecycle':lifecycle,
-            'confidence':confidence,
-            'dependencies':[],
-            'experiments':[]
-        }
-
-capability_registry_v3 = CapabilityRegistryV3()
+# Compatibility shim. Preferred import: system.capability.registry
+from system.capability.registry import *
