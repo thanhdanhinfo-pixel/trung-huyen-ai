@@ -7,5 +7,6 @@ from .policy_engine import policy_engine
 from .rule_engine import rule_engine
 from .event_bus import event_bus
 from .knowledge_graph import knowledge_graph
+from .evolution_engine import evolution_engine
 
-__all__ = ['system_awareness','digital_twin','observability','governance','self_healing','policy_engine','rule_engine','event_bus','knowledge_graph']
+__all__ = ['system_awareness','digital_twin','observability','governance','self_healing','policy_engine','rule_engine','event_bus','knowledge_graph','evolution_engine']
