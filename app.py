@@ -120,13 +120,27 @@ from api.runtime import router as runtime_router, register_error
 from api.deployment import router as deployment_router
 from api.system_runtime import router as system_runtime_router
 
+try:
+    from api.digital_twin import router as digital_twin_router
+except Exception as exc:
+    print("Digital twin router not loaded:", exc)
+    digital_twin_router = None
+
+try:
+    from api.graph import router as graph_router
+except Exception as exc:
+    print("Graph router not loaded:", exc)
+    graph_router = None
+
 app.include_router(system_router)
 app.include_router(debug_router)
 app.include_router(runtime_router)
 app.include_router(deployment_router)
 app.include_router(system_runtime_router)
-app.include_router(digital_twin_router)
-app.include_router(graph_router)
+if digital_twin_router:
+    app.include_router(digital_twin_router)
+if graph_router:
+    app.include_router(graph_router)
 app.mount('/dashboard', StaticFiles(directory='static/dashboard', html=True), name='dashboard')
 
 class ChatRequest(BaseModel):
