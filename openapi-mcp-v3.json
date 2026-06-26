@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "TRUNG_HUYEN_AI_OS_DRIVE",
-    "version": "3.3.0",
-    "description": "Clean Drive and Runtime Actions for TRUNG_HUYEN_AI_OS"
+    "title": "TRUNG_HUYEN_AI_OS_RUNTIME",
+    "version": "3.4.0",
+    "description": "Stable GPT Actions for TRUNG_HUYEN_AI_OS"
   },
   "servers": [
     {
@@ -16,7 +16,14 @@
         "operationId": "pingMcp",
         "summary": "Ping MCP runtime",
         "responses": {
-          "200": { "description": "Alive" }
+          "200": {
+            "description": "Alive",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
         }
       }
     },
@@ -24,14 +31,6 @@
       "post": {
         "operationId": "callMcpTool",
         "summary": "Call approved TRUNG_HUYEN_AI_OS internal tool",
-        "parameters": [
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -51,7 +50,14 @@
           }
         },
         "responses": {
-          "200": { "description": "Tool result" }
+          "200": {
+            "description": "Tool result",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
         }
       }
     },
@@ -68,7 +74,14 @@
           }
         ],
         "responses": {
-          "200": { "description": "File content" }
+          "200": {
+            "description": "File content",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
         }
       }
     },
@@ -80,12 +93,19 @@
           {
             "name": "path",
             "in": "query",
-            "required": true,
-            "schema": { "type": "string" }
+            "required": false,
+            "schema": { "type": "string", "default": "" }
           }
         ],
         "responses": {
-          "200": { "description": "Directory listing" }
+          "200": {
+            "description": "Directory listing",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
         }
       }
     },
@@ -102,7 +122,14 @@
           }
         ],
         "responses": {
-          "200": { "description": "Search result" }
+          "200": {
+            "description": "Search result",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
         }
       }
     },
@@ -119,7 +146,14 @@
           }
         ],
         "responses": {
-          "200": { "description": "Drive file content" }
+          "200": {
+            "description": "Drive file content",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
         }
       }
     }
