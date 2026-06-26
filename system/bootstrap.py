@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from system import system_awareness, digital_twin, observability, event_bus
+from system import system_awareness, digital_twin, observability
 
 SNAPSHOT_PATH = Path(__file__).parent / 'runtime' / 'system_snapshot.json'
 
@@ -20,6 +20,7 @@ def boot():
     with open(SNAPSHOT_PATH, 'w', encoding='utf-8') as f:
         json.dump(snapshot, f, ensure_ascii=False, indent=2)
 
+    event_bus.publish('BOOT_COMPLETED', {'boot_state': 'OPERATIONAL'})
     return snapshot
 
 
