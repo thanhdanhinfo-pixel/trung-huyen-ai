@@ -1,0 +1,35 @@
+name: SYSTEM_AUTONOMY_CORE_CAPABILITY_REGISTRY
+status: active
+purpose: Tracks what TRUNG_HUYEN_AI_OS can and cannot do through available tools.
+
+repo:
+  list_directory: true
+  read_file: true
+  write_file: true
+  commit: true
+  full_tree_visual_scan: false
+
+mcp:
+  ping: true
+  call_tool: true
+  execute_plan: true
+
+drive:
+  read: true
+  write: partial
+
+cloud_run:
+  read_logs_directly: false
+  rollback_revision_directly: false
+  trigger_build_directly: false
+  deploy_directly: false
+
+execution:
+  local_import_test: false
+  smoke_test_runtime: false
+  shell_command: false
+
+safety:
+  protected_core_move_allowed: false
+  mass_refactor_allowed: false
+  require_user_approval_for_cloud_run_files: true
