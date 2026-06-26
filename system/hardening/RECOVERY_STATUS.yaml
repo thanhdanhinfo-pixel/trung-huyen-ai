@@ -1,0 +1,34 @@
+name: RECOVERY_STATUS
+status: stable
+system: TRUNG_HUYEN_AI_OS
+
+core:
+  cloud_run: green
+  health: green
+  version: green
+  mcp: green
+  drive: green
+  github: green
+  openai: green
+  qdrant: green
+
+restored_modules:
+  boot: safe
+  scheduler: safe
+  system_runtime: safe
+  digital_twin: safe
+  graph: safe
+  advanced_rag: safe
+  copy_move: foundation
+  command_runner: dry_run
+
+remaining_work:
+  copy_move_execute: pending
+  command_runner_execute: pending
+  cloud_logs_endpoint: pending
+  automated_smoke_tests: pending
+
+policy:
+  continue_only_after_green_build: true
+  one_module_per_step: true
+  no_core_move_without_approval: true
