@@ -1,0 +1,45 @@
+name: SYSTEM_AUTONOMY_CORE_PERMISSION_GAP_REQUESTS
+status: active
+purpose: Tracks permissions/tools that TRUNG_HUYEN_AI_OS still lacks and must request from Founder.
+
+critical_missing_permissions:
+  cloud_run_logs:
+    status: missing
+    reason: AI cannot directly inspect Cloud Run runtime logs.
+    impact: Founder must copy logs manually when deploy/runtime fails.
+    required_capability: read Cloud Run logs for service trung-huyen-ai.
+    recommended_solution: expose a safe MCP tool wrapping gcloud logs read or Cloud Logging API.
+
+  cloud_run_revision_control:
+    status: missing
+    reason: AI cannot rollback or inspect revisions directly.
+    impact: emergency recovery depends on Founder UI actions.
+    required_capability: list revisions, inspect traffic, rollback traffic to last green revision.
+    recommended_solution: expose restricted MCP tool for Cloud Run revision read/rollback with approval gate.
+
+  local_import_test:
+    status: missing
+    reason: AI cannot run python -c 'import app' before committing.
+    impact: errors are discovered only after Cloud Build.
+    required_capability: run safe import/smoke tests in sandbox.
+    recommended_solution: add MCP execute_test tool with whitelist: python -c 'import app'.
+
+  local_shell:
+    status: missing
+    reason: AI cannot run shell commands in repo.
+    impact: cannot grep imports, run tests, or inspect dependency graph locally.
+    required_capability: read-only shell plus whitelisted test commands.
+    recommended_solution: add restricted command runner, disabled for production mutation by default.
+
+  github_status_checks:
+    status: missing
+    reason: AI cannot directly read GitHub check/build result status.
+    impact: Founder must report red/green state manually.
+    required_capability: read commit status/check runs for main branch.
+    recommended_solution: expose GitHub Checks API read-only MCP tool.
+
+permission_policy:
+  never_assume_missing_permission: true
+  record_missing_permission_before_workaround: true
+  require_founder_approval_for_new_execution_tool: true
+  require_approval_for_cloud_run_mutation: true
