@@ -1,0 +1,55 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "TRUNG_HUYEN_AI_OS_DIAGNOSTIC",
+    "version": "1.0.0",
+    "description": "Public diagnostic actions without authentication"
+  },
+  "servers": [
+    {
+      "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "healthCheck",
+        "summary": "Check backend health",
+        "responses": {
+          "200": {
+            "description": "Health status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/ping": {
+      "get": {
+        "operationId": "pingMcpPublic",
+        "summary": "Ping MCP runtime without authentication",
+        "responses": {
+          "200": {
+            "description": "MCP alive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
