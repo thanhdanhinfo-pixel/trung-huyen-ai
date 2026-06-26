@@ -1,7 +1,17 @@
 from __future__ import annotations
 
 import importlib
+import sys
 import traceback
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+print(f"SMOKE_IMPORT_ROOT={ROOT}")
+print(f"SMOKE_IMPORT_CWD={Path.cwd()}")
+print(f"SMOKE_IMPORT_SYSPATH0={sys.path[0]}")
 
 MODULES = [
     "services.github_service",
