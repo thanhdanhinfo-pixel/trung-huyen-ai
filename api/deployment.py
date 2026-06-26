@@ -1,22 +1,31 @@
 from fastapi import APIRouter
 import requests
+import os
+import subprocess
 
-router = APIRouter(prefix="/deployment", tags=["Deployment"])
+router = APIRouter(
+    prefix="/deployment",
+    tags=["Deployment"],
+)
 
 
 @router.post("/smoke-test")
 def smoke_test():
+
     endpoints = [
         "/health",
         "/github/runtime/status",
         "/mcp/ping",
         "/runtime/errors",
+        "/version",
     ]
 
     results = []
 
     for path in endpoints:
+
         try:
+
             response = requests.get(
                 f"http://127.0.0.1:8080{path}",
                 timeout=10,
@@ -27,7 +36,9 @@ def smoke_test():
                 "status_code": response.status_code,
                 "ok": response.ok,
             })
+
         except Exception as exc:
+
             results.append({
                 "path": path,
                 "status_code": None,
@@ -36,7 +47,10 @@ def smoke_test():
                 "type": type(exc).__name__,
             })
 
-    overall_ok = all(item.get("ok") for item in results)
+    overall_ok = all(
+        item.get("ok")
+        for item in results
+    )
 
     return {
         "status": "ok" if overall_ok else "error",
@@ -47,7 +61,20 @@ def smoke_test():
 
 @router.post("/rollback")
 def rollback():
+
     return {
         "status": "not_implemented",
         "message": "Future capability: revert last commit and redeploy."
+    }
+
+
+@router.get("/capabilities")
+def deployment_capabilities():
+
+    return {
+        "smoke_test": True,
+        "rollback": False,
+        "auto_redeploy": False,
+        "health_check": True,
+        "runtime_error_tracking": True,
     }
