@@ -1,0 +1,26 @@
+name: SYSTEM_AUTONOMY_CORE_TOOL_REGISTRY
+status: active
+
+mcp_tools:
+  pingMcp:
+    status: healthy
+  listDirectory:
+    status: healthy
+  readFile:
+    status: partially_healthy
+    note: readFile works for existing files, but returns Internal Server Error for missing paths instead of clean 404.
+  callMcpTool:
+    status: healthy
+  readDrivePath:
+    status: available
+
+github_operations:
+  read_repository: healthy
+  write_repository: healthy
+  commit: healthy
+
+missing_tools:
+  cloud_run_logs: unavailable
+  cloud_run_rollback: unavailable
+  local_shell: unavailable
+  local_python_import_test: unavailable
