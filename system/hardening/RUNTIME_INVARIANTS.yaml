@@ -1,0 +1,57 @@
+name: RUNTIME_INVARIANTS
+status: active
+purpose: Non-negotiable runtime safety rules for TRUNG_HUYEN_AI_OS.
+
+invariants:
+  no_external_io_at_import_time:
+    required: true
+    description: Modules must not call Drive, OpenAI, Qdrant, GitHub, or Cloud APIs during import.
+
+  no_blocking_startup:
+    required: true
+    description: Cloud Run must always start listening on PORT=8080 quickly.
+
+  startup_must_be_guarded:
+    required: true
+    description: boot and scheduler must use try/except and no-op fallback.
+
+  routers_must_be_guarded:
+    required: true
+    description: Optional routers must be imported with safe fallback.
+
+  safe_mode_required:
+    required: true
+    description: Every advanced subsystem must support safe-mode response.
+
+  no_mass_refactor_core:
+    required: true
+    description: Protected core files must not be moved or mass-refactored without explicit Founder approval.
+
+  one_module_one_build:
+    required: true
+    description: Restore or modify only one module per build confirmation cycle.
+
+protected_groups:
+  - SYSTEM_CONNECTION_CORE
+  - SYSTEM_AUTONOMY_CORE
+
+protected_files:
+  - app.py
+  - config.py
+  - drive.py
+  - mcp.py
+  - Dockerfile
+  - cloudbuild.yaml
+  - requirements.txt
+  - services/github_service.py
+  - services/execution_engine.py
+
+required_status_endpoints:
+  - /health
+  - /version
+  - /system-status
+  - /system/health
+  - /digital-twin/health
+  - /graph/health
+  - /rag/status
+  - /command-runner/status
