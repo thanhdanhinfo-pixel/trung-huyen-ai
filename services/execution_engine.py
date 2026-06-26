@@ -4,15 +4,12 @@ This module is the Level-4 execution layer:
 AI produces an intent/plan, while the engine translates it into safe GitHub
 operations with validation and structured reporting.
 
-Initial version supports:
+Supports:
 - create
 - update
 - upsert/write
 - delete
 - patch via exact find/replace
-
-Future versions can replace internals with AST transforms and Git Data API
-without changing the plan contract.
 """
 
 from __future__ import annotations
@@ -23,22 +20,17 @@ from typing import Any, Dict, List
 from services.github_service import (
     github_batch_update,
     github_file_exists,
-    github_copy_file,
-    github_move_file,
 )
 
 
 @dataclass
 class ExecutionStep:
     type: str
-    path: str = ""
+    path: str
     content: str = ""
     find: str = ""
     replace: str = ""
     message: str = ""
-    source: str = ""
-    destination: str = ""
-    overwrite: bool = False
 
 
 @dataclass
@@ -65,14 +57,9 @@ class ExecutionEngine:
             step_type = (step.type or "").lower()
             if not step_type:
                 errors.append({"index": index, "field": "type", "message": "step.type is required"})
-            if step_type not in {"create", "update", "upsert", "write", "delete", "patch", "copy", "move"}:
+            if step_type not in {"create", "update", "upsert", "write", "delete", "patch"}:
                 errors.append({"index": index, "field": "type", "message": f"unsupported step type: {step.type}"})
-            if step_type in {"copy", "move"}:
-                if not step.source:
-                    errors.append({"index": index, "field": "source", "message": f"{step_type} step requires source"})
-                if not step.destination:
-                    errors.append({"index": index, "field": "destination", "message": f"{step_type} step requires destination"})
-            elif not step.path:
+            if not step.path:
                 errors.append({"index": index, "field": "path", "message": "step.path is required"})
             if step_type == "patch":
                 if not step.find:
@@ -119,14 +106,6 @@ class ExecutionEngine:
             try:
                 if step_type == "patch":
                     operation = self._patch_to_operation(step, plan.message)
-                elif step_type in {"copy", "move"}:
-                    operation = {
-                        "type": step_type,
-                        "source": step.source,
-                        "destination": step.destination,
-                        "overwrite": step.overwrite,
-                        "message": step.message or plan.message,
-                    }
                 else:
                     operation = {
                         "type": step_type,
@@ -163,67 +142,10 @@ class ExecutionEngine:
         if compiled["status"] != "ok":
             return compiled
 
-        standard_ops: List[Dict[str, Any]] = []
-        direct_results: List[Dict[str, Any]] = []
-        direct_errors: List[Dict[str, Any]] = []
-
-        for index, operation in enumerate(compiled["operations"]):
-            op_type = operation.get("type")
-            try:
-                if op_type == "copy":
-                    direct_results.append({
-                        "index": index,
-                        "type": op_type,
-                        "status": "ok",
-                        "result": github_copy_file(
-                            operation["source"],
-                            operation["destination"],
-                            operation.get("message") or plan.message,
-                            overwrite=bool(operation.get("overwrite", False)),
-                        ),
-                    })
-                elif op_type == "move":
-                    direct_results.append({
-                        "index": index,
-                        "type": op_type,
-                        "status": "ok",
-                        "result": github_move_file(
-                            operation["source"],
-                            operation["destination"],
-                            operation.get("message") or plan.message,
-                            overwrite=bool(operation.get("overwrite", False)),
-                        ),
-                    })
-                else:
-                    standard_ops.append(operation)
-            except Exception as exc:
-                direct_errors.append({
-                    "index": index,
-                    "type": op_type,
-                    "status": "error",
-                    "error_type": type(exc).__name__,
-                    "message": str(exc),
-                })
-
         result = github_batch_update(
             message=plan.message,
-            operations=standard_ops,
-        ) if standard_ops else {
-            "status": "ok",
-            "message": plan.message,
-            "total": 0,
-            "succeeded": 0,
-            "failed": 0,
-            "results": [],
-            "errors": [],
-        }
-
-        result["results"] = result.get("results", []) + direct_results
-        result["errors"] = result.get("errors", []) + direct_errors
-        result["total"] = result.get("total", 0) + len(direct_results) + len(direct_errors)
-        result["succeeded"] = result.get("succeeded", 0) + len(direct_results)
-        result["failed"] = result.get("failed", 0) + len(direct_errors)
-        result["status"] = "ok" if not result.get("errors") else "partial_error"
+            operations=compiled["operations"],
+        )
 
         return {
             "status": result.get("status"),
@@ -243,9 +165,6 @@ def execution_plan_from_dict(data: Dict[str, Any]) -> ExecutionPlan:
             find=item.get("find", ""),
             replace=item.get("replace", ""),
             message=item.get("message", ""),
-            source=item.get("source", ""),
-            destination=item.get("destination", ""),
-            overwrite=bool(item.get("overwrite", False)),
         )
         for item in data.get("steps", [])
     ]
