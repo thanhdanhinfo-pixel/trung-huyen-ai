@@ -138,31 +138,6 @@ def github_delete_file(path: str, message: str):
     return r.json()
 
 
-def github_copy_file(source: str, destination: str, message: str, overwrite: bool = False):
-    src = github_file_exists(source)
-    if not src:
-        raise ValueError(f"Source file not found: {source}")
-
-    existing_dst = github_file_exists(destination)
-    if existing_dst and not overwrite:
-        raise ValueError(f"Destination already exists: {destination}")
-
-    if existing_dst:
-        return github_update_file(destination, src["content"], existing_dst["sha"], message)
-    return github_create_file(destination, src["content"], message)
-
-
-def github_move_file(source: str, destination: str, message: str, overwrite: bool = False):
-    copy_result = github_copy_file(source, destination, message, overwrite=overwrite)
-    delete_result = github_delete_file(source, f"Move cleanup: remove {source}")
-    return {
-        "copy": copy_result,
-        "delete": delete_result,
-        "source": source,
-        "destination": destination,
-    }
-
-
 def github_batch_update(message: str, operations: List[Dict[str, Any]]):
     """Execute a batch of GitHub content operations.
 
