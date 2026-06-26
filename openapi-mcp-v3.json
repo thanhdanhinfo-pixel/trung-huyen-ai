@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "TRUNG_HUYEN_AI_OS_RUNTIME",
-    "version": "3.4.0",
+    "version": "3.4.1",
     "description": "Stable GPT Actions for TRUNG_HUYEN_AI_OS"
   },
   "servers": [
@@ -20,7 +20,10 @@
             "description": "Alive",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
               }
             }
           }
@@ -39,7 +42,9 @@
                 "type": "object",
                 "required": ["tool"],
                 "properties": {
-                  "tool": { "type": "string" },
+                  "tool": {
+                    "type": "string"
+                  },
                   "arguments": {
                     "type": "object",
                     "additionalProperties": true
@@ -54,38 +59,17 @@
             "description": "Tool result",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
               }
             }
           }
         }
       }
     },
-    "/mcp/read-file": {
-      "get": {
-        "operationId": "readFile",
-        "summary": "Read a file from GitHub repository",
-        "parameters": [
-          {
-            "name": "path",
-            "in": "query",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "File content",
-            "content": {
-              "application/json": {
-                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mcp/list-directory": {
+    "/github/list": {
       "get": {
         "operationId": "listDirectory",
         "summary": "List repository directory",
@@ -94,7 +78,10 @@
             "name": "path",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "default": "" }
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
           }
         ],
         "responses": {
@@ -102,31 +89,45 @@
             "description": "Directory listing",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
               }
             }
           }
         }
       }
     },
-    "/mcp/search-code": {
-      "get": {
-        "operationId": "searchCode",
-        "summary": "Search code in repository",
-        "parameters": [
-          {
-            "name": "query",
-            "in": "query",
-            "required": true,
-            "schema": { "type": "string" }
+    "/github/read": {
+      "post": {
+        "operationId": "readFile",
+        "summary": "Read a file from GitHub repository",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["path"],
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
-        ],
+        },
         "responses": {
           "200": {
-            "description": "Search result",
+            "description": "File content",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
               }
             }
           }
@@ -142,7 +143,9 @@
             "name": "path",
             "in": "query",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -150,7 +153,10 @@
             "description": "Drive file content",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
               }
             }
           }
