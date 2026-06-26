@@ -1,5 +1,2 @@
-class DistributedBackend:
-    SUPPORTED=['redis-streams','nats','kafka']
-    def status(self):
-        return {'supported':self.SUPPORTED,'active':'redis-streams','mode':'single-node-compatible'}
-distributed_backend=DistributedBackend()
+# Compatibility shim. Preferred import: system.events.backend
+from system.events.backend import *
