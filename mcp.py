@@ -265,6 +265,20 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         )
         return {"status": "ok", "tool": tool, "result": result}
 
+    if tool == "run_command":
+        approved = bool(args.get("approved", False))
+        if not approved:
+            return {"status": "error", "tool": tool, "message": "User approval is required"}
+        command = args.get("command", "")
+        if not command:
+            return {"status": "error", "tool": tool, "message": "command is required"}
+        result = run_command(
+            command=command,
+            cwd=args.get("cwd"),
+            timeout=int(args.get("timeout", 60)),
+        )
+        return {"status": result.get("status"), "tool": tool, "result": result}
+
     if tool == "execute_plan":
         approved = bool(args.get("approved", False))
         plan_data = args.get("plan") or {}
