@@ -53,6 +53,22 @@ app = FastAPI(
     servers=[{"url": SERVER_URL}],
 )
 
+try:
+    from bootstrap.boot import boot
+except Exception as exc:
+    print("Boot module not loaded:", exc)
+    def boot():
+        return None
+
+try:
+    from services.production_scheduler import production_scheduler
+except Exception as exc:
+    print("Production scheduler not loaded:", exc)
+    class _NoopScheduler:
+        def start(self):
+            return None
+    production_scheduler = _NoopScheduler()
+
 @app.on_event('startup')
 async def system_startup_boot():
     boot()
