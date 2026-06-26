@@ -102,6 +102,8 @@ from api.debug import router as debug_router
 from api.runtime import router as runtime_router, register_error
 from api.deployment import router as deployment_router
 from api.system_runtime import router as system_runtime_router
+from system.production_scheduler import production_scheduler
+from system.bootstrap import boot
 
 app.include_router(system_router)
 app.include_router(debug_router)
