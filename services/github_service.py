@@ -10,10 +10,9 @@ GITHUB_REPO = os.getenv("GITHUB_REPO")
 GITHUB_BRANCH = os.getenv("GITHUB_BRANCH", "main")
 
 print("===== GITHUB CONFIG =====")
-print("TOKEN:", bool(GITHUB_TOKEN))
-print("TOKEN PREFIX:", GITHUB_TOKEN[:12] if GITHUB_TOKEN else None)
-print("OWNER:", GITHUB_OWNER)
-print("REPO:", GITHUB_REPO)
+print("TOKEN CONFIGURED:", bool(GITHUB_TOKEN))
+print("OWNER CONFIGURED:", bool(GITHUB_OWNER))
+print("REPO CONFIGURED:", bool(GITHUB_REPO))
 print("BRANCH:", GITHUB_BRANCH)
 print("=========================")
 
