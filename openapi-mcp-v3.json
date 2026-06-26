@@ -54,7 +54,7 @@
             "description": "Tool result",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "additionalProperties": true }
+                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
               }
             }
           }
@@ -78,7 +78,7 @@
             "description": "File content",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "additionalProperties": true }
+                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
               }
             }
           }
@@ -102,7 +102,7 @@
             "description": "Directory listing",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "additionalProperties": true }
+                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
               }
             }
           }
@@ -126,7 +126,7 @@
             "description": "Search result",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "additionalProperties": true }
+                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
               }
             }
           }
@@ -150,7 +150,7 @@
             "description": "Drive file content",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "additionalProperties": true }
+                "schema": { "type": "object", "properties": {}, "additionalProperties": true }
               }
             }
           }
