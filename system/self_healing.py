@@ -98,9 +98,13 @@ class SelfHealing:
 
         after = self.detect()
 
+        from system import event_bus
+        status = 'auto_repaired' if after['status'] == 'ok' else 'partial_repair_manual_review_required'
+        event_bus.publish('SELF_HEALING_EXECUTED', {'status': status})
+
         return {
             'executed': True,
-            'status': 'auto_repaired' if after['status'] == 'ok' else 'partial_repair_manual_review_required',
+            'status': status,
             'before': before,
             'after': after,
             'metadata': metadata_result,
