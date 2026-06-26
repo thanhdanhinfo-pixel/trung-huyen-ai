@@ -40,5 +40,9 @@ class ObservabilityLayer:
         from system.agent_runtime import worker_status
         return worker_status()
 
+    def task_status(self):
+        from system.task_runtime import task_status
+        return task_status()
+
 
 observability = ObservabilityLayer()
