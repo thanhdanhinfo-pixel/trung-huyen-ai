@@ -4,6 +4,7 @@ from .observability_layer import observability
 from .governance import governance
 from .self_healing import self_healing
 from .policy_engine import policy_engine
+from .rule_engine import rule_engine
 
 __all__ = [
     'system_awareness',
@@ -12,4 +13,5 @@ __all__ = [
     'governance',
     'self_healing',
     'policy_engine',
+    'rule_engine',
 ]
