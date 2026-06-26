@@ -119,6 +119,14 @@ class ExecutionEngine:
             try:
                 if step_type == "patch":
                     operation = self._patch_to_operation(step, plan.message)
+                elif step_type in {"copy", "move"}:
+                    operation = {
+                        "type": step_type,
+                        "source": step.source,
+                        "destination": step.destination,
+                        "overwrite": step.overwrite,
+                        "message": step.message or plan.message,
+                    }
                 else:
                     operation = {
                         "type": step_type,
