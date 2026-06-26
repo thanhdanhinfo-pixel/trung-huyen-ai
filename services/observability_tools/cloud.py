@@ -43,7 +43,10 @@ def get_recent_logs(limit: int = 20) -> Dict[str, Any]:
                 'severity': getattr(entry, 'severity', None),
                 'log_name': getattr(entry, 'log_name', None),
                 'payload': str(getattr(entry, 'payload', ''))[:1200],
-                'resource': dict(getattr(entry, 'resource', {}) or {}),
+                'resource': {
+                    'type': getattr(getattr(entry, 'resource', None), 'type', None),
+                    'labels': dict(getattr(getattr(entry, 'resource', None), 'labels', {}) or {}),
+                },
             })
             if len(logs) >= limit:
                 break
