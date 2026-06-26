@@ -6,25 +6,9 @@ from system.event_bus import event_bus
 
 class EvolutionEngine:
     def evolve(self):
-        reflection = reflection_engine.reflect_on_day()
-        learning = learning_engine.learn()
-        adaptation = adaptation_engine.adapt()
-        knowledge = knowledge_graph.snapshot()
+        r=reflection_engine.reflect_on_day(); l=learning_engine.learn(); a=adaptation_engine.adapt(); k=knowledge_graph.snapshot()
+        promoted=l.get('rule_candidates',[])
+        event_bus.publish('EVOLUTION_CYCLE_COMPLETED',{'promoted':promoted})
+        return {'status':'evolving','promoted_rules':promoted,'knowledge':k,'adaptation':a}
 
-        result = {
-            'status': 'evolving',
-            'reflection': reflection,
-            'learning_patterns': learning.get('patterns', []),
-            'adaptation': adaptation.get('decision', {}),
-            'knowledge': knowledge,
-        }
-
-        event_bus.publish('EVOLUTION_CYCLE_COMPLETED', {
-            'patterns': len(learning.get('patterns', [])),
-            'decisions': knowledge.get('decision_count', 0)
-        })
-
-        return result
-
-
-evolution_engine = EvolutionEngine()
+evolution_engine=EvolutionEngine()
