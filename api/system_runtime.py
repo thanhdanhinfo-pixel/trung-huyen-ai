@@ -94,7 +94,9 @@ async def events_ws(websocket: WebSocket):
         await websocket.close()
 
 @router.get('/scheduler')
-def scheduler_status(): return scheduler_runtime.status()
+def scheduler_status():
+    from system.runtime_bootstrap import runtime_bootstrap
+    return {'runtime': runtime_bootstrap.scheduler_state(), 'cycles': scheduler_runtime.status()}
 @router.post('/scheduler/run')
 def scheduler_run(): return scheduler_runtime.run_cycle()
 @router.get('/supervision')
