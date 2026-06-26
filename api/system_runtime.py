@@ -1,34 +1,28 @@
 from fastapi import APIRouter
 
-from system import observability, system_awareness
+from system import observability, system_awareness, governance, self_healing, policy_engine
 
 router = APIRouter(prefix='/system', tags=['system-runtime'])
-
 
 @router.get('/health')
 def system_health():
     return observability.system_snapshot()
 
-
 @router.get('/snapshot')
 def system_snapshot():
     return observability.system_snapshot()
-
 
 @router.get('/awareness')
 def awareness():
     return system_awareness.snapshot()
 
-
 @router.get('/capabilities')
 def capabilities():
     return observability.capability_status()
 
-
 @router.get('/governance')
 def governance_report():
     return governance.health_report()
-
 
 @router.get('/governance/actions')
 def governance_actions():
@@ -53,3 +47,7 @@ def workers_runtime():
 @router.get('/tasks')
 def tasks_runtime():
     return observability.task_status()
+
+@router.get('/policies')
+def policies():
+    return policy_engine.evaluate()
