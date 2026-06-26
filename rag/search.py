@@ -7,16 +7,16 @@ def search_knowledge(query: str, limit: int = 5):
 
     vector = embed_text(query)
 
-    result = client.query_points(
+    result = client.search(
         collection_name=COLLECTION_NAME,
-        query=vector,
+        query_vector=vector,
         limit=limit,
         with_payload=True,
     )
 
     output = []
 
-    for item in result.points:
+    for item in result:
         payload = item.payload or {}
 
         output.append({
