@@ -8,7 +8,7 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-RUN python -c "import app; print('APP_IMPORT_OK')"
+RUN python tools/smoke_import.py
 
 ENV PORT=8080
 
