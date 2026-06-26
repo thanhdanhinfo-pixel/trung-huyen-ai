@@ -767,6 +767,81 @@ def append_document_direct(req: dict):
         x_api_key=MCP_API_KEY,
     )
     
+
+@router.get("/read-file")
+def read_file_action(path: str = ""):
+    if not path:
+        return {
+            "status": "error",
+            "tool": "readFile",
+            "message": "path is required",
+        }
+
+    try:
+        return call_tool(
+            MCPCall(
+                tool="readFile",
+                arguments={"path": path},
+            ),
+            x_api_key=MCP_API_KEY,
+        )
+    except Exception as exc:
+        return {
+            "status": "error",
+            "tool": "readFile",
+            "path": path,
+            "message": str(exc),
+            "type": type(exc).__name__,
+        }
+
+
+@router.get("/list-directory")
+def list_directory_action(path: str = ""):
+    try:
+        return call_tool(
+            MCPCall(
+                tool="listDirectory",
+                arguments={"path": path or ""},
+            ),
+            x_api_key=MCP_API_KEY,
+        )
+    except Exception as exc:
+        return {
+            "status": "error",
+            "tool": "listDirectory",
+            "path": path,
+            "message": str(exc),
+            "type": type(exc).__name__,
+        }
+
+
+@router.get("/search-code")
+def search_code_action(query: str = ""):
+    if not query:
+        return {
+            "status": "error",
+            "tool": "searchCode",
+            "message": "query is required",
+        }
+
+    try:
+        return call_tool(
+            MCPCall(
+                tool="searchCode",
+                arguments={"query": query},
+            ),
+            x_api_key=MCP_API_KEY,
+        )
+    except Exception as exc:
+        return {
+            "status": "error",
+            "tool": "searchCode",
+            "query": query,
+            "message": str(exc),
+            "type": type(exc).__name__,
+        }
+
+
 @router.get("/drive-tree")
 def drive_tree():
     from drive import list_recursive
