@@ -2,14 +2,17 @@ from fastapi import APIRouter
 
 router = APIRouter(prefix='/observability', tags=['observability-tools'])
 
+
 @router.get('/status')
 def status():
     return {
-        'status': 'foundation',
+        'status': 'online',
         'cloud': '/observability/cloud',
         'github': '/observability/github',
+        'github_latest_commit': '/observability/github/latest-commit',
         'smoke_tests': '/observability/smoke-test',
     }
+
 
 @router.get('/cloud')
 def cloud():
@@ -19,6 +22,7 @@ def cloud():
     except Exception as exc:
         return {'status': 'safe-mode', 'error': str(exc)}
 
+
 @router.get('/github')
 def github():
     try:
@@ -26,6 +30,16 @@ def github():
         return github_checks_status()
     except Exception as exc:
         return {'status': 'safe-mode', 'error': str(exc)}
+
+
+@router.get('/github/latest-commit')
+def github_latest_commit():
+    try:
+        from services.observability_tools.github_checks import github_latest_commit
+        return github_latest_commit()
+    except Exception as exc:
+        return {'status': 'safe-mode', 'error': str(exc)}
+
 
 @router.post('/smoke-test')
 def smoke_test():
