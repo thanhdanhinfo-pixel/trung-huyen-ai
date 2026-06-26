@@ -49,3 +49,7 @@ def planner_runtime():
 @router.get('/workers')
 def workers_runtime():
     return observability.worker_status()
+
+@router.get('/tasks')
+def tasks_runtime():
+    return observability.task_status()
