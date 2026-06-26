@@ -1,0 +1,6 @@
+version: 1
+lessons:
+  - id: L001
+    title: Always refresh context before patching
+    source: reflection_engine
+    status: active
