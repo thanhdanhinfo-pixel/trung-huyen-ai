@@ -1,13 +1,56 @@
-version: 1.0
+version: 2.0
 
 system_name: TRUNG_HUYEN_AI_OS
 
-purpose:
-  Define what TRUNG_HUYEN_AI_OS can do, what is active, what is developing, and what is not yet available.
+registry_metadata:
+  schema_version: 2.0
+  last_updated: 2026-06-26
+  source_of_truth: system/CAPABILITY_REGISTRY.yaml
+  purpose: >
+    Define what TRUNG_HUYEN_AI_OS can do, what is active, what is developing,
+    what is planned, and how capabilities relate to runtime, self-awareness,
+    observability, and future digital twin governance.
+  supports:
+    dependencies: true
+    health_checks: true
+    runtime_binding: true
+    observability: true
+    digital_twin: true
+    self_awareness: true
+
+purpose: >
+  Define what TRUNG_HUYEN_AI_OS can do, what is active, what is developing,
+  and what is not yet available.
+
+capability_status_model:
+  active: Capability is usable in current operating mode.
+  partial: Capability exists but is incomplete or requires manual trigger.
+  developing: Capability is being built and may not be reliable yet.
+  planned: Capability is defined architecturally but not yet implemented.
+  unavailable: Capability is known but not currently accessible.
+
+criticality_model:
+  core: Required for TRUNG_HUYEN_AI_OS identity, continuity, or operation.
+  extended: Important but not required for boot or baseline operation.
+  experimental: Useful for evolution, not yet relied upon.
 
 capability_groups:
   identity_and_continuity:
+    id: identity_and_continuity
     status: active
+    criticality: core
+    owner_layer: system
+    dependencies:
+      - system/TRUNG_HUYEN_AI_OS_PERSISTENT_IDENTITY.md
+      - system/SYSTEM_CONTINUITY_CORE.md
+      - system/SELF_STATE.yaml
+    runtime_binding:
+      module: system_bootstrap
+      required_on_boot: true
+    health:
+      state: healthy
+      last_verified: 2026-06-26
+      verification_method: repository_file_presence
     capabilities:
       - Read Persistent Identity
       - Read System Continuity Core
@@ -16,7 +59,20 @@ capability_groups:
       - Maintain role as TRUNG_HUYEN_AI_OS
 
   system_architecture:
+    id: system_architecture
     status: active
+    criticality: core
+    owner_layer: system
+    dependencies:
+      - system/SYSTEM_MODEL.yaml
+      - system/BOOT_SEQUENCE.md
+    runtime_binding:
+      module: system_model
+      required_on_boot: true
+    health:
+      state: healthy
+      last_verified: 2026-06-26
+      verification_method: repository_file_presence
     capabilities:
       - Design AI Operating System architecture
       - Define system layers
@@ -25,7 +81,24 @@ capability_groups:
       - Propose repository structure
 
   knowledge_management:
+    id: knowledge_management
     status: active
+    criticality: core
+    owner_layer: knowledge
+    dependencies:
+      - drive.py
+      - knowledge
+      - rag
+    runtime_binding:
+      module: drive.py
+      tools:
+        - search_documents
+        - read_document
+        - ask_knowledge
+    health:
+      state: operational
+      last_verified: 2026-06-26
+      verification_method: mcp_manifest
     capabilities:
       - Read Google Drive knowledge documents
       - Search knowledge base
@@ -34,7 +107,23 @@ capability_groups:
       - Build structured knowledge models
 
   github_management:
+    id: github_management
     status: active
+    criticality: core
+    owner_layer: infrastructure
+    dependencies:
+      - services/github_service.py
+      - mcp.py
+    runtime_binding:
+      module: services.github_service
+      tools:
+        - github_list_files
+        - github_read_file
+        - github_update_file
+    health:
+      state: operational
+      last_verified: 2026-06-26
+      verification_method: mcp_source_inspection
     capabilities:
       - List repository files
       - Read repository files
@@ -42,7 +131,26 @@ capability_groups:
       - Maintain system state files
 
   google_drive_management:
+    id: google_drive_management
     status: active
+    criticality: extended
+    owner_layer: infrastructure
+    dependencies:
+      - drive.py
+      - auth.py
+    runtime_binding:
+      module: drive.py
+      tools:
+        - list_documents
+        - search_documents
+        - read_document
+        - create_folder
+        - create_document
+        - append_document
+    health:
+      state: operational
+      last_verified: 2026-06-26
+      verification_method: mcp_manifest
     capabilities:
       - List Drive files
       - Search Drive documents
@@ -50,7 +158,21 @@ capability_groups:
       - Use Drive documents as knowledge input
 
   runtime_observation:
+    id: runtime_observation
     status: partial
+    criticality: core
+    owner_layer: runtime
+    dependencies:
+      - runtime_health.py
+      - metrics.py
+      - performance_monitor.py
+    runtime_binding:
+      module: runtime_health.py
+      required_on_boot: false
+    health:
+      state: partial
+      last_verified: 2026-06-26
+      verification_method: repository_file_presence
     capabilities:
       - Check available workspace state
       - Inspect repository state
@@ -60,7 +182,22 @@ capability_groups:
       - System does not auto-boot without user command
 
   task_management:
+    id: task_management
     status: partial
+    criticality: extended
+    owner_layer: planner
+    dependencies:
+      - system/TASK_REGISTRY.yaml
+      - task_queue.py
+      - planner_agent.py
+      - master_planner.py
+    runtime_binding:
+      module: task_queue.py
+      required_on_boot: false
+    health:
+      state: partial
+      last_verified: 2026-06-26
+      verification_method: repository_file_presence
     capabilities:
       - Maintain TASK_REGISTRY
       - Identify active tasks
@@ -69,7 +206,22 @@ capability_groups:
       - Task execution state is not yet fully automated
 
   learning_system:
+    id: learning_system
     status: developing
+    criticality: extended
+    owner_layer: brain
+    dependencies:
+      - learning_engine.py
+      - reflection_engine.py
+      - self_improvement.py
+      - continuous_improvement.py
+    runtime_binding:
+      module: learning_engine.py
+      required_on_boot: false
+    health:
+      state: developing
+      last_verified: 2026-06-26
+      verification_method: repository_file_presence
     capabilities:
       - Extract lessons from founder documents
       - Update continuity model
@@ -78,7 +230,20 @@ capability_groups:
       - Automatic long-term learning pipeline not yet complete
 
   academy_development:
+    id: academy_development
     status: active
+    criticality: extended
+    owner_layer: domain_model
+    dependencies:
+      - system/ACADEMY_MODEL.yaml
+      - system/CORE_BRAIN_INDEX.yaml
+    runtime_binding:
+      module: system_model
+      required_on_boot: false
+    health:
+      state: healthy
+      last_verified: 2026-06-26
+      verification_method: repository_file_presence
     capabilities:
       - Analyze Trung Huyen Academy foundation
       - Extract mission, vision, philosophy, values
@@ -86,7 +251,21 @@ capability_groups:
       - Connect Academy with Core Brain and AI OS
 
   core_brain_development:
+    id: core_brain_development
     status: developing
+    criticality: core
+    owner_layer: brain
+    dependencies:
+      - system/CORE_BRAIN_INDEX.yaml
+      - brain
+      - knowledge_graph.py
+    runtime_binding:
+      module: knowledge_graph.py
+      required_on_boot: false
+    health:
+      state: developing
+      last_verified: 2026-06-26
+      verification_method: repository_file_presence
     capabilities:
       - Organize Core Brain concepts
       - Build world model
@@ -96,7 +275,24 @@ capability_groups:
       - Full Core Brain index not yet built
 
   multi_agent_orchestration:
+    id: multi_agent_orchestration
     status: planned
+    criticality: extended
+    owner_layer: orchestration
+    dependencies:
+      - agent_orchestrator.py
+      - multi_agent_manager.py
+      - planner_agent.py
+      - research_agent.py
+      - task_agent.py
+      - answer_validator.py
+    runtime_binding:
+      module: agent_orchestrator.py
+      required_on_boot: false
+    health:
+      state: planned
+      last_verified: 2026-06-26
+      verification_method: repository_file_presence
     capabilities:
       - Planner Agent
       - Research Agent
@@ -105,18 +301,108 @@ capability_groups:
     limitations:
       - Not yet fully defined in system state
 
+  system_awareness:
+    id: system_awareness
+    status: developing
+    criticality: core
+    owner_layer: self_awareness
+    dependencies:
+      - system/SELF_STATE.yaml
+      - system/SYSTEM_MODEL.yaml
+      - system/CAPABILITY_REGISTRY.yaml
+      - runtime_health.py
+    runtime_binding:
+      module: system_awareness.py
+      required_on_boot: true
+      implementation_status: missing_module
+    health:
+      state: developing
+      last_verified: 2026-06-26
+      verification_method: registry_upgrade
+    capabilities:
+      - Observe runtime state
+      - Observe capability health
+      - Generate self reports
+      - Maintain system snapshots
+      - Synchronize System Awareness from Self State, System Model, and Capability Registry
+    limitations:
+      - system_awareness.py is not yet implemented
+      - Snapshot generation is not yet automated
+
+  digital_twin:
+    id: digital_twin
+    status: planned
+    criticality: core
+    owner_layer: self_awareness
+    dependencies:
+      - system/SYSTEM_MODEL.yaml
+      - system/CAPABILITY_REGISTRY.yaml
+      - system/SELF_STATE.yaml
+      - system/TASK_REGISTRY.yaml
+    runtime_binding:
+      module: digital_twin.py
+      required_on_boot: false
+      implementation_status: missing_module
+    health:
+      state: planned
+      last_verified: 2026-06-26
+      verification_method: registry_upgrade
+    capabilities:
+      - Maintain system representation
+      - Track architecture, capability, task, and runtime state
+      - Track evolution history
+      - Track dependencies
+      - Predict architectural impacts
+    limitations:
+      - digital_twin.py is not yet implemented
+      - system/DIGITAL_TWIN.yaml is not yet created
+
+  unified_observability:
+    id: unified_observability
+    status: planned
+    criticality: core
+    owner_layer: runtime
+    dependencies:
+      - logger.py
+      - audit_log.py
+      - metrics.py
+      - runtime_health.py
+      - performance_monitor.py
+    runtime_binding:
+      module: observability_layer.py
+      required_on_boot: false
+      implementation_status: missing_module
+    health:
+      state: planned
+      last_verified: 2026-06-26
+      verification_method: registry_upgrade
+    capabilities:
+      - Produce system snapshots
+      - Report capability status
+      - Report worker status
+      - Report planner status
+      - Report memory status
+      - Report Drive, GitHub, and MCP status
+    limitations:
+      - No unified observability layer yet
+      - Existing observability modules are still fragmented
+
 active_tools:
   - GitHub list/read/update
   - Google Drive search/read
   - Knowledge search
   - RAG search
   - Workspace load
+  - MCP call gateway
 
 known_limitations:
   - Cannot automatically remember every conversation without saved state
   - Cannot automatically read GitHub at the start of every new chat unless user triggers synchronization
   - Needs explicit command: Đồng bộ trạng thái hệ thống
   - Capability Registry must be updated as system tools evolve
+  - System Awareness module is not yet implemented
+  - Digital Twin model is not yet implemented
+  - Unified Observability layer is not yet implemented
 
 boot_integration:
   should_be_read_after:
@@ -125,12 +411,20 @@ boot_integration:
   should_be_read_before:
     - system/TASK_REGISTRY.yaml
     - system/MEMORY_LOG.md
+  required_for_boot:
+    - identity_and_continuity
+    - system_architecture
+    - github_management
+    - knowledge_management
+    - runtime_observation
+    - system_awareness
 
 next_development_priorities:
-  - Build SYSTEM_MODEL.yaml
-  - Build ACADEMY_MODEL.yaml
-  - Build CORE_BRAIN_INDEX.yaml
+  - Upgrade SELF_STATE.yaml to v2
+  - Create system/DIGITAL_TWIN.yaml
+  - Implement system_awareness.py
+  - Implement unified observability layer
   - Upgrade TASK_REGISTRY to v2
-  - Upgrade BOOT_SEQUENCE to include Capability Registry
+  - Upgrade BOOT_SEQUENCE to include Capability Registry v2 checks
 
-last_updated: 2026-06-24
+last_updated: 2026-06-26
