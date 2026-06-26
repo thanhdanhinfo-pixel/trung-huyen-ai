@@ -119,7 +119,14 @@ from api.debug import router as debug_router
 
 from api.runtime import router as runtime_router, register_error
 from api.deployment import router as deployment_router
-from api.system_runtime import router as system_runtime_router
+
+try:
+    from api.system_runtime import router as system_runtime_router
+except Exception as exc:
+    import traceback
+    print("System runtime router not loaded")
+    traceback.print_exc()
+    system_runtime_router = None
 
 try:
     from api.digital_twin import router as digital_twin_router
