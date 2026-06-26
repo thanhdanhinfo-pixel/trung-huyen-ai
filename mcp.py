@@ -20,11 +20,8 @@ from services.github_service import (
     github_list_files,
     github_read_file,
     github_update_file,
-    github_copy_file,
-    github_move_file,
 )
 from services.execution_engine import execution_engine, execution_plan_from_dict
-from services.command_runner import run_command
 
 
 router = APIRouter(prefix="/mcp", tags=["MCP Gateway"])
