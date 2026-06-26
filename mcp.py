@@ -13,7 +13,13 @@ from drive import (
     create_google_doc,
     append_google_doc,
 )
-from services.github_service import github_list_files, github_read_file, github_update_file
+from services.github_service import (
+    github_list_files,
+    github_read_file,
+    github_update_file,
+    github_copy_file,
+    github_move_file,
+)
 from services.execution_engine import execution_engine, execution_plan_from_dict
 
 
