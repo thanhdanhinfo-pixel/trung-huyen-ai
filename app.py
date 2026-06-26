@@ -53,6 +53,10 @@ app = FastAPI(
     servers=[{"url": SERVER_URL}],
 )
 
+@app.on_event('startup')
+async def system_startup_boot():
+    boot()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -98,7 +102,6 @@ from api.debug import router as debug_router
 from api.runtime import router as runtime_router, register_error
 from api.deployment import router as deployment_router
 from api.system_runtime import router as system_runtime_router
-from system.bootstrap import boot
 
 app.include_router(system_router)
 app.include_router(debug_router)
