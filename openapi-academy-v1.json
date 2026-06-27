@@ -1,1 +1,122 @@
-{"openapi":"3.1.0","info":{"title":"ACADEMY_GPT","version":"1.0.0"},"servers":[{"url":"https://trung-huyen-ai-779121307308.asia-southeast1.run.app"}],"paths":{"/system/khoi-dong":{"get":{"operationId":"startupSystem","summary":"Startup"}},"/system/global-memory":{"get":{"operationId":"globalMemory","summary":"Global Memory"}},"/mcp/read-drive-path":{"get":{"operationId":"readDrivePath","summary":"Read Academy Docs"}},"/knowledge/save":{"post":{"operationId":"saveKnowledge","summary":"Save Knowledge"}},"/workspace/load":{"get":{"operationId":"loadWorkspace","summary":"Load Workspace"}}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ACADEMY_GPT",
+    "version": "1.1.0",
+    "description": "Specialized GPT Action schema for TRUNG HUYỀN ACADEMY. Shared startup plus Academy knowledge, workspace and knowledge capture."
+  },
+  "servers": [
+    {
+      "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+    }
+  ],
+  "paths": {
+    "/system/khoi-dong": {
+      "get": {
+        "operationId": "startupSystem",
+        "summary": "Khởi động hệ thống",
+        "description": "Load Startup Memory Pack, checkpoint, governance, global memory and next actions.",
+        "responses": {
+          "200": {
+            "description": "Startup state loaded",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/global-memory": {
+      "get": {
+        "operationId": "getGlobalMemory",
+        "summary": "Get global memory",
+        "responses": {
+          "200": {
+            "description": "Global memory",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/read-drive-path": {
+      "get": {
+        "operationId": "readDrivePath",
+        "summary": "Read Academy Drive document by logical path",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Drive file content",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge/save": {
+      "post": {
+        "operationId": "saveKnowledge",
+        "summary": "Save Academy knowledge",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "content"],
+                "properties": {
+                  "title": { "type": "string" },
+                  "content": { "type": "string" },
+                  "type": { "type": "string", "default": "Principle" },
+                  "tags": { "type": "array", "items": { "type": "string" }, "default": [] }
+                },
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Knowledge saved",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspace/load": {
+      "get": {
+        "operationId": "loadWorkspace",
+        "summary": "Load workspace",
+        "responses": {
+          "200": {
+            "description": "Workspace loaded",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
