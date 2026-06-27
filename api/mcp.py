@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from openai import OpenAI
 import os
 import requests
-
+from system.security import is_founder_unlock_active
 from services.github_service import github_list_files, github_read_file, github_update_file
 from services.execution_engine import execution_engine, execution_plan_from_dict
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
@@ -444,6 +444,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         approved = (
             is_founder_approved(args)
             or is_emergency_override(args)
+            or is_founder_unlock_active(args.get("founder_unlock"), min_level=3)
         )
 
         if not approved:
