@@ -422,16 +422,30 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "grant_token": grant_token,
             "grant": grant,
         }
-    
+
     if tool == "founder_grant_close":
 
-        clear_current_grant()
+        grant_token = args.get("grant_token", "")
+
+        if not grant_token:
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "grant_token is required",
+            }
+
+        revoke_grant(
+            grant_token,
+            reason="manual close",
+        )
 
         return {
             "status": "ok",
             "tool": tool,
-            "message": "Founder grant cleared",
+            "message": "Founder grant revoked",
+            "grant_token": grant_token,
         }
+    
     if tool == "github_update_file":
         approved = is_founder_approved(args)
         if not approved:
