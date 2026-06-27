@@ -13,7 +13,8 @@ def status():
         'self_awareness_url':'/system/self-awareness',
         'repository_tree_url':'/system/repository-tree',
         'folder_health_url':'/system/folder-health',
-        'protected_files_url':'/system/protected-files'
+        'protected_files_url':'/system/protected-files',
+        'repository_observer_version':'L1-runtime-verified'
     }
 
 @router.get('/capabilities')
