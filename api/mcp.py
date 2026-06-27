@@ -449,10 +449,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "tool": tool,
             "result": result,
         }
-            "status": "ok",
-            "tool": tool,
-            "result": github_update_file(path, content, sha, message),
-        }
+            
     if tool == "execute_plan":
         approved = (
             is_founder_approved(args)
