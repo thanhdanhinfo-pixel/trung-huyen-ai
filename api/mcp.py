@@ -42,7 +42,7 @@ GOVERNED_WRITE_PATH_PREFIXES = (
 
 
 def is_founder_approved(args: Dict[str, Any]) -> bool:
-    return bool(args.get("approved", False)) or args.get("approved_by") == "Founder"
+    return validate_founder_approval(args)
 
 
 def is_governed_write_path(method: str, path: str) -> bool:
