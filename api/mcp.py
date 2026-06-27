@@ -21,6 +21,28 @@ from drive import (
 from fastapi import Header, HTTPException
 from config import MCP_API_KEY, DRIVE_FOLDER_ID, drive_root_sources
 
+WRITE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
+GOVERNED_WRITE_PATH_PREFIXES = (
+    "/github/update",
+    "/github/delete",
+    "/github/move",
+    "/github/batch",
+    "/github/cleanup",
+    "/github/patch",
+    "/github/patch-batch",
+    "/github/move-batch",
+    "/github/mkdir",
+    "/github/refactor-imports",
+)
+
+
+def is_founder_approved(args: Dict[str, Any]) -> bool:
+    return bool(args.get("approved", False)) or args.get("approved_by") == "Founder"
+
+
+def is_governed_write_path(method: str, path: str) -> bool:
+    return method.upper() in WRITE_METHODS and any(path.startswith(prefix) for prefix in GOVERNED_WRITE_PATH_PREFIXES)
+
 router = APIRouter(prefix="/mcp", tags=["MCP Gateway"])
 
 APPS_SCRIPT_CREATE_DOCUMENT_URL = os.getenv(
@@ -162,6 +184,15 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 "status": "error",
                 "tool": tool,
                 "message": "path must start with /",
+            }
+
+        if is_governed_write_path(method, path):
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "Direct governed write endpoints are forbidden through backend_call. Use governed MCP tools only.",
+                "path": path,
+                "method": method,
             }
 
         url = f"http://127.0.0.1:8080{path}"
@@ -355,7 +386,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             ],
         }
     if tool == "github_update_file":
-        approved = bool(args.get("approved", False))
+        approved = is_founder_approved(args)
         if not approved:
             return {
                 "status": "error",
@@ -381,7 +412,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "result": github_update_file(path, content, sha, message),
         }
     if tool == "execute_plan":
-        approved = bool(args.get("approved", False))
+        approved = is_founder_approved(args)
         plan_data = args.get("plan") or {}
 
         if not isinstance(plan_data, dict):
@@ -437,7 +468,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
     if tool == "create_folder":
         name = args.get("name", "")
         parent_id = args.get("parent_id", None)
-        approved = bool(args.get("approved", False))
+        approved = is_founder_approved(args)
 
         if not approved:
             return {
@@ -507,7 +538,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
     if tool == "append_document":
         file_id = args.get("file_id", "")
         content = args.get("content", "")
-        approved = bool(args.get("approved", False))
+        approved = is_founder_approved(args)
 
         if not approved:
             return {
