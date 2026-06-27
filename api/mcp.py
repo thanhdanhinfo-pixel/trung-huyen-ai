@@ -10,6 +10,9 @@ from system.security import (
     is_founder_grant_active,
     is_founder_unlock_active,
     system_write,
+    create_grant,
+    load_grant,
+    revoke_grant,
 )
 import os
 import requests
@@ -410,14 +413,16 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
     if tool == "founder_grant_open":
         grant = args.get("founder_grant", {})
 
-        set_current_grant(grant)
+        grant_token = create_grant(grant)
 
         return {
-           "status": "ok",
-           "tool": tool,
-           "message": "Founder grant activated",
-           "grant": grant,
+            "status": "ok",
+            "tool": tool,
+            "message": "Founder grant activated",
+            "grant_token": grant_token,
+            "grant": grant,
         }
+    
     if tool == "founder_grant_close":
 
         clear_current_grant()
