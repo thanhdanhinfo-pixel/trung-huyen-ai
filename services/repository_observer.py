@@ -231,3 +231,67 @@ def architecture_summary() -> Dict[str, Any]:
         'dependency_map_url': '/system/dependency-map',
         'protected_files_url': '/system/protected-files',
     }
+
+
+PROTECTED_MODULES = {
+    'app.py', 'config.py', 'drive.py', 'mcp.py', 'vectordb.py', 'runtime_health.py',
+    'cloudbuild.yaml', 'requirements.txt', 'Dockerfile',
+}
+
+ACTIVE_ROOT_MODULES = {
+    'agent_orchestrator.py', 'planner_agent.py', 'task_agent.py', 'task_queue.py',
+    'workflow_engine.py', 'long_term_memory.py', 'document_cache.py', 'knowledge_graph.py',
+}
+
+KNOWN_SHIMS = {
+    'chat.py': 'api/chat.py',
+    'health.py': 'api/health.py',
+    'scheduler.py': 'services/production_scheduler.py',
+    'orchestrator.py': 'agent_orchestrator.py',
+}
+
+
+def module_classification() -> Dict[str, Any]:
+    root = list_path('')
+    if root.get('status') != 'ok':
+        return root
+
+    modules = []
+    for item in root.get('items', []):
+        name = item.get('name') or ''
+        if not name.endswith('.py'):
+            continue
+        size = item.get('size') or 0
+        path = item.get('path')
+        if name in PROTECTED_MODULES:
+            category = 'PROTECTED'
+            action = 'do_not_move'
+            reason = 'core runtime file'
+        elif name in ACTIVE_ROOT_MODULES:
+            category = 'ACTIVE'
+            action = 'keep_until_dependency_scan'
+            reason = 'known active root module'
+        elif name in KNOWN_SHIMS:
+            category = 'SHIM'
+            action = 'verify_imports_then_replace_with_compatibility_shim'
+            reason = f'candidate shim for {KNOWN_SHIMS[name]}'
+        elif size <= 250:
+            category = 'REVIEW'
+            action = 'inspect_content_before_decision'
+            reason = 'tiny root module'
+        else:
+            category = 'UNKNOWN_ACTIVE'
+            action = 'dependency_scan_required'
+            reason = 'non-trivial root module'
+        modules.append({'path': path, 'size': size, 'category': category, 'recommended_action': action, 'reason': reason})
+
+    summary = {}
+    for m in modules:
+        summary[m['category']] = summary.get(m['category'], 0) + 1
+
+    return {
+        'status': 'ok',
+        'policy': 'classification_only_no_delete',
+        'summary': summary,
+        'modules': modules,
+    }
