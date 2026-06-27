@@ -1,11 +1,19 @@
 from typing import Any, Dict, List
-from system.security import is_founder_grant_active, set_current_grant, clear_current_grant
+
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from openai import OpenAI
+from system.security import (
+    set_current_grant,
+    get_current_grant,
+    clear_current_grant,
+    is_founder_grant_active,
+    is_founder_unlock_active,
+    system_write,
+)
 import os
 import requests
-from system.security import is_founder_unlock_active, system_write
+
 from services.github_service import github_list_files, github_read_file, github_update_file
 from services.execution_engine import execution_engine, execution_plan_from_dict
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
@@ -401,7 +409,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         }
     if tool == "founder_grant_open":
 
-        grant = args.get("founder_grant", {})
+        grant = args.get("founder_grant") or get_current_grant() or {}
 
         set_current_grant(grant)
 
