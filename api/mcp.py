@@ -428,11 +428,11 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 "message": "audit validation failed",
             }
 
-        if not path or not content or not sha or not message:
+        if not path or not content or not message:
             return {
                 "status": "error",
                 "tool": tool,
-                "message": "path, content, sha and message are required",
+                "message": "path, content and message are required",
             }
 
         grant = args.get("founder_grant", {})
