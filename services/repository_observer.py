@@ -467,3 +467,55 @@ def refactor_plan() -> Dict[str, Any]:
         ],
         'next_endpoint': '/system/refactor-plan',
     }
+
+
+# =============================
+# Repository Observability Performance Cache
+# Keeps full scan accuracy while avoiding repeated GitHub reads.
+# =============================
+
+from datetime import datetime, timedelta
+
+_IMPORT_SCAN_CACHE: Dict[str, Any] | None = None
+_IMPORT_SCAN_AT: datetime | None = None
+_IMPORT_SCAN_TTL = timedelta(minutes=5)
+_import_scan_uncached = import_scan
+
+
+def import_scan(force: bool = False) -> Dict[str, Any]:
+    global _IMPORT_SCAN_CACHE, _IMPORT_SCAN_AT
+
+    now = datetime.utcnow()
+    if (
+        not force
+        and _IMPORT_SCAN_CACHE is not None
+        and _IMPORT_SCAN_AT is not None
+        and now - _IMPORT_SCAN_AT < _IMPORT_SCAN_TTL
+    ):
+        cached = dict(_IMPORT_SCAN_CACHE)
+        cached['cache'] = {
+            'hit': True,
+            'cached_at': _IMPORT_SCAN_AT.isoformat() + 'Z',
+            'ttl_seconds': int(_IMPORT_SCAN_TTL.total_seconds()),
+        }
+        return cached
+
+    result = _import_scan_uncached()
+    _IMPORT_SCAN_CACHE = result
+    _IMPORT_SCAN_AT = now
+
+    enriched = dict(result)
+    enriched['cache'] = {
+        'hit': False,
+        'cached_at': _IMPORT_SCAN_AT.isoformat() + 'Z',
+        'ttl_seconds': int(_IMPORT_SCAN_TTL.total_seconds()),
+    }
+    _IMPORT_SCAN_CACHE = enriched
+    return enriched
+
+
+def clear_import_scan_cache() -> Dict[str, Any]:
+    global _IMPORT_SCAN_CACHE, _IMPORT_SCAN_AT
+    _IMPORT_SCAN_CACHE = None
+    _IMPORT_SCAN_AT = None
+    return {'status': 'ok', 'cache': 'cleared'}
