@@ -1,5 +1,5 @@
 from typing import Any, Dict, List
-from system.security import is_founder_grant_active
+from system.security import is_founder_grant_active, set_current_grant, clear_current_grant
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from openai import OpenAI
@@ -398,6 +398,28 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 }
                 for f in list_recursive()
             ],
+        }
+
+        if tool == "founder_grant_open":
+
+        grant = args.get("founder_grant", {})
+
+        set_current_grant(grant)
+
+        return {
+            "status": "ok",
+            "tool": tool,
+            "message": "Founder grant activated",
+            "grant": grant,
+        }
+    if tool == "founder_grant_close":
+
+        clear_current_grant()
+
+        return {
+            "status": "ok",
+            "tool": tool,
+            "message": "Founder grant cleared",
         }
     if tool == "github_update_file":
         approved = is_founder_approved(args)
