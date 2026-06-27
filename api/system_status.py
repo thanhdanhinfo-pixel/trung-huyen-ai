@@ -103,3 +103,19 @@ def architecture_summary():
 def module_classification():
     from services.repository_observer import module_classification as classify_modules
     return classify_modules()
+
+
+@router.get('/import-scan')
+def import_scan():
+    from services.repository_observer import import_scan as scan_imports
+    return scan_imports()
+
+@router.get('/orphan-modules')
+def orphan_modules():
+    from services.repository_observer import orphan_modules as get_orphans
+    return get_orphans()
+
+@router.get('/refactor-plan')
+def refactor_plan():
+    from services.repository_observer import refactor_plan as get_plan
+    return get_plan()
