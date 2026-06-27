@@ -2,7 +2,10 @@ from .system_awareness import system_awareness
 from .digital_twin import digital_twin
 from .observability_layer import observability
 from .governance import governance
-from .self_healing import self_healing
+try:
+    from .self_healing import self_healing
+except Exception:
+    self_healing = None
 from .policy_engine import policy_engine
 from .rule_engine import rule_engine
 from .event_bus import event_bus
