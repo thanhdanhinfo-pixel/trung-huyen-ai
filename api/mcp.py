@@ -435,7 +435,24 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 "message": "path, content, sha and message are required",
             }
 
+        grant = args.get("founder_grant", {})
+
+        result = system_write(
+            action="update_file",
+            target=path,
+            payload={
+                "content": content,
+                "message": message,
+                "sha": sha,
+            },
+            founder_grant=grant,
+        )
+
         return {
+            "status": "ok" if result.get("status") != "error" else "error",
+            "tool": tool,
+            "result": result,
+        }
             "status": "ok",
             "tool": tool,
             "result": github_update_file(path, content, sha, message),
