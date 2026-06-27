@@ -168,8 +168,6 @@ def _payload() -> Dict[str, Any]:
             "next_actions": "/system/next-actions",
             "self_state": "/system/self-state",
             "tool_health": "/system/tool-health",
-            "memory_pack": "/system/memory-pack",
-            "governance_rules": "/system/governance-rules",
         },
         "gpt_network_policy": {
             "master_gpt": "TRUNG_HUYEN_AI_OS",
@@ -230,3 +228,13 @@ def tool_health() -> Dict[str, Any]:
         },
         "safe_mode": False,
     }
+
+
+@router.get("/memory-pack")
+def memory_pack() -> Dict[str, Any]:
+    return _memory_pack()
+
+
+@router.get("/governance-rules")
+def governance_rules() -> Dict[str, Any]:
+    return _governance_rules()
