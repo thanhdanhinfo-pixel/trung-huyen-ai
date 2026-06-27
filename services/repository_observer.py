@@ -142,3 +142,92 @@ def protected_files() -> Dict[str, Any]:
             'one module per build cycle',
         ],
     }
+
+
+PY_ROOT_DUPLICATE_CANDIDATES = [
+    'scheduler.py', 'health.py', 'admin.py', 'chat.py',
+    'orchestrator.py', 'workflow_engine.py', 'runtime_health.py',
+]
+
+
+def duplicate_modules() -> Dict[str, Any]:
+    root = list_path('')
+    api = list_path('api')
+    services = list_path('services')
+    system = list_path('system')
+
+    groups = {}
+    for scope_name, scope in [('root', root), ('api', api), ('services', services), ('system', system)]:
+        for item in scope.get('items', []) if scope.get('status') == 'ok' else []:
+            name = item.get('name') or ''
+            if not name.endswith('.py'):
+                continue
+            stem = name[:-3]
+            groups.setdefault(stem, []).append({'scope': scope_name, 'path': item.get('path'), 'size': item.get('size')})
+
+    duplicates = {k: v for k, v in groups.items() if len(v) > 1}
+    root_candidates = [name for name in PY_ROOT_DUPLICATE_CANDIDATES if any(i.get('name') == name for i in root.get('items', []))]
+
+    return {
+        'status': 'ok',
+        'duplicate_groups': duplicates,
+        'root_duplicate_candidates': root_candidates,
+        'recommendation': 'manual-review-required' if duplicates or root_candidates else 'green',
+    }
+
+
+def dead_module_candidates() -> Dict[str, Any]:
+    root = list_path('')
+    if root.get('status') != 'ok':
+        return root
+
+    files = [i for i in root.get('items', []) if i.get('type') == 'file' and str(i.get('name', '')).endswith('.py')]
+    candidates = []
+    for item in files:
+        size = item.get('size') or 0
+        name = item.get('name') or ''
+        if size <= 250 and name not in ['app.py', 'config.py', 'mcp.py']:
+            candidates.append({'path': item.get('path'), 'size': size, 'reason': 'tiny-root-module'})
+
+    return {
+        'status': 'ok',
+        'count': len(candidates),
+        'candidates': candidates,
+        'policy': 'do-not-delete-without-founder-approval',
+    }
+
+
+def import_dependency_map() -> Dict[str, Any]:
+    # Lightweight static map for current architecture. Deep import parsing is planned for L3.
+    return {
+        'status': 'ok',
+        'mode': 'lightweight',
+        'nodes': CORE_FOLDERS + ['app.py', 'mcp.py', 'drive.py', 'config.py'],
+        'edges': [
+            ['app.py', 'api'],
+            ['app.py', 'drive.py'],
+            ['app.py', 'config.py'],
+            ['app.py', 'services'],
+            ['api', 'services'],
+            ['services', 'github_runtime'],
+            ['services', 'observability_tools'],
+            ['rag', 'vectordb.py'],
+            ['mcp.py', 'drive.py'],
+        ],
+        'next': 'recursive-python-import-scan',
+    }
+
+
+def architecture_summary() -> Dict[str, Any]:
+    health = folder_health()
+    duplicates = duplicate_modules()
+    dead = dead_module_candidates()
+    return {
+        'status': 'ok',
+        'level': 'repository-observability-l2',
+        'folder_health': health,
+        'duplicate_modules': duplicates,
+        'dead_module_candidates': dead,
+        'dependency_map_url': '/system/dependency-map',
+        'protected_files_url': '/system/protected-files',
+    }
