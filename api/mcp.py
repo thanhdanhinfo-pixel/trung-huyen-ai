@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from openai import OpenAI
 import os
 import requests
-from system.security import is_founder_unlock_active
+from system.security import is_founder_unlock_active, system_write
 from services.github_service import github_list_files, github_read_file, github_update_file
 from services.execution_engine import execution_engine, execution_plan_from_dict
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
