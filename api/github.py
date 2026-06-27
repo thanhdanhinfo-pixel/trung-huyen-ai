@@ -278,27 +278,27 @@ def read(req: ReadFile):
 
 @router.post('/update')
 def update(req: UpdateFile):
-    return github_runtime.update_file(req.path, req.content, req.message, req.sha)
+    return {"status":"error","message":"Direct write endpoint disabled. Use MCP governed tools."}
 
 
 @router.post('/delete')
 def delete(req: DeleteFile):
-    return github_runtime.delete_file(req.path, req.message)
+    return {"status":"error","message":"Direct write endpoint disabled. Use MCP governed tools."}
 
 
 @router.post('/move')
 def move(req: MoveFile):
-    return github_runtime.move_file(req.source, req.destination, req.message)
+    return {"status":"error","message":"Direct write endpoint disabled. Use MCP governed tools."}
 
 
 @router.post('/batch')
 def batch(req: BatchCommit):
-    return github_runtime.batch_commit(req.operations, req.message)
+    return {"status":"error","message":"Direct write endpoint disabled. Use MCP governed tools."}
 
 
 @router.post('/cleanup')
 def cleanup(req: CleanupRepository):
-    return github_runtime.cleanup_repository(commit=req.commit)
+    return {"status":"error","message":"Direct write endpoint disabled. Use MCP governed tools."}
 
 
 @router.post("/patch")
