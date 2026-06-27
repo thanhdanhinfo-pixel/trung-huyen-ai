@@ -399,18 +399,17 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 for f in list_recursive()
             ],
         }
-
-        if tool == "founder_grant_open":
+    if tool == "founder_grant_open":
 
         grant = args.get("founder_grant", {})
 
         set_current_grant(grant)
 
         return {
-            "status": "ok",
-            "tool": tool,
-            "message": "Founder grant activated",
-            "grant": grant,
+           "status": "ok",
+           "tool": tool,
+           "message": "Founder grant activated",
+           "grant": grant,
         }
     if tool == "founder_grant_close":
 
