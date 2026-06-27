@@ -114,6 +114,7 @@ app.include_router(workspace_router)
 app.include_router(knowledge_router)
 app.include_router(execute_router)
 app.include_router(system_awareness_router)
+app.include_router(system_startup_router)
 
 from api.system import router as system_router
 from api.debug import router as debug_router
