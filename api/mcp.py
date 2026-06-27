@@ -408,8 +408,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             ],
         }
     if tool == "founder_grant_open":
-
-        grant = args.get("founder_grant") or get_current_grant() or {}
+        grant = args.get("founder_grant", {})
 
         set_current_grant(grant)
 
@@ -464,7 +463,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 "message": "path, content and message are required",
             }
 
-        grant = args.get("founder_grant", {})
+        grant = args.get("founder_grant") or get_current_grant() or {}
 
         result = system_write(
             action="update_file",
