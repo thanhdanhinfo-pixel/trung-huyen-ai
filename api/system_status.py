@@ -76,3 +76,24 @@ def folder_health():
 def protected_files():
     from services.repository_observer import protected_files as get_protected
     return get_protected()
+
+
+@router.get('/duplicate-modules')
+def duplicate_modules():
+    from services.repository_observer import duplicate_modules as get_duplicates
+    return get_duplicates()
+
+@router.get('/dead-modules')
+def dead_modules():
+    from services.repository_observer import dead_module_candidates as get_dead
+    return get_dead()
+
+@router.get('/dependency-map')
+def dependency_map():
+    from services.repository_observer import import_dependency_map as get_map
+    return get_map()
+
+@router.get('/architecture-summary')
+def architecture_summary():
+    from services.repository_observer import architecture_summary as get_summary
+    return get_summary()
