@@ -159,11 +159,6 @@ def _payload() -> Dict[str, Any]:
         "last_actions": _last_actions(),
         "global_memory": _global_memory(),
         "next_actions": _next_actions(),
-        "governance_rules": _governance_rules(),
-        "founder_constitution": _founder_constitution(),
-        "gpt_action_scope": _gpt_action_scope(),
-        "capability_verification_contract": _capability_verification_contract(),
-        "memory_pack": _memory_pack(),
         "active_endpoints": {
             "khoi_dong": "/system/khoi-dong",
             "boot_v3": "/system/boot-v3",
@@ -173,6 +168,8 @@ def _payload() -> Dict[str, Any]:
             "next_actions": "/system/next-actions",
             "self_state": "/system/self-state",
             "tool_health": "/system/tool-health",
+            "memory_pack": "/system/memory-pack",
+            "governance_rules": "/system/governance-rules",
         },
         "gpt_network_policy": {
             "master_gpt": "TRUNG_HUYEN_AI_OS",
