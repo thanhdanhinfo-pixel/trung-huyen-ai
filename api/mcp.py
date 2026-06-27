@@ -1,5 +1,5 @@
 from typing import Any, Dict, List
-
+from system.security import is_founder_grant_active
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from openai import OpenAI
@@ -445,6 +445,12 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             is_founder_approved(args)
             or is_emergency_override(args)
             or is_founder_unlock_active(args.get("founder_unlock"), min_level=3)
+            or is_founder_grant_active(
+                args.get("founder_grant"),
+                subject="TRUNG_HUYEN_AI_OS",
+                min_level=3,
+                scope="ALL_SYSTEM",
+            )
         )
 
         if not approved:
@@ -457,8 +463,17 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         audit = write_audit(
             "execute_plan",
             {
-                "approved_by": args.get("approved_by") or args.get("founder_unlock", {}).get("approved_by"),
-                "approval_id": args.get("approval_id") or args.get("founder_unlock", {}).get("session_id"),
+                "approved_by": (
+                    args.get("approved_by")
+                    or args.get("founder_unlock", {}).get("approved_by")
+                    or args.get("founder_grant", {}).get("granted_by")
+                ),
+                "approval_id": (
+                    args.get("approval_id")
+                    or args.get("founder_unlock", {}).get("session_id")
+                    or args.get("founder_grant", {}).get("session_id")
+                ),
+                  
                 "tool": tool,
                 "status": "pending",
             },
