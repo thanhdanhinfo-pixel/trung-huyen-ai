@@ -403,6 +403,21 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         content = args.get("content", "")
         sha = args.get("sha", "")
         message = args.get("message", "")
+        audit = write_audit(
+            "github_update_file",
+            {
+                "approved_by": args.get("approved_by"),
+                "approval_id": args.get("approval_id"),
+                "tool": tool,
+                "status": "pending",
+            },
+        )
+
+        if not require_audit(audit):
+            return {
+                "status": "error",
+                "message": "audit validation failed",
+            }
 
         if not path or not content or not sha or not message:
             return {
