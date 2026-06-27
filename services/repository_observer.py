@@ -304,8 +304,10 @@ def module_classification() -> Dict[str, Any]:
 
 import ast
 import base64
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 SCAN_FOLDERS = ['', 'api', 'services', 'system']
+MAX_IMPORT_SCAN_WORKERS = int(os.getenv('IMPORT_SCAN_WORKERS', '16'))
 
 
 def _read_text_file(path: str) -> Dict[str, Any]:
@@ -324,7 +326,34 @@ def _read_text_file(path: str) -> Dict[str, Any]:
         return {'status': 'error', 'path': path, 'error_type': type(exc).__name__, 'message': str(exc)}
 
 
+def _repo_tree_recursive() -> Dict[str, Any]:
+    try:
+        url = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/git/trees/{GITHUB_BRANCH}?recursive=1'
+        resp = requests.get(url, headers=_headers(), timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+        return {'status': 'ok', 'tree': data.get('tree', [])}
+    except Exception as exc:
+        return {'status': 'error', 'error_type': type(exc).__name__, 'message': str(exc), 'tree': []}
+
+
 def _python_files_for_scan() -> List[Dict[str, Any]]:
+    tree_result = _repo_tree_recursive()
+    if tree_result.get('status') == 'ok':
+        files: List[Dict[str, Any]] = []
+        for item in tree_result.get('tree', []):
+            path = item.get('path') or ''
+            if item.get('type') == 'blob' and path.endswith('.py'):
+                files.append({
+                    'name': path.split('/')[-1],
+                    'path': path,
+                    'type': 'file',
+                    'size': item.get('size', 0),
+                    'sha': item.get('sha'),
+                })
+        return files
+
+    # Fallback: legacy folder scan if Git tree API is unavailable.
     files: List[Dict[str, Any]] = []
     seen = set()
     for folder in SCAN_FOLDERS:
@@ -351,14 +380,15 @@ def import_scan() -> Dict[str, Any]:
     results = []
     errors = []
 
-    for item in files:
+    def parse_file(item: Dict[str, Any]) -> Dict[str, Any]:
         path = item.get('path')
         read = _read_text_file(path)
         if read.get('status') != 'ok':
-            errors.append(read)
-            continue
+            return {'status': 'error', 'error': read}
+
         text = read.get('text', '')
         imports = []
+        imported = set()
         try:
             tree = ast.parse(text)
             for node in ast.walk(tree):
@@ -366,26 +396,41 @@ def import_scan() -> Dict[str, Any]:
                     for alias in node.names:
                         name = alias.name
                         imports.append(name)
-                        imported_names.add(name)
-                        imported_names.add(name.split('.')[0])
+                        imported.add(name)
+                        imported.add(name.split('.')[0])
                 elif isinstance(node, ast.ImportFrom):
                     if node.module:
                         imports.append(node.module)
-                        imported_names.add(node.module)
-                        imported_names.add(node.module.split('.')[0])
+                        imported.add(node.module)
+                        imported.add(node.module.split('.')[0])
         except SyntaxError as exc:
-            errors.append({'path': path, 'error_type': 'SyntaxError', 'message': str(exc)})
-            continue
+            return {'status': 'error', 'error': {'path': path, 'error_type': 'SyntaxError', 'message': str(exc)}}
         except Exception as exc:
-            errors.append({'path': path, 'error_type': type(exc).__name__, 'message': str(exc)})
-            continue
+            return {'status': 'error', 'error': {'path': path, 'error_type': type(exc).__name__, 'message': str(exc)}}
 
-        results.append({
-            'path': path,
-            'module': _module_name_from_path(path),
-            'import_count': len(imports),
-            'imports': sorted(set(imports)),
-        })
+        return {
+            'status': 'ok',
+            'imported_names': imported,
+            'result': {
+                'path': path,
+                'module': _module_name_from_path(path),
+                'import_count': len(imports),
+                'imports': sorted(set(imports)),
+            },
+        }
+
+    worker_count = max(1, min(MAX_IMPORT_SCAN_WORKERS, 32, len(files) or 1))
+    with ThreadPoolExecutor(max_workers=worker_count) as executor:
+        future_map = {executor.submit(parse_file, item): item for item in files}
+        for future in as_completed(future_map):
+            parsed = future.result()
+            if parsed.get('status') != 'ok':
+                errors.append(parsed.get('error'))
+                continue
+            imported_names.update(parsed.get('imported_names', set()))
+            results.append(parsed.get('result'))
+
+    results.sort(key=lambda x: x.get('path', ''))
 
     referenced_internal = []
     for module, path in modules.items():
