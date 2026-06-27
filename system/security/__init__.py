@@ -1,5 +1,6 @@
 from .audit import write_audit, require_audit
 from .approval import validate_founder_approval
+from .write_gateway import system_write
 from .emergency import (
     create_emergency_override,
     is_emergency_active,
@@ -27,4 +28,5 @@ __all__ = [
     "is_founder_grant_active",
     "revoke_founder_grant",
     "complete_founder_grant",
+    "system_write",
 ]
