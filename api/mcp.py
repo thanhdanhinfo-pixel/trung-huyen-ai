@@ -482,7 +482,8 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 "message": "path, content and message are required",
             }
 
-        grant = args.get("founder_grant") or get_current_grant() or {}
+        grant_token = args.get("grant_token", "")
+        grant = load_grant(grant_token) if grant_token else args.get("founder_grant", {})
 
         result = system_write(
             action="update_file",
