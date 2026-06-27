@@ -97,3 +97,9 @@ def dependency_map():
 def architecture_summary():
     from services.repository_observer import architecture_summary as get_summary
     return get_summary()
+
+
+@router.get('/module-classification')
+def module_classification():
+    from services.repository_observer import module_classification as classify_modules
+    return classify_modules()
