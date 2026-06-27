@@ -295,3 +295,175 @@ def module_classification() -> Dict[str, Any]:
         'summary': summary,
         'modules': modules,
     }
+
+
+# =============================
+# Repository Observability L3
+# AST import scan, orphan candidates, safe refactor plan
+# =============================
+
+import ast
+import base64
+
+SCAN_FOLDERS = ['', 'api', 'services', 'system']
+
+
+def _read_text_file(path: str) -> Dict[str, Any]:
+    try:
+        resp = requests.get(_repo_url(path), headers=_headers(), timeout=20)
+        resp.raise_for_status()
+        data = resp.json()
+        content = data.get('content', '')
+        encoding = data.get('encoding')
+        if encoding == 'base64':
+            text = base64.b64decode(content).decode('utf-8', errors='replace')
+        else:
+            text = content or ''
+        return {'status': 'ok', 'path': path, 'text': text, 'sha': data.get('sha'), 'size': data.get('size')}
+    except Exception as exc:
+        return {'status': 'error', 'path': path, 'error_type': type(exc).__name__, 'message': str(exc)}
+
+
+def _python_files_for_scan() -> List[Dict[str, Any]]:
+    files: List[Dict[str, Any]] = []
+    seen = set()
+    for folder in SCAN_FOLDERS:
+        listing = list_path(folder)
+        if listing.get('status') != 'ok':
+            continue
+        for item in listing.get('items', []):
+            path = item.get('path') or ''
+            if item.get('type') == 'file' and path.endswith('.py') and path not in seen:
+                files.append(item)
+                seen.add(path)
+    return files
+
+
+def _module_name_from_path(path: str) -> str:
+    name = path[:-3] if path.endswith('.py') else path
+    return name.replace('/', '.')
+
+
+def import_scan() -> Dict[str, Any]:
+    files = _python_files_for_scan()
+    modules = {_module_name_from_path(f.get('path', '')): f.get('path') for f in files}
+    imported_names = set()
+    results = []
+    errors = []
+
+    for item in files:
+        path = item.get('path')
+        read = _read_text_file(path)
+        if read.get('status') != 'ok':
+            errors.append(read)
+            continue
+        text = read.get('text', '')
+        imports = []
+        try:
+            tree = ast.parse(text)
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    for alias in node.names:
+                        name = alias.name
+                        imports.append(name)
+                        imported_names.add(name)
+                        imported_names.add(name.split('.')[0])
+                elif isinstance(node, ast.ImportFrom):
+                    if node.module:
+                        imports.append(node.module)
+                        imported_names.add(node.module)
+                        imported_names.add(node.module.split('.')[0])
+        except SyntaxError as exc:
+            errors.append({'path': path, 'error_type': 'SyntaxError', 'message': str(exc)})
+            continue
+        except Exception as exc:
+            errors.append({'path': path, 'error_type': type(exc).__name__, 'message': str(exc)})
+            continue
+
+        results.append({
+            'path': path,
+            'module': _module_name_from_path(path),
+            'import_count': len(imports),
+            'imports': sorted(set(imports)),
+        })
+
+    referenced_internal = []
+    for module, path in modules.items():
+        short = module.split('.')[-1]
+        if module in imported_names or short in imported_names:
+            referenced_internal.append({'module': module, 'path': path})
+
+    return {
+        'status': 'ok',
+        'mode': 'ast-static-scan',
+        'scanned_files': len(files),
+        'modules_detected': len(modules),
+        'referenced_internal_count': len(referenced_internal),
+        'referenced_internal': referenced_internal,
+        'files': results,
+        'errors': errors,
+    }
+
+
+def orphan_modules() -> Dict[str, Any]:
+    scan = import_scan()
+    if scan.get('status') != 'ok':
+        return scan
+
+    referenced_paths = {item.get('path') for item in scan.get('referenced_internal', [])}
+    protected = set(PROTECTED_MODULES)
+    active = set(ACTIVE_ROOT_MODULES)
+    shims = set(KNOWN_SHIMS.keys())
+    candidates = []
+
+    for item in _python_files_for_scan():
+        path = item.get('path')
+        name = item.get('name')
+        if path in referenced_paths:
+            continue
+        if name in protected:
+            category = 'PROTECTED_UNREFERENCED'
+            action = 'keep'
+        elif name in active:
+            category = 'ACTIVE_UNREFERENCED'
+            action = 'manual_review_after_runtime_trace'
+        elif name in shims:
+            category = 'SHIM_UNREFERENCED'
+            action = 'candidate_for_compatibility_shim_or_archive'
+        elif item.get('size', 0) <= 250 and '/' not in path:
+            category = 'REVIEW_ORPHAN_CANDIDATE'
+            action = 'inspect_then_archive_candidate'
+        else:
+            category = 'UNKNOWN_UNREFERENCED'
+            action = 'dependency_scan_required'
+        candidates.append({'path': path, 'size': item.get('size'), 'category': category, 'recommended_action': action})
+
+    return {
+        'status': 'ok',
+        'policy': 'analysis_only_no_delete',
+        'count': len(candidates),
+        'candidates': candidates,
+    }
+
+
+def refactor_plan() -> Dict[str, Any]:
+    classification = module_classification()
+    orphans = orphan_modules()
+    shim_modules = [m for m in classification.get('modules', []) if m.get('category') == 'SHIM']
+    review_orphans = [m for m in orphans.get('candidates', []) if m.get('category') in ['SHIM_UNREFERENCED', 'REVIEW_ORPHAN_CANDIDATE']]
+
+    return {
+        'status': 'ok',
+        'mode': 'proposal-only',
+        'policy': 'founder-approval-required-before-any-move-or-delete',
+        'phase_1_safe_actions': [
+            {'action': 'convert_to_compatibility_shim', 'targets': shim_modules},
+            {'action': 'inspect_review_orphans', 'targets': review_orphans[:25]},
+        ],
+        'blocked_actions': [
+            'delete_files',
+            'mass_move_root_modules',
+            'modify_protected_files_without_explicit_approval',
+        ],
+        'next_endpoint': '/system/refactor-plan',
+    }
