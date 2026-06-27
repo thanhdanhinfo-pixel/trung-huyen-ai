@@ -15,6 +15,7 @@ from .grant_manager import (
     is_founder_grant_active,
     revoke_founder_grant,
     complete_founder_grant,
+
 )
 __all__ = [
     "write_audit",
@@ -29,4 +30,7 @@ __all__ = [
     "revoke_founder_grant",
     "complete_founder_grant",
     "system_write",
+    "set_current_grant",
+    "get_current_grant",
+    "clear_current_grant",
 ]
