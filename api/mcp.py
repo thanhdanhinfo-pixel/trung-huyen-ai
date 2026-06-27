@@ -429,7 +429,11 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             }
 
         if not path or not content or not sha or not message:
-            
+            return {
+                "status": "error",
+                "tool": tool,
+                "message": "path, content, sha and message are required",
+            }
 
         grant = args.get("founder_grant", {})
 
