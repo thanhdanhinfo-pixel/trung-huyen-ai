@@ -432,24 +432,52 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "result": github_update_file(path, content, sha, message),
         }
     if tool == "execute_plan":
-        approved = is_founder_approved(args)
-        plan_data = args.get("plan") or {}
+    approved = is_founder_approved(args)
 
-        if not isinstance(plan_data, dict):
-            return {
-                "status": "error",
-                "tool": tool,
-                "message": "plan must be an object",
-            }
-
-        plan = execution_plan_from_dict(plan_data)
-        result = execution_engine.execute(plan=plan, approved=approved)
-
+    if not approved:
         return {
-            "status": result.get("status"),
+            "status": "error",
             "tool": tool,
-            "result": result,
+            "message": "User approval is required",
         }
+
+    audit = write_audit(
+        "execute_plan",
+        {
+            "approved_by": args.get("approved_by"),
+            "approval_id": args.get("approval_id"),
+            "tool": tool,
+            "status": "pending",
+        },
+    )
+
+    if not require_audit(audit):
+        return {
+            "status": "error",
+            "message": "audit validation failed",
+        }
+
+    plan_data = args.get("plan") or {}
+
+    if not isinstance(plan_data, dict):
+        return {
+            "status": "error",
+            "tool": tool,
+            "message": "plan must be an object",
+        }
+
+    plan = execution_plan_from_dict(plan_data)
+    result = execution_engine.execute(
+        plan=plan,
+        approved=True,
+    )
+
+    return {
+        "status": result.get("status"),
+        "tool": tool,
+        "result": result,
+    }
+
     if tool == "search_documents":
         try:
             q = args.get("q", "")
