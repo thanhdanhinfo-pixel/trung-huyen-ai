@@ -10,17 +10,11 @@ from .unlock import (
     create_founder_unlock,
     is_founder_unlock_active,
 )
-from .grant_state import (
-    set_current_grant,
-    get_current_grant,
-    clear_current_grant,
-)
 from .grant_manager import (
     create_founder_grant,
     is_founder_grant_active,
     revoke_founder_grant,
     complete_founder_grant,
-
 )
 from .grant_store import (
     create_grant,
@@ -28,6 +22,7 @@ from .grant_store import (
     revoke_grant,
     complete_grant,
 )
+
 __all__ = [
     "write_audit",
     "require_audit",
@@ -41,9 +36,6 @@ __all__ = [
     "revoke_founder_grant",
     "complete_founder_grant",
     "system_write",
-    "set_current_grant",
-    "get_current_grant",
-    "clear_current_grant",
     "create_grant",
     "load_grant",
     "revoke_grant",
