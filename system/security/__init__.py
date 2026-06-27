@@ -22,6 +22,12 @@ from .grant_manager import (
     complete_founder_grant,
 
 )
+from .grant_store import (
+    create_grant,
+    load_grant,
+    revoke_grant,
+    complete_grant,
+)
 __all__ = [
     "write_audit",
     "require_audit",
@@ -38,4 +44,8 @@ __all__ = [
     "set_current_grant",
     "get_current_grant",
     "clear_current_grant",
+    "create_grant",
+    "load_grant",
+    "revoke_grant",
+    "complete_grant",
 ]
