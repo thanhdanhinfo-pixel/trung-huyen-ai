@@ -44,6 +44,15 @@ GOVERNED_WRITE_PATH_PREFIXES = (
 def is_founder_approved(args: Dict[str, Any]) -> bool:
     return validate_founder_approval(args)
 
+def is_emergency_override(args: Dict[str, Any]) -> bool:
+    emergency = args.get("emergency_override")
+
+    if not isinstance(emergency, dict):
+        return False
+
+    from system.security import is_emergency_active
+
+    return is_emergency_active(emergency)
 
 def is_governed_write_path(method: str, path: str) -> bool:
     return method.upper() in WRITE_METHODS and any(path.startswith(prefix) for prefix in GOVERNED_WRITE_PATH_PREFIXES)
@@ -432,7 +441,10 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "result": github_update_file(path, content, sha, message),
         }
     if tool == "execute_plan":
-        approved = is_founder_approved(args)
+        approved = (
+            is_founder_approved(args)
+            or is_emergency_override(args)
+        )
 
         if not approved:
             return {
