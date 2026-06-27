@@ -141,149 +141,6 @@ def _next_actions() -> List[str]:
     ]
 
 
-def _governance_rules() -> Dict[str, Any]:
-    return {
-        "status": "ok",
-        "rules": {
-            "RULE_017": {
-                "name": "VERIFY_BEFORE_DENY",
-                "description": "Never claim missing tools, permissions or capabilities before verifying runtime capability.",
-                "required_checks": [
-                    "ping MCP runtime",
-                    "read MCP/backend tool registry",
-                    "check GitHub runtime status",
-                    "check action/OpenAPI manifest",
-                    "check backend endpoints",
-                ],
-                "default_assumption": "capability_exists_until_disproven",
-            },
-            "RULE_018": {
-                "name": "STATE_CONSISTENCY",
-                "description": "Do not downgrade or contradict a previously verified completed state unless new verification proves failure.",
-                "allowed_state_change_conditions": [
-                    "runtime reports rollback",
-                    "verification proves failure",
-                    "Founder requests re-validation",
-                ],
-            },
-        },
-        "response_policy": {
-            "before_denial": "verify capability first",
-            "after_success_report": "keep completed state locked unless disproven",
-        },
-    }
-
-
-def _founder_constitution() -> Dict[str, Any]:
-    return {
-        "founder_authority": True,
-        "founder_roles": [
-            "creator",
-            "chief_architect",
-            "system_owner",
-            "final_decision_maker",
-        ],
-        "truth_sources": {
-            "startup_truth": "/system/khoi-dong",
-            "code_truth": "GitHub",
-            "knowledge_truth": "Google Drive",
-            "runtime_truth": "Cloud Run Runtime",
-        },
-        "protected_actions_require_approval": [
-            "delete_files",
-            "mass_move_files",
-            "modify_protected_files",
-            "large_refactor",
-            "change_secrets",
-            "change_runtime_structure",
-            "change_system_policy",
-        ],
-        "default_governance_flow": ["observe", "analyze", "propose", "execute_after_approval"],
-    }
-
-
-def _gpt_action_scope() -> Dict[str, Any]:
-    return {
-        "master_gpt": "TRUNG_HUYEN_AI_OS",
-        "scope": "system_building_and_system_operation_only",
-        "allowed_domains": [
-            "startup",
-            "runtime",
-            "github",
-            "mcp",
-            "repository_observability",
-            "import_scan",
-            "orphan_detection",
-            "refactor_plan",
-            "tool_health",
-            "self_awareness",
-            "capability_registry",
-            "workers",
-            "scheduler",
-            "governance",
-        ],
-        "forbidden_domains": [
-            "academy_training",
-            "student_coaching",
-            "crm",
-            "marketing",
-            "sales",
-            "project_delivery",
-            "du_an_thuc_chien",
-        ],
-        "action_policy": {
-            "do_not_remove_stable_existing_system_actions": True,
-            "add_startup_group_only_for_bootstrap": True,
-            "do_not_expose_full_dynamic_openapi_if_over_action_limit": True,
-        },
-    }
-
-
-def _capability_verification_contract() -> Dict[str, Any]:
-    return {
-        "status": "active",
-        "contract": "Capabilities must be verified, never assumed absent.",
-        "forbidden_before_verification": [
-            "I do not have permission",
-            "I do not have tools",
-            "I cannot write files",
-            "I cannot commit",
-            "I cannot call the API",
-        ],
-        "verification_order": [
-            "mcp_runtime",
-            "mcp_tool_registry",
-            "github_runtime_status",
-            "backend_manifest",
-            "openapi_action_manifest",
-            "repository_state",
-        ],
-        "default_assumption": "capability_exists_until_disproven",
-    }
-
-
-def _memory_pack() -> Dict[str, Any]:
-    return {
-        "status": "ok",
-        "startup_contract": {
-            "trigger_commands": ["Khởi động", "START", "THOS START"],
-            "canonical_endpoint": "/system/khoi-dong",
-            "fallback_endpoint": "/system/boot-v3",
-            "continue_from": "next_actions",
-        },
-        "governance_rules": _governance_rules(),
-        "founder_constitution": _founder_constitution(),
-        "gpt_action_scope": _gpt_action_scope(),
-        "capability_verification_contract": _capability_verification_contract(),
-        "gpt_network_policy": {
-            "connection_model": "shared-backend-not-gpt-to-gpt",
-            "shared_startup_endpoint": "/system/khoi-dong",
-            "master_gpt": "TRUNG_HUYEN_AI_OS",
-            "specialized_gpts": ["Brain GPT", "Academy GPT", "Project GPT", "Worker GPT"],
-        },
-    }
-
-
 def _payload() -> Dict[str, Any]:
     return {
         "status": "ok",
@@ -302,6 +159,11 @@ def _payload() -> Dict[str, Any]:
         "last_actions": _last_actions(),
         "global_memory": _global_memory(),
         "next_actions": _next_actions(),
+        "governance_rules": _governance_rules(),
+        "founder_constitution": _founder_constitution(),
+        "gpt_action_scope": _gpt_action_scope(),
+        "capability_verification_contract": _capability_verification_contract(),
+        "memory_pack": _memory_pack(),
         "active_endpoints": {
             "khoi_dong": "/system/khoi-dong",
             "boot_v3": "/system/boot-v3",
