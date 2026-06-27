@@ -458,7 +458,7 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "execute_plan",
             {
                 "approved_by": args.get("approved_by"),
-                "approval_id": args.get("approval_id"),
+                "approval_id": args.get("approval_id") or args.get("founder_unlock", {}).get("session_id"),
                 "tool": tool,
                 "status": "pending",
             },
