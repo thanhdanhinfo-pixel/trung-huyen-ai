@@ -499,65 +499,6 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "message": "Founder grant revoked",
             "grant_token": grant_token,
         }
-    if tool == "github_update_file":
-        grant_token = args.get("grant_token", "")
-        grant = (
-            load_grant(grant_token)
-            if grant_token
-            else args.get("founder_grant", {})
-        )
-
-        approved = (
-            validate_founder_approval(args)
-            or is_founder_unlock_active(
-                args.get("founder_unlock"),
-                min_level=3,
-            )
-            or is_founder_grant_active(
-                grant,
-                subject="TRUNG_HUYEN_AI_OS",
-                min_level=3,
-                scope="ALL_SYSTEM",
-            )
-        )
-
-        if not approved:
-            return {
-                "status": "error",
-                "tool": tool,
-                "message": "Founder authorization required",
-            }
-    
-
-        path = args.get("path", "")
-        content = args.get("content", "")
-        sha = args.get("sha", "")
-        message = args.get("message", "")
-
-        if not path or not content or not sha or not message:
-            return {
-                "status": "error",
-                "tool": tool,
-                "message": "path, content, sha and message are required",
-            }
-
-        result = system_write(
-            action="update_file",
-            target=path,
-            payload={
-                "content": content,
-                "message": message,
-                "sha": sha,
-            },
-            founder_grant=grant,
-        )
-
-        return {
-            "status": "ok" if result.get("status") != "error" else "error",
-            "tool": tool,
-            "result": result,
-        }
-        
     if tool == "execute_plan":
         grant_token = args.get("grant_token", "")
         grant = load_grant(grant_token) if grant_token else args.get("founder_grant", {})
