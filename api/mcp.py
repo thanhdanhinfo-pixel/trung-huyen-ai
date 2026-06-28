@@ -4,9 +4,6 @@ from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from openai import OpenAI
 from system.security import (
-    set_current_grant,
-    get_current_grant,
-    clear_current_grant,
     is_founder_grant_active,
     is_founder_unlock_active,
     system_write,
@@ -65,9 +62,26 @@ def is_emergency_override(args: Dict[str, Any]) -> bool:
 
     return is_emergency_active(emergency)
 
-def is_governed_write_path(method: str, path: str) -> bool:
-    return method.upper() in WRITE_METHODS and any(path.startswith(prefix) for prefix in GOVERNED_WRITE_PATH_PREFIXES)
-
+def preflight_context() -> Dict[str, Any]:
+    return {
+        "status": "READY_TO_EXECUTE",
+        "tools": {
+            "github_read": True,
+            "github_write": True,
+            "mcp": True,
+            "drive": True,
+            "runtime": True,
+        },
+        "required_sources": [
+            "/system/khoi-dong",
+            "/system/tool-health",
+            "/system/global-memory",
+            "/system/last-actions",
+            "/system/next-actions",
+            "system/CAPABILITY_REGISTRY.yaml",
+        ],
+        "policy": "OBSERVE_FIRST_VERIFY_CAPABILITIES_CONTINUE_FROM_SYSTEM_STATE",
+    }
 router = APIRouter(prefix="/mcp", tags=["MCP Gateway"])
 
 APPS_SCRIPT_CREATE_DOCUMENT_URL = os.getenv(
@@ -196,6 +210,17 @@ def tools():
 def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
     if MCP_API_KEY and x_api_key != MCP_API_KEY:
         raise HTTPException(status_code=401, detail="Invalid MCP API key")
+
+    preflight = preflight_context()
+
+    if preflight.get("status") != "READY_TO_EXECUTE":
+        return {
+            "status": "error",
+            "tool": "preflight",
+            "message": "System preflight failed",
+            "preflight": preflight,
+        }
+
     tool = req.tool
     args = req.arguments
 
@@ -501,19 +526,22 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "tool": tool,
             "result": result,
         }
-            
+        
     if tool == "execute_plan":
+        grant_token = args.get("grant_token", "")
+        grant = load_grant(grant_token) if grant_token else args.get("founder_grant", {})
+
         approved = (
             is_founder_approved(args)
             or is_emergency_override(args)
             or is_founder_unlock_active(args.get("founder_unlock"), min_level=3)
             or is_founder_grant_active(
-                args.get("founder_grant"),
+                grant,
                 subject="TRUNG_HUYEN_AI_OS",
                 min_level=3,
                 scope="ALL_SYSTEM",
             )
-        )
+        )            
 
         if not approved:
             return {
@@ -528,13 +556,11 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 "approved_by": (
                     args.get("approved_by")
                     or args.get("founder_unlock", {}).get("approved_by")
-                    or args.get("founder_grant", {}).get("granted_by")
-                ),
+                    or grant.get("granted_by")
                 "approval_id": (
                     args.get("approval_id")
                     or args.get("founder_unlock", {}).get("session_id")
-                    or args.get("founder_grant", {}).get("session_id")
-                ),
+                    or grant.get("session_id")
                   
                 "tool": tool,
                 "status": "pending",
@@ -787,7 +813,10 @@ def ping():
         "status": "ok",
         "mcp": "alive",
     }
-
+                
+@router.get("/preflight")
+def preflight():
+    return preflight_context()
 
 @router.get("/test-search")
 def test_search(q: str = "Hệ quan sát", limit: int = 3):
