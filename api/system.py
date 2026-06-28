@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Any, Optional
-from api.mcp import preflight_context
+from services.preflight_service import preflight_context
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from services.system_service import self_test
