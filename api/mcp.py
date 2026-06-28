@@ -557,12 +557,12 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                     args.get("approved_by")
                     or args.get("founder_unlock", {}).get("approved_by")
                     or grant.get("granted_by")
-                )    
+                ),    
                 "approval_id": (
                     args.get("approval_id")
                     or args.get("founder_unlock", {}).get("session_id")
                     or grant.get("session_id")
-                ) 
+                ), 
                 "tool": tool,
                 "status": "pending",
             },
