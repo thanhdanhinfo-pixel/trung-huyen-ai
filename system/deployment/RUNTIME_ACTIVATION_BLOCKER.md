@@ -8,7 +8,7 @@ The repository token available to TRUNG_HUYEN_AI_OS can write normal repository 
 .github/workflows/deploy-cloud-run.yml
 ```
 
-This means the token lacks the GitHub `workflow` permission.
+This means the token lacks the GitHub `workflow` permission. 
 
 ## Workaround added
 
