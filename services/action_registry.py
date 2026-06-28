@@ -184,6 +184,49 @@ def action_github_update_file(payload: Dict[str, Any], context: Any = None) -> D
 
 
 @register_action(
+    "patch_file",
+    description="Patch a GitHub file through system_write and WRITE_SAFETY_GATE.",
+    namespace="github",
+    required_level=3,
+    scope="ALL_SYSTEM",
+    write_safe=True,
+    audit_required=True,
+)
+def action_patch_file(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from system.security import load_grant, system_write
+
+    grant_token = payload.get("grant_token", "")
+    grant = load_grant(grant_token) if grant_token else payload.get("founder_grant", {})
+
+    path = payload.get("path", "")
+    find = payload.get("find", "")
+    replace = payload.get("replace", "")
+    message = payload.get("message", "system write patch")
+
+    if not path or not find:
+        return {
+            "status": "error",
+            "message": "path and find are required",
+        }
+
+    result = system_write(
+        action="patch_file",
+        target=path,
+        payload={
+            "find": find,
+            "replace": replace,
+            "message": message,
+        },
+        founder_grant=grant or {},
+    )
+
+    return {
+        "status": "ok" if result.get("status") != "error" else "error",
+        "result": result,
+    }
+
+
+@register_action(
     "execute_plan",
     description="Execute an approved execution plan through the unified action registry.",
     namespace="execution",
