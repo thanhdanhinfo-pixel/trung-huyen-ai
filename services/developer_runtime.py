@@ -43,7 +43,7 @@ class DeveloperRuntime:
                 "patch_files",
                 "batch_operations",
                 "verify_paths",
-                "rollback_placeholder",
+                "rollback_v2_planned",
             ],
         }
 
