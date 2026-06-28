@@ -145,6 +145,7 @@ class DeveloperRuntime:
                 "allowed": sorted(list(allowed)),
             }
 
+        import os
         import subprocess
         import sys
 
@@ -154,6 +155,11 @@ class DeveloperRuntime:
             timeout=30,
             capture_output=True,
             text=True,
+            cwd="/app",
+            env={
+                **os.environ,
+                "PYTHONPATH": "/app",
+            },
         )
 
         return {
