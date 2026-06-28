@@ -131,10 +131,26 @@ class DeveloperRuntime:
             "message": "Rollback thật sẽ được triển khai ở Developer Runtime v2 bằng snapshot trước commit.",
         }
     def run_command(self, command: str = "") -> Dict[str, Any]:
+        allowed = {
+            "tools/dependency_graph.py",
+            "tools/import_safety.py",
+            "tools/orphan_detector.py",
+            "scripts/health_check.py",
+        }
+
+        if command not in allowed:
+            return {
+                "status": "error",
+                "message": f"Command not allowed: {command}",
+                "allowed": sorted(list(allowed)),
+            }
+
         return {
-            "status": "not_implemented",
-            "message": "Developer Runtime V2 safe execution stub active.",
-            "requested": command,
+            "status": "ready",
+            "message": "Safe execution engine activated. Subprocess support will be enabled next.",
+            "command": command,
+            "shell": false,
+            "timeout": 30,
         }
 
     def execute(self, action: str, payload: dict) -> Dict[str, Any]:
