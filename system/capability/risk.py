@@ -4,4 +4,4 @@ class DependencyRisk:
         if has_cycle:
             base=100
         return {'risk_score':base,'level':'high' if base>=80 else 'medium' if base>=40 else 'low'}
-dependency_risk=DependencyRisk()
+dependency_risk=DependencyRisk() 
