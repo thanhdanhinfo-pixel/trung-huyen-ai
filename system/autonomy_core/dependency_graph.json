@@ -2,7 +2,7 @@
   "runtime_entrypoint": "app:app",
   "connection_core": [
     "app.py",
-    "config.py",
+    "config.py", 
     "drive.py",
     "mcp.py",
     "Dockerfile",
