@@ -24,11 +24,7 @@ from drive import (
 )
 from fastapi import Header, HTTPException
 from config import MCP_API_KEY, DRIVE_FOLDER_ID, drive_root_sources
-from system.security import (
-    validate_founder_approval,
-    write_audit,
-    require_audit,
-)
+from system.security import validate_founder_approval
 
 WRITE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
 GOVERNED_WRITE_PATH_PREFIXES = (
