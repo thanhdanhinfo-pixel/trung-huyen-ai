@@ -1,6 +1,6 @@
 name: Deploy to Cloud Run
 
-on:
+on: 
   workflow_dispatch:
   push:
     branches:
