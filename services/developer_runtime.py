@@ -149,7 +149,7 @@ class DeveloperRuntime:
             "status": "ready",
             "message": "Safe execution engine activated. Subprocess support will be enabled next.",
             "command": command,
-            "shell": false,
+            "shell": False,
             "timeout": 30,
         }
 
