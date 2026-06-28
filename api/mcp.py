@@ -4,11 +4,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from openai import OpenAI
 from system.security import (
-    is_founder_grant_active,
-    is_founder_unlock_active,
-    system_write,
     create_grant,
-    load_grant,
     revoke_grant,
 )
 import os
