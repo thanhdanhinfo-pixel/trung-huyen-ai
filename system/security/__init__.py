@@ -9,6 +9,9 @@ from .emergency import (
 from .unlock import (
     create_founder_unlock,
     is_founder_unlock_active,
+    register_lock,
+    open_all_locks,
+    is_system_unlocked,
 )
 from .grant_manager import (
     create_founder_grant,
@@ -31,6 +34,9 @@ __all__ = [
     "is_emergency_active",
     "create_founder_unlock",
     "is_founder_unlock_active",
+    "register_lock",
+    "open_all_locks",
+    "is_system_unlocked",
     "create_founder_grant",
     "is_founder_grant_active",
     "revoke_founder_grant",
