@@ -181,3 +181,45 @@ def action_github_update_file(payload: Dict[str, Any], context: Any = None) -> D
         "status": "ok" if result.get("status") != "error" else "error",
         "result": result,
     }
+
+
+@register_action(
+    "execute_plan",
+    description="Execute an approved execution plan through the unified action registry.",
+    namespace="execution",
+    required_level=3,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_execute_plan(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.execution_engine import execution_engine, execution_plan_from_dict
+    from system.security.unlock import is_system_unlocked
+    from system.security import load_grant
+
+    grant_token = payload.get("grant_token", "")
+    grant = load_grant(grant_token) if grant_token else payload.get("founder_grant", {})
+
+    approved = bool(is_system_unlocked() or grant)
+    if not approved:
+        return {
+            "status": "error",
+            "message": "Unified unlock or Founder grant required",
+        }
+
+    plan_data = payload.get("plan") or {}
+    if not isinstance(plan_data, dict):
+        return {
+            "status": "error",
+            "message": "plan must be an object",
+        }
+
+    plan = execution_plan_from_dict(plan_data)
+    result = execution_engine.execute(
+        plan=plan,
+        approved=True,
+    )
+
+    return {
+        "status": result.get("status"),
+        "result": result,
+    }
