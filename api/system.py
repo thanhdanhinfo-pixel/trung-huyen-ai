@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Any, Optional
-
+from api.mcp import preflight_context
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from services.system_service import self_test
@@ -25,6 +25,12 @@ SYSTEM_STATE_FILES = [
 def test():
     return self_test()
 
+@router.get("/preflight")
+def system_preflight():
+    return {
+        "status": "ok",
+        "preflight": preflight_context(),
+    }
 
 @router.get("/bootstrap")
 def system_bootstrap():
