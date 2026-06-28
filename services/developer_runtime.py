@@ -145,11 +145,23 @@ class DeveloperRuntime:
                 "allowed": sorted(list(allowed)),
             }
 
+        import subprocess
+        import sys
+
+        result = subprocess.run(
+            [sys.executable, command],
+            shell=False,
+            timeout=30,
+            capture_output=True,
+            text=True,
+        )
+
         return {
-            "status": "ready",
-            "message": "Safe execution engine activated. Subprocess support will be enabled next.",
+            "status": "ok" if result.returncode == 0 else "failed",
             "command": command,
-            "shell": False,
+            "returncode": result.returncode,
+            "stdout": result.stdout[-4000:],
+            "stderr": result.stderr[-4000:],
             "timeout": 30,
         }
 
