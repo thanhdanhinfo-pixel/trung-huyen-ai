@@ -227,6 +227,46 @@ def action_patch_file(payload: Dict[str, Any], context: Any = None) -> Dict[str,
 
 
 @register_action(
+    "move_file",
+    description="Move a GitHub file through system_write.",
+    namespace="github",
+    required_level=3,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_move_file(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from system.security import load_grant, system_write
+
+    grant_token = payload.get("grant_token", "")
+    grant = load_grant(grant_token) if grant_token else payload.get("founder_grant", {})
+
+    source = payload.get("source") or payload.get("path") or ""
+    destination = payload.get("destination", "")
+    message = payload.get("message", "system write move")
+
+    if not source or not destination:
+        return {
+            "status": "error",
+            "message": "source/path and destination are required",
+        }
+
+    result = system_write(
+        action="move_file",
+        target=source,
+        payload={
+            "destination": destination,
+            "message": message,
+        },
+        founder_grant=grant or {},
+    )
+
+    return {
+        "status": "ok" if result.get("status") != "error" else "error",
+        "result": result,
+    }
+
+
+@register_action(
     "execute_plan",
     description="Execute an approved execution plan through the unified action registry.",
     namespace="execution",
