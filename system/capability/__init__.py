@@ -1,7 +1,7 @@
 from .evolution import CapabilityEvolution, capability_evolution
 from .lineage import CapabilityLineage, capability_lineage
 from .dependencies import CapabilityDependencies, capability_dependencies
-from .risk import DependencyRisk, dependency_risk
+from .risk import DependencyRisk, dependency_risk 
 
 __all__=[
 'CapabilityEvolution','capability_evolution',
