@@ -204,6 +204,7 @@ class ActionRegistry:
         }
 
     def has(self, name: str) -> bool:
+        name = self.normalize_name(name)
         return name in self._actions
 
     def list_actions(self) -> List[Dict[str, Any]]:
