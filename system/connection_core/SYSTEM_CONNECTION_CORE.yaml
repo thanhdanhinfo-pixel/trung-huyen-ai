@@ -6,7 +6,7 @@ rules:
   move_requires_approval: true
   refactor_requires_approval: true
   mass_edit_forbidden: true
-  require_build_green_before_next_step: true
+  require_build_green_before_next_step: true 
 
 files:
   - app.py
