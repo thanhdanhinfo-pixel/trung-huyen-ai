@@ -10,8 +10,7 @@ from system.security import (
 import os
 import requests
 
-from services.github_service import github_list_files, github_read_file, github_update_file
-from services.execution_engine import execution_engine, execution_plan_from_dict
+from services.github_service import github_list_files, github_read_file
 from services.action_registry import action_registry
 from config import OPENAI_API_KEY, OPENAI_MODEL, MAX_CONTEXT_CHARS
 from drive import (
