@@ -48,7 +48,14 @@ GOVERNED_WRITE_PATH_PREFIXES = (
     "/github/refactor-imports",
 )
 
-
+def is_governed_write_path(method: str, path: str) -> bool:
+    return (
+        method in WRITE_METHODS
+        and any(
+            path.startswith(prefix)
+            for prefix in GOVERNED_WRITE_PATH_PREFIXES
+        )
+    )
 def is_founder_approved(args: Dict[str, Any]) -> bool:
     return validate_founder_approval(args)
 
