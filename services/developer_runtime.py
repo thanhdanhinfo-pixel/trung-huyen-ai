@@ -135,6 +135,9 @@ class DeveloperRuntime:
             "tools/dependency_graph.py",
             "tools/import_safety.py",
             "tools/orphan_detector.py",
+            "tools/root_audit.py",
+            "tools/root_cleanup_candidates.py",
+            "tools/architecture_audit.py",
             "scripts/health_check.py",
         }
 
