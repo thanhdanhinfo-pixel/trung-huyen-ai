@@ -8,7 +8,7 @@
     "Dockerfile",
     "cloudbuild.yaml",
     "requirements.txt",
-    "services/github_service.py",
+    "services/github_service.py", 
     "services/execution_engine.py"
   ],
   "known_disabled_or_guarded": {
