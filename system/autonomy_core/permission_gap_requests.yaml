@@ -2,7 +2,7 @@ name: SYSTEM_AUTONOMY_CORE_PERMISSION_GAP_REQUESTS
 status: active
 purpose: Tracks permissions/tools that TRUNG_HUYEN_AI_OS still lacks and must request from Founder.
 
-critical_missing_permissions:
+critical_missing_permissions: 
   cloud_run_logs:
     status: missing
     reason: AI cannot directly inspect Cloud Run runtime logs.
