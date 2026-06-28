@@ -7,7 +7,7 @@ This packet exists because TRUNG_HUYEN_AI_OS has finished source-level deploymen
 ```text
 POST /deployment/redeploy -> 404
 GET /deployment/capabilities -> old schema
-GitHub write to .github/workflows/* -> 403 Forbidden
+GitHub write to .github/workflows/* -> 403 Forbidden 
 ```
 
 Root cause:
