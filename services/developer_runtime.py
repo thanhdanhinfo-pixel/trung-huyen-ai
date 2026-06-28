@@ -130,11 +130,19 @@ class DeveloperRuntime:
             "status": "not_implemented",
             "message": "Rollback thật sẽ được triển khai ở Developer Runtime v2 bằng snapshot trước commit.",
         }
+    def run_command(self, command: str = "") -> Dict[str, Any]:
+        return {
+            "status": "not_implemented",
+            "message": "Developer Runtime V2 safe execution stub active.",
+            "requested": command,
+        }
+
     def execute(self, action: str, payload: dict) -> Dict[str, Any]:
         registry = {
             "developer.transform": self.patch,
             "developer.transaction": self.batch,
             "developer.verify": self.verify,
+            "developer.run_command": self.run_command,
         }
 
         handler = registry.get(action)
