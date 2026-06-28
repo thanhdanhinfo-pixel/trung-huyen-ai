@@ -159,6 +159,7 @@ class ActionRegistry:
             return {"status": "error", "message": str(exc)}
 
     def execute(self, name: str, payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+        name = self.normalize_name(name)
         action = self._actions.get(name)
         if not action:
             return {
