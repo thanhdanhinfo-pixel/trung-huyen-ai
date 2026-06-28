@@ -8,7 +8,7 @@ principles:
   - Runtime mutation tools require approval gates.
   - Read-only observability should be enabled before mutation tools.
 
-phase_1_read_only_observability:
+phase_1_read_only_observability: 
   priority: highest
   permissions:
     cloud_run_logs:
