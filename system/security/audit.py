@@ -15,11 +15,14 @@ def write_audit(event: str, data: dict) -> dict:
 
 
 def require_audit(record: dict) -> bool:
-    required = [
-        "event",
-        "timestamp",
-        "approved_by",
-        "approval_id",
-    ]
+    """Validate audit record structure without acting as an authorization gate.
 
-    return all(record.get(k) for k in required)
+    RULE-020: SINGLE GRANT AUTHORITY
+    - Founder Grant is the source of truth for write authorization.
+    - Audit is a logging / traceability layer.
+    - Audit must not block a write that has already passed Founder Grant validation.
+    """
+    if not isinstance(record, dict):
+        return False
+
+    return bool(record.get("event") and record.get("timestamp"))
