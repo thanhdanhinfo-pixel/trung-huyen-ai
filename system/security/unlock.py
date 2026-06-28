@@ -68,9 +68,32 @@ def _load_unlock_state() -> dict:
     return _SYSTEM_UNLOCK_STATE
 
 
-def register_lock(handler):
-    REGISTERED_LOCKS.append(handler)
-    return handler
+def register_lock(handler=None, *, name: str = "", description: str = ""):
+    """Register a lock adapter for RULE-019 unified unlock.
+
+    New lock layers must register here instead of requiring Founder to open a
+    separate hidden lock manually.
+    """
+    def _register(func):
+        func.lock_name = name or getattr(func, "__name__", "unknown_lock")
+        func.lock_description = description
+        REGISTERED_LOCKS.append(func)
+        return func
+
+    if handler is not None:
+        return _register(handler)
+
+    return _register
+
+
+def list_registered_locks() -> list:
+    return [
+        {
+            "name": getattr(handler, "lock_name", getattr(handler, "__name__", "unknown_lock")),
+            "description": getattr(handler, "lock_description", ""),
+        }
+        for handler in REGISTERED_LOCKS
+    ]
 
 
 def create_founder_unlock(
@@ -119,15 +142,21 @@ def open_all_locks(reason: str = "Founder command") -> dict:
 
     results = []
     for handler in REGISTERED_LOCKS:
+        lock_name = getattr(handler, "lock_name", getattr(handler, "__name__", "unknown_lock"))
         try:
-            results.append(handler())
+            result = handler()
+            if isinstance(result, dict):
+                results.append({"lock": lock_name, **result})
+            else:
+                results.append({"lock": lock_name, "status": "ok", "result": result})
         except Exception as exc:
-            results.append({"status": "error", "error": str(exc)})
+            results.append({"lock": lock_name, "status": "error", "error": str(exc)})
 
     return {
         "status": "ok",
         "unlock": unlock,
         "locks_opened": len(results),
+        "registered_locks": list_registered_locks(),
         "results": results,
         "persistent": _firestore_ref() is not None,
     }
@@ -146,3 +175,28 @@ def close_all_locks(reason: str = "Founder command") -> dict:
 def is_system_unlocked() -> bool:
     state = _load_unlock_state()
     return bool(state.get("active", False))
+
+
+@register_lock(name="founder_grant", description="Persistent Founder Grant authority layer")
+def _open_founder_grant_layer() -> dict:
+    return {"status": "ok", "mode": "persistent_grant_store"}
+
+
+@register_lock(name="system_write", description="System write authorization layer")
+def _open_system_write_layer() -> dict:
+    return {"status": "ok", "mode": "unified_unlock_authorized"}
+
+
+@register_lock(name="audit", description="Audit/logging layer; log-only and non-blocking")
+def _open_audit_layer() -> dict:
+    return {"status": "ok", "mode": "non_blocking_log"}
+
+
+@register_lock(name="write_safety_gate", description="Write safety remains active while unlocked")
+def _open_write_safety_gate_layer() -> dict:
+    return {"status": "ok", "mode": "safety_gate_active"}
+
+
+@register_lock(name="future_lock_registry", description="Future lock layers must register through register_lock")
+def _open_future_lock_registry_layer() -> dict:
+    return {"status": "ok", "mode": "registry_ready"}
