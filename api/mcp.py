@@ -241,6 +241,18 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
     tool = req.tool
     args = req.arguments
 
+    if action_registry.has(tool):
+        result = action_registry.execute(
+            tool,
+            payload=args,
+            context={"source": "mcp_call"},
+        )
+        return {
+            "status": result.get("status", "ok") if isinstance(result, dict) else "ok",
+            "tool": tool,
+            "result": result,
+        }
+
     if tool == "backend_call":
         method = args.get("method", "GET").upper()
         path = args.get("path", "")
