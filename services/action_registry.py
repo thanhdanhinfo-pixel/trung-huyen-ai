@@ -37,8 +37,26 @@ class ActionRegistry:
         "close_all_locks",
     }
 
+    GLOBAL_COMMAND_ALIASES = {
+        "mở khóa đi": "open_all_locks",
+        "mở khóa": "open_all_locks",
+        "mo khoa di": "open_all_locks",
+        "mo khoa": "open_all_locks",
+        "unlock": "open_all_locks",
+        "open all locks": "open_all_locks",
+        "khóa lại": "close_all_locks",
+        "khoa lai": "close_all_locks",
+        "lock": "close_all_locks",
+        "close all locks": "close_all_locks",
+    }
+
     def __init__(self) -> None:
         self._actions: Dict[str, ActionDefinition] = {}
+
+    def normalize_name(self, name: str) -> str:
+        raw = (name or "").strip()
+        lowered = raw.lower()
+        return self.GLOBAL_COMMAND_ALIASES.get(lowered, raw)
 
     def register(
         self,
