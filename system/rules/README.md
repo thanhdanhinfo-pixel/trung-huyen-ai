@@ -83,6 +83,8 @@ Founder Grant là nguồn sự thật duy nhất cho quyền ghi. Audit là lớ
 
 Runtime verification: PASSED
 
+Firestore grant verification: PASSED
+
 ## Purpose
 
 Chặn lỗi nền lọt vào runtime, hợp nhất cơ chế mở khóa, và bảo đảm hệ thống đủ trơn tru để triển khai dự án thật.
