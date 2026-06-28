@@ -7,4 +7,4 @@ class CapabilityLineage:
     def snapshot(self):
         return {'history_count':len(self._history),'history':self._history[-20:],'status':'tracking'}
 capability_lineage=CapabilityLineage() 
-
+ 
