@@ -97,3 +97,44 @@ class ActionRegistry:
 
 action_registry = ActionRegistry()
 register_action = action_registry.action
+
+
+@register_action(
+    "action_registry_status",
+    description="Return Action Registry status and registered actions.",
+    namespace="system",
+)
+def action_registry_status(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    return action_registry.status()
+
+
+@register_action(
+    "open_all_locks",
+    description="RULE-019 unified unlock command. Opens all registered lock layers.",
+    namespace="security",
+    required_level=5,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_open_all_locks(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from system.security.unlock import open_all_locks
+
+    return open_all_locks(
+        reason=payload.get("reason", "Founder command"),
+    )
+
+
+@register_action(
+    "close_all_locks",
+    description="Close unified unlock state and relock the system.",
+    namespace="security",
+    required_level=5,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_close_all_locks(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from system.security.unlock import close_all_locks
+
+    return close_all_locks(
+        reason=payload.get("reason", "Founder command"),
+    )
