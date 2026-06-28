@@ -138,3 +138,46 @@ def action_close_all_locks(payload: Dict[str, Any], context: Any = None) -> Dict
     return close_all_locks(
         reason=payload.get("reason", "Founder command"),
     )
+
+
+@register_action(
+    "github_update_file",
+    description="Update a GitHub file through system_write and WRITE_SAFETY_GATE.",
+    namespace="github",
+    required_level=3,
+    scope="ALL_SYSTEM",
+    write_safe=True,
+    audit_required=True,
+)
+def action_github_update_file(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from system.security import load_grant, system_write
+
+    grant_token = payload.get("grant_token", "")
+    grant = load_grant(grant_token) if grant_token else payload.get("founder_grant", {})
+
+    path = payload.get("path", "")
+    content = payload.get("content", "")
+    sha = payload.get("sha", "")
+    message = payload.get("message", "")
+
+    if not path or not content or not message:
+        return {
+            "status": "error",
+            "message": "path, content and message are required",
+        }
+
+    result = system_write(
+        action="update_file",
+        target=path,
+        payload={
+            "content": content,
+            "message": message,
+            "sha": sha,
+        },
+        founder_grant=grant or {},
+    )
+
+    return {
+        "status": "ok" if result.get("status") != "error" else "error",
+        "result": result,
+    }
