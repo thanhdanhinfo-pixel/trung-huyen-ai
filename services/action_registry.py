@@ -13,6 +13,10 @@ class ActionDefinition:
     description: str = ""
     requires_approval: bool = False
     namespace: str = "default"
+    required_level: int = 0
+    scope: str = ""
+    write_safe: bool = False
+    audit_required: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
         data = asdict(self)
@@ -37,6 +41,10 @@ class ActionRegistry:
         description: str = "",
         requires_approval: bool = False,
         namespace: Optional[str] = None,
+        required_level: int = 0,
+        scope: str = "",
+        write_safe: bool = False,
+        audit_required: bool = False,
     ) -> None:
         self._actions[name] = ActionDefinition(
             name=name,
@@ -44,7 +52,20 @@ class ActionRegistry:
             description=description,
             requires_approval=requires_approval,
             namespace=namespace or name.split(".", 1)[0],
+            required_level=required_level,
+            scope=scope,
+            write_safe=write_safe,
+            audit_required=audit_required,
         )
+
+    def action(self, name: str, **metadata):
+        def decorator(func: ActionHandler):
+            self.register(name=name, handler=func, **metadata)
+            return func
+        return decorator
+
+    def get(self, name: str) -> Optional[ActionDefinition]:
+        return self._actions.get(name)
 
     def execute(self, name: str, payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
         action = self._actions.get(name)
@@ -75,3 +96,4 @@ class ActionRegistry:
 
 
 action_registry = ActionRegistry()
+register_action = action_registry.action
