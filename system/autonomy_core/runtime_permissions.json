@@ -5,7 +5,7 @@
   "repo_write_file": true,
   "repo_commit": true,
   "cloud_run_read_logs_directly": false,
-  "cloud_run_rollback_directly": false,
+  "cloud_run_rollback_directly": false, 
   "cloud_run_revision_read": false,
   "cloud_build_status_read": false,
   "github_checks_read": false,
