@@ -267,6 +267,47 @@ def action_move_file(payload: Dict[str, Any], context: Any = None) -> Dict[str, 
 
 
 @register_action(
+    "developer.execute",
+    description="Submit a developer workflow action through the unified action registry.",
+    namespace="developer",
+    required_level=5,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_developer_execute(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.workflow_engine import workflow_engine
+    from system.security.unlock import is_system_unlocked
+    from system.security import load_grant
+
+    grant_token = payload.get("grant_token", "")
+    grant = load_grant(grant_token) if grant_token else payload.get("founder_grant", {})
+
+    if not (is_system_unlocked() or grant):
+        return {
+            "status": "error",
+            "message": "Unified unlock or Founder grant required",
+        }
+
+    action = payload.get("action", "")
+    action_payload = payload.get("payload", {})
+    requires_approval = bool(payload.get("requires_approval", False))
+    auto_run = bool(payload.get("auto_run", True))
+
+    if not action:
+        return {
+            "status": "error",
+            "message": "action is required",
+        }
+
+    return workflow_engine.submit(
+        action=f"developer.{action}",
+        payload=action_payload,
+        requires_approval=requires_approval,
+        auto_run=auto_run,
+    )
+
+
+@register_action(
     "execute_plan",
     description="Execute an approved execution plan through the unified action registry.",
     namespace="execution",
