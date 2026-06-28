@@ -484,13 +484,34 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             "grant_token": grant_token,
         }
     if tool == "github_update_file":
+        grant_token = args.get("grant_token", "")
+        grant = (
+            load_grant(grant_token)
+            if grant_token
+            else args.get("founder_grant", {})
+        )
 
-        if not validate_founder_approval(args):
+        approved = (
+            validate_founder_approval(args)
+            or is_founder_unlock_active(
+                args.get("founder_unlock"),
+                min_level=3,
+            )
+            or is_founder_grant_active(
+                grant,
+                subject="TRUNG_HUYEN_AI_OS",
+                min_level=3,
+                scope="ALL_SYSTEM",
+            )
+        )
+
+        if not approved:
             return {
                 "status": "error",
                 "tool": tool,
-                "message": "Founder approval is required",
+                "message": "Founder authorization required",
             }
+    
 
         path = args.get("path", "")
         content = args.get("content", "")
@@ -503,13 +524,6 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
                 "tool": tool,
                 "message": "path, content, sha and message are required",
             }
-
-        grant_token = args.get("grant_token", "")
-        grant = (
-            load_grant(grant_token)
-            if grant_token
-            else args.get("founder_grant", {})
-        )
 
         result = system_write(
             action="update_file",
