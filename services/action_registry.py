@@ -31,6 +31,12 @@ class ActionRegistry:
     across routers or long if/else blocks.
     """
 
+    UNLOCK_BOOTSTRAP_ACTIONS = {
+        "action_registry_status",
+        "open_all_locks",
+        "close_all_locks",
+    }
+
     def __init__(self) -> None:
         self._actions: Dict[str, ActionDefinition] = {}
 
@@ -67,6 +73,73 @@ class ActionRegistry:
     def get(self, name: str) -> Optional[ActionDefinition]:
         return self._actions.get(name)
 
+    def _load_founder_grant(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from system.security import load_grant
+
+            grant_token = payload.get("grant_token", "")
+            if grant_token:
+                return load_grant(grant_token) or {}
+            return payload.get("founder_grant", {}) or {}
+        except Exception:
+            return payload.get("founder_grant", {}) or {}
+
+    def _is_authorized(self, action: ActionDefinition, payload: Dict[str, Any]) -> bool:
+        if action.name in self.UNLOCK_BOOTSTRAP_ACTIONS:
+            return True
+
+        if action.required_level <= 0 and not action.requires_approval:
+            return True
+
+        try:
+            from system.security.unlock import is_system_unlocked
+            if is_system_unlocked():
+                return True
+        except Exception:
+            pass
+
+        grant = self._load_founder_grant(payload)
+        if not grant:
+            return False
+
+        try:
+            from system.security import is_founder_grant_active
+
+            return is_founder_grant_active(
+                grant,
+                subject="TRUNG_HUYEN_AI_OS",
+                min_level=max(action.required_level, 1),
+                scope=action.scope or "ALL_SYSTEM",
+            )
+        except Exception:
+            return bool(grant.get("status") == "active")
+
+    def _audit_start(self, action: ActionDefinition, payload: Dict[str, Any]) -> Dict[str, Any]:
+        if not action.audit_required:
+            return {"status": "skipped"}
+
+        try:
+            from system.security import write_audit, require_audit
+
+            grant = self._load_founder_grant(payload)
+            audit = write_audit(
+                "action_registry.execute",
+                {
+                    "action": action.name,
+                    "namespace": action.namespace,
+                    "required_level": action.required_level,
+                    "scope": action.scope,
+                    "approved_by": grant.get("granted_by"),
+                    "approval_id": grant.get("session_id") or grant.get("token"),
+                    "status": "pending",
+                },
+            )
+            if not require_audit(audit):
+                return {"status": "error", "message": "audit validation failed"}
+            return {"status": "ok", "audit": audit}
+        except Exception as exc:
+            return {"status": "error", "message": str(exc)}
+
     def execute(self, name: str, payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
         action = self._actions.get(name)
         if not action:
@@ -75,7 +148,41 @@ class ActionRegistry:
                 "message": f"Unsupported action: {name}",
                 "available_actions": sorted(self._actions.keys()),
             }
-        return action.handler(payload, context)
+
+        if not self._is_authorized(action, payload):
+            return {
+                "status": "error",
+                "message": "Unified unlock or Founder grant required",
+                "action": name,
+                "required_level": action.required_level,
+                "scope": action.scope,
+            }
+
+        audit = self._audit_start(action, payload)
+        if audit.get("status") == "error":
+            return audit
+
+        try:
+            result = action.handler(payload, context)
+        except Exception as exc:
+            return {
+                "status": "error",
+                "message": str(exc),
+                "action": name,
+                "type": type(exc).__name__,
+            }
+
+        if isinstance(result, dict):
+            result.setdefault("action", name)
+            result.setdefault("namespace", action.namespace)
+            return result
+
+        return {
+            "status": "ok",
+            "action": name,
+            "namespace": action.namespace,
+            "result": result,
+        }
 
     def has(self, name: str) -> bool:
         return name in self._actions
@@ -92,6 +199,11 @@ class ActionRegistry:
             "action_count": len(self._actions),
             "namespaces": by_namespace,
             "actions": sorted(self._actions.keys()),
+            "middleware": {
+                "authorization": True,
+                "audit": True,
+                "bootstrap_actions": sorted(self.UNLOCK_BOOTSTRAP_ACTIONS),
+            },
         }
 
 
@@ -276,17 +388,6 @@ def action_move_file(payload: Dict[str, Any], context: Any = None) -> Dict[str, 
 )
 def action_developer_execute(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
     from services.workflow_engine import workflow_engine
-    from system.security.unlock import is_system_unlocked
-    from system.security import load_grant
-
-    grant_token = payload.get("grant_token", "")
-    grant = load_grant(grant_token) if grant_token else payload.get("founder_grant", {})
-
-    if not (is_system_unlocked() or grant):
-        return {
-            "status": "error",
-            "message": "Unified unlock or Founder grant required",
-        }
 
     action = payload.get("action", "")
     action_payload = payload.get("payload", {})
@@ -317,18 +418,6 @@ def action_developer_execute(payload: Dict[str, Any], context: Any = None) -> Di
 )
 def action_execute_plan(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
     from services.execution_engine import execution_engine, execution_plan_from_dict
-    from system.security.unlock import is_system_unlocked
-    from system.security import load_grant
-
-    grant_token = payload.get("grant_token", "")
-    grant = load_grant(grant_token) if grant_token else payload.get("founder_grant", {})
-
-    approved = bool(is_system_unlocked() or grant)
-    if not approved:
-        return {
-            "status": "error",
-            "message": "Unified unlock or Founder grant required",
-        }
 
     plan_data = payload.get("plan") or {}
     if not isinstance(plan_data, dict):
