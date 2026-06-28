@@ -1,2 +1,3 @@
-# Compatibility shim. Preferred import: system.validation.report
-from system.validation.report import *
+from system.validation.report import validation_report
+
+__all__ = ["validation_report"]
