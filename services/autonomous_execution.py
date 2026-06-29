@@ -101,9 +101,94 @@ def git_pull(remote: str = "origin", branch: str = "main") -> Dict[str, Any]:
     return shell_exec(f"git pull --rebase {remote_q} {branch_q}")
 
 
-def cloud_build_submit(tag: str = DEFAULT_IMAGE) -> Dict[str, Any]:
-    tag_q = shlex.quote(tag or DEFAULT_IMAGE)
-    return shell_exec(f"gcloud builds submit --tag {tag_q}", timeout=1800)
+def _google_project_id(explicit_project_id: str | None = None) -> str:
+    if explicit_project_id:
+        return explicit_project_id
+    env_project = (
+        os.getenv("GOOGLE_CLOUD_PROJECT")
+        or os.getenv("GCP_PROJECT")
+        or os.getenv("PROJECT_ID")
+    )
+    if env_project:
+        return env_project
+    _, detected_project = google.auth.default()
+    if not detected_project:
+        raise RuntimeError("Unable to determine Google Cloud project id")
+    return detected_project
+
+
+def cloud_build_submit(
+    tag: str = DEFAULT_IMAGE,
+    project_id: str | None = None,
+    repo_url: str = "https://github.com/thanhdanhinfo-pixel/trung-huyen-ai",
+    revision: str = "main",
+    service: str = DEFAULT_SERVICE,
+    region: str = DEFAULT_REGION,
+) -> Dict[str, Any]:
+    """Trigger Cloud Build through Cloud Build API instead of requiring gcloud CLI."""
+    try:
+        project = _google_project_id(project_id)
+        image = tag or DEFAULT_IMAGE
+        cloudbuild = build("cloudbuild", "v1", cache_discovery=False)
+        build_body = {
+            "source": {
+                "gitSource": {
+                    "url": repo_url,
+                    "revision": revision or "main",
+                }
+            },
+            "steps": [
+                {
+                    "name": "gcr.io/cloud-builders/docker",
+                    "args": ["build", "-t", image, "."],
+                },
+                {
+                    "name": "gcr.io/cloud-builders/docker",
+                    "args": ["push", image],
+                },
+                {
+                    "name": "gcr.io/google.com/cloudsdktool/cloud-sdk",
+                    "entrypoint": "gcloud",
+                    "args": [
+                        "run",
+                        "deploy",
+                        service or DEFAULT_SERVICE,
+                        "--image",
+                        image,
+                        "--region",
+                        region or DEFAULT_REGION,
+                        "--platform",
+                        "managed",
+                        "--allow-unauthenticated",
+                    ],
+                },
+            ],
+            "images": [image],
+        }
+        operation = cloudbuild.projects().builds().create(
+            projectId=project,
+            body=build_body,
+        ).execute()
+        metadata = operation.get("metadata", {}) if isinstance(operation, dict) else {}
+        build_info = metadata.get("build", {}) if isinstance(metadata, dict) else {}
+        return {
+            "status": "ok",
+            "provider": "cloud_build_api",
+            "project_id": project,
+            "image": image,
+            "service": service,
+            "region": region,
+            "operation": operation,
+            "build_id": build_info.get("id"),
+            "log_url": build_info.get("logUrl"),
+        }
+    except Exception as exc:
+        return {
+            "status": "error",
+            "provider": "cloud_build_api",
+            "message": str(exc),
+            "type": type(exc).__name__,
+        }
 
 
 def cloud_run_deploy(
