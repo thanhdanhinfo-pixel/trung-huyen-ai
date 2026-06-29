@@ -120,6 +120,9 @@ capability_groups:
         - github_list_files
         - github_read_file
         - github_update_file
+        - github_create_file
+        - github_upsert_file
+        - github_delete_file
     health:
       state: operational
       last_verified: 2026-06-26
