@@ -767,6 +767,18 @@ def manifest():
                 "description": "Thực thi một kế hoạch chỉnh sửa GitHub qua Execution Engine sau khi người dùng phê duyệt"
             },
             {
+                "name": "shell_exec",
+                "description": "Thực thi lệnh shell nằm trong allowlist của hệ thống"
+            },
+            {
+                "name": "cloud_build_submit",
+                "description": "Kích hoạt Google Cloud Build cho runtime"
+            },
+            {
+                "name": "cloud_run_deploy",
+                "description": "Triển khai Cloud Run service bằng lệnh đã được cho phép"
+            },
+            {
                 "name": "create_document",
                 "description": "Tạo Google Docs mới sau khi người dùng phê duyệt"
             },
