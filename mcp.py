@@ -122,8 +122,6 @@ def manifest():
             {"name": "github_delete_file", "description": "Xóa file GitHub sau khi được phê duyệt"},
             {"name": "github_upsert_file", "description": "Tạo mới hoặc cập nhật file GitHub sau khi được phê duyệt"},
             {"name": "execute_plan", "description": "Thực thi kế hoạch chỉnh sửa sau khi được phê duyệt"},
-            {"name": "shell_exec", "description": "Thực thi lệnh shell đã được allowlist sau khi được phê duyệt"},
-            {"name": "trigger_cloud_build", "description": "Kích hoạt Google Cloud Build bằng cloudbuild.yaml sau khi được phê duyệt"},
             {"name": "backend_call", "description": "Gọi endpoint nội bộ của backend"},
             {"name": "system_tree", "description": "Lấy cây thư mục Google Drive"},
             {"name": "workspace_bootstrap", "description": "Nạp trạng thái workspace ban đầu"},
@@ -279,6 +277,23 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
         plan = execution_plan_from_dict(plan_data)
         result = execution_engine.execute(plan=plan, approved=approved)
         return {"status": result.get("status"), "tool": tool, "result": result}
+
+    if tool == "shell_exec":
+        approved = bool(args.get("approved", False))
+        if not approved:
+            return {"status": "error", "tool": tool, "message": "Shell execution denied. User approval is required."}
+        command = args.get("command", "")
+        cwd = args.get("cwd", ".")
+        timeout_seconds = int(args.get("timeout_seconds", 900))
+        return {"status": "ok", "tool": tool, "result": shell_exec(command=command, cwd=cwd, timeout_seconds=timeout_seconds)}
+
+    if tool == "trigger_cloud_build":
+        approved = bool(args.get("approved", False))
+        if not approved:
+            return {"status": "error", "tool": tool, "message": "Cloud Build trigger denied. User approval is required."}
+        config = args.get("config", "cloudbuild.yaml")
+        cwd = args.get("cwd", ".")
+        return {"status": "ok", "tool": tool, "result": trigger_cloud_build(config=config, cwd=cwd)}
 
     if tool == "backend_call":
         method = args.get("method", "GET").upper()
