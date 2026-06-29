@@ -373,7 +373,7 @@ capability_groups:
     runtime_binding:
       module: action_registry
       required_on_boot: true
-      implementation_status: missing_runtime_actions
+      implementation_status: active
       required_tools:
         - github_create_file
         - github_upsert_file
