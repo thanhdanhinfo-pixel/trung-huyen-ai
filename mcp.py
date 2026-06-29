@@ -25,7 +25,6 @@ from services.github_service import (
     github_upsert_file,
 )
 from services.execution_engine import execution_engine, execution_plan_from_dict
-from services.shell_service import shell_exec, trigger_cloud_build
 
 
 router = APIRouter(prefix="/mcp", tags=["MCP Gateway"])
@@ -86,6 +85,8 @@ def tool_names() -> List[str]:
         "github_delete_file",
         "github_upsert_file",
         "execute_plan",
+        "shell_exec",
+        "trigger_cloud_build",
         "backend_call",
         "system_tree",
         "workspace_bootstrap",
