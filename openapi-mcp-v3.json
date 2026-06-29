@@ -91,6 +91,86 @@
         }
       }
     },
+    "/system/active-task": {
+      "get": {
+        "operationId": "getActiveTask",
+        "summary": "Get current active task and unfinished task continuity context",
+        "responses": {
+          "200": {
+            "description": "Active task continuity state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/active-task/pause": {
+      "post": {
+        "operationId": "pauseActiveTask",
+        "summary": "Pause current active task before switching context",
+        "responses": {
+          "200": {
+            "description": "Paused active task context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/active-task/resume": {
+      "post": {
+        "operationId": "resumeActiveTask",
+        "summary": "Resume current active task from next_step",
+        "responses": {
+          "200": {
+            "description": "Resumed active task context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/active-task/complete": {
+      "post": {
+        "operationId": "completeActiveTask",
+        "summary": "Request completion of current active task and review unfinished tasks",
+        "responses": {
+          "200": {
+            "description": "Active task completion review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/system/global-memory": {
       "get": {
         "operationId": "getGlobalMemory",
