@@ -3,7 +3,7 @@
   "info": {
     "title": "TRUNG_HUYEN_AI_OS_RUNTIME",
     "version": "3.6.0",
-    "description": "Stable GPT Actions schema for TRUNG_HUYEN_AI_OS with mandatory startup preflight, MCP discovery, and safe shell/cloud build capability"
+    "description": "Stable GPT Actions schema for TRUNG_HUYEN_AI_OS with mandatory startup preflight"
   },
   "servers": [
     {
@@ -278,6 +278,46 @@
         "responses": {
           "200": {
             "description": "Governance rules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/tools": {
+      "get": {
+        "operationId": "listMcpTools",
+        "summary": "List available MCP tools including shell_exec and trigger_cloud_build after deploy",
+        "responses": {
+          "200": {
+            "description": "MCP tool list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/manifest": {
+      "get": {
+        "operationId": "getMcpManifest",
+        "summary": "Get MCP manifest including tool descriptions",
+        "responses": {
+          "200": {
+            "description": "MCP manifest",
             "content": {
               "application/json": {
                 "schema": {
