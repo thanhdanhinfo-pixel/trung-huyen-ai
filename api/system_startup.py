@@ -270,6 +270,38 @@ def self_state() -> Dict[str, Any]:
     return _self_state()
 
 
+@router.get("/active-task")
+def active_task() -> Dict[str, Any]:
+    return _active_task()
+
+
+@router.post("/active-task/pause")
+def active_task_pause() -> Dict[str, Any]:
+    payload = _active_task()
+    payload["action"] = "pause"
+    payload["message"] = "Current active task should be paused before switching context. Persisted source of truth: system/TASK_REGISTRY.yaml."
+    payload["next_required_behavior"] = "remind_return_to_previous_task_after_interruption"
+    return payload
+
+
+@router.post("/active-task/resume")
+def active_task_resume() -> Dict[str, Any]:
+    payload = _active_task()
+    payload["action"] = "resume"
+    payload["message"] = "Resume current active task and continue from next_step."
+    payload["resume_task_id"] = payload["current_active_task"]["id"]
+    return payload
+
+
+@router.post("/active-task/complete")
+def active_task_complete() -> Dict[str, Any]:
+    payload = _active_task()
+    payload["action"] = "complete"
+    payload["message"] = "Completion requested. Verify remaining tasks before closing active context."
+    payload["must_review_unfinished_tasks"] = True
+    return payload
+
+
 @router.get("/tool-health")
 def tool_health() -> Dict[str, Any]:
     return {
