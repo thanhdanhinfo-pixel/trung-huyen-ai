@@ -13,6 +13,9 @@ import shlex
 import subprocess
 from typing import Any, Dict, Iterable
 
+import google.auth
+from googleapiclient.discovery import build
+
 DEFAULT_TIMEOUT_SECONDS = int(os.getenv("AUTONOMOUS_EXEC_TIMEOUT_SECONDS", "900"))
 
 ALLOWED_COMMAND_PREFIXES = (
