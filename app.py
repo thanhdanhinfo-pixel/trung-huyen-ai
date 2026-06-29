@@ -101,14 +101,14 @@ except Exception as exc:
     traceback.print_exc()
     mcp_router = None
 
-if admin_router:
-    app.include_router(admin_router)
+include_runtime_routers(
+    app,
+    admin_router=admin_router,
+    mcp_router=mcp_router,
+)
 app.include_router(github_router)
 app.include_router(developer_router)
 app.include_router(repo_router)
-
-if mcp_router:
-    app.include_router(mcp_router)
 app.include_router(workspace_router)
     
 app.include_router(knowledge_router)
