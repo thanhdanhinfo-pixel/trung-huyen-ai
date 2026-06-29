@@ -132,13 +132,59 @@ def _global_memory() -> Dict[str, Any]:
 
 def _next_actions() -> List[str]:
     return [
-        "verify /system/khoi-dong after Cloud Run deploy",
-        "verify /system/boot-v3 after Cloud Run deploy",
-        "update GPT Action OpenAPI schema to include startup endpoints if missing",
+        "verify /system/active-task after Cloud Run deploy",
+        "verify /system/khoi-dong includes active_task",
+        "verify /system/boot-v3 includes active_task",
+        "update GPT Action OpenAPI schema to include active-task endpoints if missing",
         "connect Brain GPT to /system/khoi-dong and memory endpoints",
         "connect Academy GPT to /system/khoi-dong and academy/memory endpoints",
         "connect Worker GPT to /system/khoi-dong and worker/runtime endpoints",
     ]
+
+
+def _active_task() -> Dict[str, Any]:
+    return {
+        "status": "ok",
+        "current_active_task": {
+            "id": "TASK-SELF-AWARENESS-V1",
+            "title": "Hoàn thiện Self Awareness và Active Work Context",
+            "status": "in_progress",
+            "current_step": "IMPLEMENT_ACTIVE_TASK_CONTINUITY",
+            "next_step": "deploy_and_verify_active_task_endpoints",
+            "must_not_forget": True,
+            "source_of_truth": "system/TASK_REGISTRY.yaml",
+        },
+        "unfinished_tasks": [
+            {
+                "id": "TASK-SELF-AWARENESS-V1",
+                "title": "Hoàn thiện Self Awareness và Active Work Context",
+                "status": "in_progress",
+                "next_step": "deploy_and_verify_active_task_endpoints",
+            },
+            {
+                "id": "TASK-005",
+                "title": "Drive Visibility 100%",
+                "status": "waiting_runtime_deploy",
+                "next_step": "verify_after_current_active_task",
+            },
+        ],
+        "continuity_policy": {
+            "before_switching_task": "pause_current_task",
+            "after_finishing_interruption": "remind_return_to_previous_task",
+            "before_answering_work_status": "read_current_active_task",
+            "forbidden": [
+                "forget_current_active_task",
+                "overwrite_current_active_task_without_founder_intent",
+                "finish_interruption_without_reminding_old_tasks",
+            ],
+            "required_behavior": [
+                "remind_current_active_task_when_context_switch_detected",
+                "after_any_side_task_completed_remind_unfinished_old_tasks",
+                "ask_continue_pause_or_switch_when_new_work_conflicts",
+            ],
+        },
+        "return_reminder": "Sau khi xử lý việc chen ngang, phải nhắc Founder quay lại TASK-SELF-AWARENESS-V1 và các việc cũ còn dở.",
+    }
 
 
 def _payload() -> Dict[str, Any]:
