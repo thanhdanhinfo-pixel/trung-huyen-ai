@@ -237,6 +237,38 @@ def call_tool(req: MCPCall, x_api_key: str = Header(default="")):
             return {"status": "error", "tool": tool, "message": "path, content, sha and message are required"}
         return {"status": "ok", "tool": tool, "result": github_update_file(path, content, sha, message)}
 
+    if tool == "github_create_file":
+        approved = bool(args.get("approved", False))
+        if not approved:
+            return {"status": "error", "tool": tool, "message": "User approval is required"}
+        path = args.get("path", "")
+        content = args.get("content", "")
+        message = args.get("message", "")
+        if not path or not message:
+            return {"status": "error", "tool": tool, "message": "path and message are required"}
+        return {"status": "ok", "tool": tool, "result": github_create_file(path, content, message)}
+
+    if tool == "github_upsert_file":
+        approved = bool(args.get("approved", False))
+        if not approved:
+            return {"status": "error", "tool": tool, "message": "User approval is required"}
+        path = args.get("path", "")
+        content = args.get("content", "")
+        message = args.get("message", "")
+        if not path or not message:
+            return {"status": "error", "tool": tool, "message": "path and message are required"}
+        return {"status": "ok", "tool": tool, "result": github_upsert_file(path, content, message)}
+
+    if tool == "github_delete_file":
+        approved = bool(args.get("approved", False))
+        if not approved:
+            return {"status": "error", "tool": tool, "message": "User approval is required"}
+        path = args.get("path", "")
+        message = args.get("message", "")
+        if not path or not message:
+            return {"status": "error", "tool": tool, "message": "path and message are required"}
+        return {"status": "ok", "tool": tool, "result": github_delete_file(path, message)}
+
     if tool == "execute_plan":
         approved = bool(args.get("approved", False))
         plan_data = args.get("plan") or {}
