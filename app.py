@@ -7,6 +7,7 @@ from api.knowledge import router as knowledge_router
 from api.execute import router as execute_router
 from api.system_awareness import router as system_awareness_router
 from api.system_startup import router as system_startup_router
+from api.app_startup import run_startup_boot
 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
