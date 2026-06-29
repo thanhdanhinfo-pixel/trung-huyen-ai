@@ -88,3 +88,39 @@ Firestore grant verification: PASSED
 ## Purpose
 
 Chặn lỗi nền lọt vào runtime, hợp nhất cơ chế mở khóa, và bảo đảm hệ thống đủ trơn tru để triển khai dự án thật.
+
+---
+
+# RULE-020: CAPABILITY_DENIAL_PROHIBITION
+
+Status: ACTIVE
+Owner: Founder
+
+## Mandatory preflight
+
+Trước khi kết luận thiếu quyền hoặc thiếu công cụ, bắt buộc:
+
+1. getPreflight()
+2. getToolHealth()
+3. đọc CAPABILITY_REGISTRY
+4. thử action thực tế nếu action tồn tại.
+
+## Forbidden statements after verification
+
+Nếu:
+- github_write = available
+- runtime = available
+- mcp = available
+- safe_mode = false
+
+thì cấm phát biểu:
+- Tôi không có công cụ.
+- Tôi không có quyền GitHub.
+- Tôi không thể sửa file.
+- Tôi không thể deploy.
+
+## Required behavior
+
+Verify → Attempt → Report Failure.
+
+Chỉ được báo không thể thực hiện sau khi execution thực tế thất bại.
