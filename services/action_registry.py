@@ -456,3 +456,73 @@ def action_execute_plan(payload: Dict[str, Any], context: Any = None) -> Dict[st
         "status": result.get("status"),
         "result": result,
     }
+
+
+@register_action(
+    "shell_exec",
+    description="Execute an allowlisted shell command through Autonomous Execution V1.",
+    namespace="execution",
+    required_level=5,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_shell_exec(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.autonomous_execution import shell_exec
+
+    return shell_exec(
+        command=payload.get("command", ""),
+        timeout=payload.get("timeout"),
+        cwd=payload.get("cwd"),
+    )
+
+
+@register_action(
+    "git_pull",
+    description="Run git pull --rebase for the runtime workspace.",
+    namespace="execution",
+    required_level=5,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_git_pull(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.autonomous_execution import git_pull
+
+    return git_pull(
+        remote=payload.get("remote", "origin"),
+        branch=payload.get("branch", "main"),
+    )
+
+
+@register_action(
+    "cloud_build_submit",
+    description="Run gcloud builds submit for the configured Cloud Run image.",
+    namespace="execution",
+    required_level=5,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_cloud_build_submit(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.autonomous_execution import cloud_build_submit
+
+    return cloud_build_submit(
+        tag=payload.get("tag", None) or "asia-southeast1-docker.pkg.dev/trung-huyen-ai/thos/trung-huyen-ai",
+    )
+
+
+@register_action(
+    "cloud_run_deploy",
+    description="Deploy the configured Cloud Run service using an allowlisted gcloud command.",
+    namespace="execution",
+    required_level=5,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_cloud_run_deploy(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.autonomous_execution import cloud_run_deploy
+
+    return cloud_run_deploy(
+        service=payload.get("service", "trung-huyen-ai"),
+        image=payload.get("image", "asia-southeast1-docker.pkg.dev/trung-huyen-ai/thos/trung-huyen-ai"),
+        region=payload.get("region", "asia-southeast1"),
+        allow_unauthenticated=bool(payload.get("allow_unauthenticated", True)),
+    )
