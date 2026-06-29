@@ -9,6 +9,11 @@ class RuleEngineV2:
             actions.append('scale_workers')
         if boot_failed:
             actions.append('restore_last_healthy_snapshot')
+
+        # RULE-020: Capability Denial Prohibition
+        # Runtime must verify and attempt execution before declaring missing capabilities.
+        actions.append('verify_capabilities_before_denial')
+
         return actions or ['system_nominal']
 
     def execute(self, **kwargs):
