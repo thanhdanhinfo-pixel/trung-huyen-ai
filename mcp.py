@@ -20,6 +20,9 @@ from services.github_service import (
     github_list_files,
     github_read_file,
     github_update_file,
+    github_create_file,
+    github_delete_file,
+    github_upsert_file,
 )
 from services.execution_engine import execution_engine, execution_plan_from_dict
 
