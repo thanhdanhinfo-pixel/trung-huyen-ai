@@ -205,7 +205,16 @@ def _payload() -> Dict[str, Any]:
         "last_actions": _last_actions(),
         "global_memory": _global_memory(),
         "next_actions": _next_actions(),
+        "active_task": _active_task(),
+        "startup_sequence": [
+            "load_self_state",
+            "load_capability_registry",
+            "load_global_memory",
+            "load_task_registry",
+            "restore_current_active_task"
+        ],
         "active_endpoints": {
+            "active_task": "/system/active-task",
             "khoi_dong": "/system/khoi-dong",
             "boot_v3": "/system/boot-v3",
             "session_checkpoint": "/system/session-checkpoint",
