@@ -154,14 +154,7 @@ def _active_task() -> Dict[str, Any]:
             "must_not_forget": True,
             "source_of_truth": "system/TASK_REGISTRY.yaml",
         },
-        "unfinished_tasks": [
-            {
-                "id": "TASK-SELF-AWARENESS-V1",
-                "title": "Hoàn thiện Self Awareness và Active Work Context",
-                "status": "in_progress",
-                "next_step": "deploy_and_verify_active_task_endpoints",
-            },
-        ],
+        "unfinished_tasks": [],
         "continuity_policy": {
             "before_switching_task": "pause_current_task",
             "after_finishing_interruption": "remind_return_to_previous_task",
