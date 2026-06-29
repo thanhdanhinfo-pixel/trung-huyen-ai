@@ -384,8 +384,8 @@ capability_groups:
         - cloud_run_deploy
         - cloud_run_logs
     health:
-      state: blocked_until_runtime_actions_exposed
-      last_verified: 2026-06-29
+      state: operational
+      last_verified: 2026-06-30
       verification_method: action_registry_status
     capabilities:
       - Create new repository files
