@@ -243,12 +243,15 @@ def list_recursive(parent_id: Optional[str] = None, current_path: str = "") -> L
                 metadata["source_id"] = master.get("id")
                 items.append(metadata)
             except Exception as exc:
-                print(
-                    "MASTER_DOCUMENT_UNAVAILABLE:",
-                    master.get("id"),
-                    type(exc).__name__,
-                    str(exc),
-                )
+                items.append({
+                    "id": master["id"],
+                    "name": master.get("name", "master"),
+                    "path": master.get("name", "master"),
+                    "mimeType": GOOGLE_DOC,
+                    "source": master.get("name", "master"),
+                    "source_id": master.get("id"),
+                    "read_error": str(exc),
+                })
         return items
 
     service = get_drive_service()
@@ -572,14 +575,14 @@ def _master_doc_result() -> Optional[Dict[str, Any]]:
         metadata["source"] = master.get("name", "master")
         metadata["source_id"] = master.get("id")
         return metadata
-    except Exception:
-        return {
-            "id": master["id"],
-            "name": master.get("name", "master"),
-            "mimeType": GOOGLE_DOC,
-            "source": master.get("name", "master"),
-            "source_id": master.get("id"),
-        }
+    except Exception as exc:
+        print(
+            "MASTER_DOCUMENT_UNAVAILABLE:",
+            master.get("id"),
+            type(exc).__name__,
+            str(exc),
+        )
+        return None
 
 
 def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
