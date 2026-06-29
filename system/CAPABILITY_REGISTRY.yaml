@@ -398,9 +398,7 @@ capability_groups:
       - Update TASK_REGISTRY after execution
       - Resume previous unfinished tasks after interruption
     limitations:
-      - Runtime action registry currently does not expose shell_exec
-      - Runtime action registry currently does not expose cloud_build_submit
-      - Runtime action registry currently does not expose cloud_run_deploy
+      - cloud_run_logs action is not yet exposed through the unified registry
 
   unified_observability:
     id: unified_observability
