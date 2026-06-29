@@ -3,11 +3,11 @@ version: 2.0
 current_active_task:
   id: TASK-SELF-AWARENESS-V1
   title: Hoàn thiện Self Awareness và Active Work Context
-  status: done
+  status: in_progress
   owner: TRUNG_HUYEN_AI_OS
   priority: core
   current_step: IMPLEMENT_ACTIVE_TASK_CONTINUITY
-  next_step: expose_runtime_execution_actions
+  next_step: completed_and_verified
   source_of_truth: system/TASK_REGISTRY.yaml
   must_not_forget: true
   started_from:
