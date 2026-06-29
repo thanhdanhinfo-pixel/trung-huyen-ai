@@ -86,6 +86,8 @@ def tool_names() -> List[str]:
         "github_delete_file",
         "github_upsert_file",
         "execute_plan",
+        "shell_exec",
+        "trigger_cloud_build",
         "backend_call",
         "system_tree",
         "workspace_bootstrap",
