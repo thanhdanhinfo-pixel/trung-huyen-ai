@@ -182,36 +182,31 @@ def create_document_via_apps_script(
 
 @router.get("/tools")
 def tools():
+    registry_status = action_registry.status()
+    static_tools = {
+        "list_documents",
+        "search_documents",
+        "read_document",
+        "ask_knowledge",
+        "github_list_files",
+        "github_read_file",
+        "system_self_test",
+        "listDirectory",
+        "readFile",
+        "searchCode",
+        "backend_call",
+        "system_tree",
+        "workspace_bootstrap",
+        "create_document",
+        "append_document",
+        "create_folder",
+    }
+    registry_tools = set(registry_status.get("actions", []))
     return {
         "status": "ok",
-        "tools": [
-            "list_documents",
-            "search_documents",
-            "read_document",
-            "ask_knowledge",
-            "github_list_files",
-            "github_read_file",
-            "system_self_test",
-            "github_update_file",
-            "listDirectory",
-            "readFile",
-            "searchCode",
-            "execute_plan",
-            "backend_call",
-            "system_tree",
-            "workspace_bootstrap",
-            "create_document",
-            "append_document",
-            "create_folder",
-            "founder_grant_open",
-            "founder_grant_close",
-            "action_registry_status",
-            "open_all_locks",
-            "close_all_locks",
-            "developer.execute",
-            "developer.transform",
-            "developer.transaction",
-        ],
+        "source": "action_registry_plus_static_mcp_tools",
+        "tools": sorted(static_tools | registry_tools),
+        "registry": registry_status,
     }
     
 @router.post("/call")
