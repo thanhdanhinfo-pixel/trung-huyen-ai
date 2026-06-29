@@ -399,6 +399,88 @@ def action_move_file(payload: Dict[str, Any], context: Any = None) -> Dict[str, 
 
 
 @register_action(
+    "github_create_file",
+    description="Create a new GitHub file through GitHub runtime with unified authorization.",
+    namespace="github",
+    required_level=3,
+    scope="ALL_SYSTEM",
+    write_safe=True,
+    audit_required=True,
+)
+def action_github_create_file(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.github_runtime import github_runtime
+
+    path = payload.get("path", "")
+    content = payload.get("content", "")
+    message = payload.get("message", "Create file through action registry")
+
+    if not path or not message:
+        return {
+            "status": "error",
+            "message": "path and message are required",
+        }
+
+    try:
+        github_runtime.get_file_metadata(path)
+        return {
+            "status": "error",
+            "message": "file already exists; use github_upsert_file or github_update_file",
+            "path": path,
+        }
+    except Exception:
+        pass
+
+    result = github_runtime.update_file(
+        path=path,
+        content=content,
+        message=message,
+        sha=None,
+    )
+
+    return {
+        "status": "ok",
+        "path": path,
+        "result": result,
+    }
+
+
+@register_action(
+    "github_upsert_file",
+    description="Create or update a GitHub file through GitHub runtime with unified authorization.",
+    namespace="github",
+    required_level=3,
+    scope="ALL_SYSTEM",
+    write_safe=True,
+    audit_required=True,
+)
+def action_github_upsert_file(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.github_runtime import github_runtime
+
+    path = payload.get("path", "")
+    content = payload.get("content", "")
+    message = payload.get("message", "Upsert file through action registry")
+
+    if not path or not message:
+        return {
+            "status": "error",
+            "message": "path and message are required",
+        }
+
+    result = github_runtime.update_file(
+        path=path,
+        content=content,
+        message=message,
+        sha=payload.get("sha") or None,
+    )
+
+    return {
+        "status": "ok",
+        "path": path,
+        "result": result,
+    }
+
+
+@register_action(
     "developer.execute",
     description="Submit a developer workflow action through the unified action registry.",
     namespace="developer",
