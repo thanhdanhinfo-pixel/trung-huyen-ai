@@ -148,9 +148,9 @@ def _active_task() -> Dict[str, Any]:
         "current_active_task": {
             "id": "TASK-SELF-AWARENESS-V1",
             "title": "Hoàn thiện Self Awareness và Active Work Context",
-            "status": "in_progress",
+            "status": "done",
             "current_step": "IMPLEMENT_ACTIVE_TASK_CONTINUITY",
-            "next_step": "deploy_and_verify_active_task_endpoints",
+            "next_step": "completed_and_verified",
             "must_not_forget": True,
             "source_of_truth": "system/TASK_REGISTRY.yaml",
         },
