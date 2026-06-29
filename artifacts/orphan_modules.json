@@ -1,0 +1,3587 @@
+{
+  "files_scanned": 316,
+  "entrypoints": 49,
+  "safe_to_keep": 133,
+  "needs_review": 46,
+  "possible_dead_code": 88
+}
+artifact=artifacts/orphan_modules.json
+    "needs_review": 46,
+    "possible_dead_code": 88
+  },
+  "entrypoints": [
+    {
+      "path": "api/bootstrap.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/chat.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/command_runner.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/debug.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/deployment.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/developer.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/digital_twin.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/drive_manage.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/execute.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/github.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/graph.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/health.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/kernel.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/knowledge.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/mcp.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/observability_tools.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/planner.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/rag_runtime.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/repo.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/repository.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/runtime.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/system.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/system_awareness.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/system_events.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/system_health.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/system_runtime.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/system_scheduler.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/system_startup.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/system_status.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/worker.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "api/workspace.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "app.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "scripts/activate_deploy_workflow.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "scripts/health_check.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tests/test_validation_contract.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/architecture_audit.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/dependency_graph.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/domain_classifier.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/export_repo_manifest.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/generate_all_artifacts.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/import_safety.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/move_recommendation.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/orphan_detector.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/repo_snapshot.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/repo_tree.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/root_audit.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/root_cleanup_candidates.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "tools/root_hotspots.py",
+      "reason": "entrypoint_or_tooling_area"
+    },
+    {
+      "path": "worker/main.py",
+      "reason": "entrypoint_or_tooling_area"
+    }
+  ],
+  "safe_to_keep": [
+    {
+      "path": "agent_orchestrator.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "config.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 14
+    },
+    {
+      "path": "drive.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 12
+    },
+    {
+      "path": "health.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "kernel/kernel.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 3
+    },
+    {
+      "path": "kernel/observation/system_observer.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "knowledge/capture.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "knowledge/drive.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "knowledge/markdown.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "knowledge/template.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "multi_agent_manager.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "planner_agent.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "rag/chunker.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "rag/embedding.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "rag/indexer.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "rag/search.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "runtime_health.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "services/action_registry.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/ai_runtime.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "services/ai_worker.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/background_loop.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/bootstrap_service.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "services/code_transaction.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/code_transformer.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "services/command_runner/allowlist.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/command_runner/sandbox.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/dependency_analyzer.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "services/developer_runtime.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 3
+    },
+    {
+      "path": "services/execution_engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 3
+    },
+    {
+      "path": "services/execution_queue.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 4
+    },
+    {
+      "path": "services/github_runtime.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 15
+    },
+    {
+      "path": "services/github_service.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 3
+    },
+    {
+      "path": "services/health_runtime.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/import_rewriter.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/kernel.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/observability_tools/cloud.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/observability_tools/github_checks.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/repo_refactor.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/repository_manager.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/repository_observer.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/repository_tree_loader.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/runtime_diagnostic.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "services/safe_move_engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "services/security_center.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/smoke_tests/foundation.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/system_service.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "services/worker_pool.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/worker_registry.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "services/worker_runner.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "services/workflow_engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 4
+    },
+    {
+      "path": "services/workspace.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "services/workspace_service.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/adaptation_engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/bootstrap.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/capability/dependencies.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/capability/evolution.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/capability/lineage.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/capability/registry.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/capability/risk.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/capability_dependencies.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/capability_evolution.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/capability_lineage.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/dependency_risk.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/digital_twin.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/digital_twin_pkg/runtime.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/digital_twin_pkg/simulation.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/digital_twin_simulation.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/event_ack.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/event_ack_store.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/event_bus.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 4
+    },
+    {
+      "path": "system/event_retention.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 3
+    },
+    {
+      "path": "system/event_subscriptions.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/events/ack.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/events/ack_store.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/events/backend.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/events/bus.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/events/redis_adapter.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/events/retention.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/events/routing.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/events/stream.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/events/subscriptions.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/events/ws.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/evolution/adaptation.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/evolution/engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/evolution/history.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/evolution/learning.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 3
+    },
+    {
+      "path": "system/evolution/reflection.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 3
+    },
+    {
+      "path": "system/evolution_engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/evolution_history.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/evolution_worker.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/governance_pkg/audit.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/governance_pkg/autonomy.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/governance_pkg/constitution_runtime.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/governance_pkg/founder.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/governance_pkg/governance.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/knowledge/graph.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/knowledge_graph.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/learning_engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/observability/awareness.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/observability/layer.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/policy_engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/production_scheduler.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/reflection_engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/retention_worker.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/rule_engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/rules/engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/rules/engine_v2.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/rules/policy.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/runtime/agent.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/runtime/bootstrap.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/runtime/task.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/runtime_bootstrap.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/scheduler/bootstrap.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/scheduler/evolution_worker.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/scheduler/production.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/scheduler/retention_worker.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/scheduler/runtime.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/scheduler/supervision.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/scheduler_runtime.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/security/audit.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/security/grant_manager.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/security/unlock.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/self_healing.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/tools/refactor/copy_module.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/tools/refactor/create_shim.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/tools/refactor/verify_imports.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/validation/report.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    },
+    {
+      "path": "system/validation_report.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "system/worker_supervision.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "task_agent.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 2
+    },
+    {
+      "path": "task_queue.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 5
+    },
+    {
+      "path": "vectordb.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 4
+    },
+    {
+      "path": "workflow_engine.py",
+      "reason": "has_inbound_imports",
+      "inbound_count": 1
+    }
+  ],
+  "needs_review": [
+    {
+      "path": "services/chat_service.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/command_runner/audit.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/command_runner/timeout.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/developer_worker.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/executive_runtime.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/file_ops/audit.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/file_ops/copy.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/file_ops/move.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/file_ops/validators.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/knowledge_service.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/preflight_service.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/repository_governor.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/repository_health.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/runtime.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/supervisor.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/task_planner.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "services/worker_runtime.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/agent_runtime.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/autonomous_governance.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/capability_registry_v3.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/capability_system.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/constitution.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/distributed_backend.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/distributed_routing.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/event_stream.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/event_system.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/evolution_system.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/facade_policy.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/founder_control.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/governance.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/governance_audit.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/observability/healing.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/observability_layer.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/redis_event_bus.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/rule_engine_v2.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/scheduler_system.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/security/approval.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/security/emergency.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/security/grant_state.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/security/grant_store.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/security/write_gateway.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/system_awareness.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/task_runtime.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/tools/refactor/file_ops.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/tools/refactor/migrate_module.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    },
+    {
+      "path": "system/ws_subscriptions.py",
+      "reason": "runtime_area_no_static_inbound_imports"
+    }
+  ],
+  "possible_dead_code": [
+    {
+      "path": "admin.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "ai_ceo.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "ai_governance.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "answer_validator.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "audit_log.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "auth.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "auto_reindex.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "bootstrap/lifecycle.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "bootstrap/router_registry.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "brain_agent.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "cache_service.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "change_detector.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "chat.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "chat_engine.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "chunking.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "citation_engine.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "context_builder.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "context_ranker.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "continuous_improvement.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "conversation_memory.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "cosine.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "decision_engine.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "document_cache.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "document_ranker.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "embedding_cache.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "exceptions.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "feedback_engine.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "goal_manager.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "hallucination_guard.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/awareness/awareness_manager.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/awareness/capability_observer.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/awareness/configuration_observer.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/capability.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/discovery.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/execution_plan_adapter.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/governance.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/health.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/memory.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/observation/observation_result.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/observation/repository_observer.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/observation/runtime_observer.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/observation/tool_observer.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/planner.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/registry.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/relationship.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/repository_adapter.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/repository_scanner.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/runtime.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/runtime_observer.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/self_state.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/system_model.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/system_node.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "kernel/tool_registry.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "knowledge/index.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "knowledge/models.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "knowledge/service.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "knowledge_evolution.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "knowledge_graph.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "learning_engine.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "legacy/sprint2_integration.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "legacy/sync_job.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "logger.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "long_term_memory.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "master_planner.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "mcp.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "metadata_engine.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "metrics.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "nervous_system/event_bus.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "nightly_sync.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "orchestrator.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "pdf_reader.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "performance_monitor.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "prompt.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "prompt_manager.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "quality_score.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "query_planner.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "rag/rag.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "rag/vectordb.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "reflection_engine.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "request_middleware.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "research_agent.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "response.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "rule_engine.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "scheduler.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "security_layer.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "self_improvement.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "settings.py",
+      "reason": "no_static_inbound_imports"
+    },
+    {
+      "path": "tool_registry.py",
+      "reason": "no_static_inbound_imports"
+    }
+  ],
+  "inbound": {
+    "admin.py": [],
+    "agent_orchestrator.py": [
+      "worker/main.py"
+    ],
+    "ai_ceo.py": [],
+    "ai_governance.py": [],
+    "answer_validator.py": [],
+    "api/bootstrap.py": [],
+    "api/chat.py": [],
+    "api/command_runner.py": [
+      "app.py"
+    ],
+    "api/debug.py": [
+      "app.py",
+      "bootstrap/router_registry.py"
+    ],
+    "api/deployment.py": [
+      "app.py",
+      "bootstrap/router_registry.py"
+    ],
+    "api/developer.py": [
+      "app.py"
+    ],
+    "api/digital_twin.py": [
+      "app.py",
+      "bootstrap/router_registry.py"
+    ],
+    "api/drive_manage.py": [],
+    "api/execute.py": [
+      "app.py"
+    ],
+    "api/github.py": [
+      "app.py"
+    ],
+    "api/graph.py": [
+      "app.py",
+      "bootstrap/router_registry.py"
+    ],
+    "api/health.py": [],
+    "api/kernel.py": [],
+    "api/knowledge.py": [
+      "app.py"
+    ],
+    "api/mcp.py": [
+      "api/system.py",
+      "app.py"
+    ],
+    "api/observability_tools.py": [
+      "app.py"
+    ],
+    "api/planner.py": [],
+    "api/rag_runtime.py": [
+      "app.py"
+    ],
+    "api/repo.py": [
+      "app.py"
+    ],
+    "api/repository.py": [],
+    "api/runtime.py": [
+      "app.py",
+      "bootstrap/router_registry.py"
+    ],
+    "api/system.py": [
+      "app.py",
+      "bootstrap/router_registry.py"
+    ],
+    "api/system_awareness.py": [
+      "app.py"
+    ],
+    "api/system_events.py": [],
+    "api/system_health.py": [],
+    "api/system_runtime.py": [
+      "app.py",
+      "bootstrap/router_registry.py"
+    ],
+    "api/system_scheduler.py": [],
+    "api/system_startup.py": [
+      "app.py"
+    ],
+    "api/system_status.py": [
+      "app.py"
+    ],
+    "api/worker.py": [],
+    "api/workspace.py": [
+      "app.py"
+    ],
+    "app.py": [],
+    "audit_log.py": [],
+    "auth.py": [],
+    "auto_reindex.py": [],
+    "bootstrap/lifecycle.py": [],
+    "bootstrap/router_registry.py": [],
+    "brain_agent.py": [],
+    "cache_service.py": [],
+    "change_detector.py": [],
+    "chat.py": [],
+    "chat_engine.py": [],
+    "chunking.py": [],
+    "citation_engine.py": [],
+    "config.py": [
+      "api/chat.py",
+      "api/command_runner.py",
+      "api/health.py",
+      "api/mcp.py",
+      "app.py",
+      "drive.py",
+      "kernel/awareness/configuration_observer.py",
+      "kernel/registry.py",
+      "knowledge/drive.py",
+      "mcp.py",
+      "rag/embedding.py",
+      "rag/vectordb.py",
+      "services/bootstrap_service.py",
+      "vectordb.py"
+    ],
+    "context_builder.py": [],
+    "context_ranker.py": [],
+    "continuous_improvement.py": [],
+    "conversation_memory.py": [],
+    "cosine.py": [],
+    "decision_engine.py": [],
+    "document_cache.py": [],
+    "document_ranker.py": [],
+    "drive.py": [
+      "api/chat.py",
+      "api/drive_manage.py",
+      "api/mcp.py",
+      "api/system.py",
+      "app.py",
+      "knowledge/drive.py",
+      "mcp.py",
+      "rag/indexer.py",
+      "services/bootstrap_service.py",
+      "services/system_service.py",
+      "services/workspace.py",
+      "services/workspace_service.py"
+    ],
+    "embedding_cache.py": [],
+    "exceptions.py": [],
+    "feedback_engine.py": [],
+    "goal_manager.py": [],
+    "hallucination_guard.py": [],
+    "health.py": [
+      "kernel/kernel.py"
+    ],
+    "kernel/awareness/awareness_manager.py": [],
+    "kernel/awareness/capability_observer.py": [],
+    "kernel/awareness/configuration_observer.py": [],
+    "kernel/capability.py": [],
+    "kernel/discovery.py": [],
+    "kernel/execution_plan_adapter.py": [],
+    "kernel/governance.py": [],
+    "kernel/health.py": [],
+    "kernel/kernel.py": [
+      "api/planner.py",
+      "api/system_awareness.py",
+      "worker/main.py"
+    ],
+    "kernel/memory.py": [],
+    "kernel/observation/observation_result.py": [],
+    "kernel/observation/repository_observer.py": [],
+    "kernel/observation/runtime_observer.py": [],
+    "kernel/observation/system_observer.py": [
+      "api/system_awareness.py"
+    ],
+    "kernel/observation/tool_observer.py": [],
+    "kernel/planner.py": [],
+    "kernel/registry.py": [],
+    "kernel/relationship.py": [],
+    "kernel/repository_adapter.py": [],
+    "kernel/repository_scanner.py": [],
+    "kernel/runtime.py": [],
+    "kernel/runtime_observer.py": [],
+    "kernel/self_state.py": [],
+    "kernel/system_model.py": [],
+    "kernel/system_node.py": [],
+    "kernel/tool_registry.py": [],
+    "knowledge/capture.py": [
+      "api/knowledge.py"
+    ],
+    "knowledge/drive.py": [
+      "knowledge/capture.py"
+    ],
+    "knowledge/index.py": [],
+    "knowledge/markdown.py": [
+      "knowledge/capture.py"
+    ],
+    "knowledge/models.py": [],
+    "knowledge/service.py": [],
+    "knowledge/template.py": [
+      "knowledge/capture.py"
+    ],
+    "knowledge_evolution.py": [],
+    "knowledge_graph.py": [],
+    "learning_engine.py": [],
+    "legacy/sprint2_integration.py": [],
+    "legacy/sync_job.py": [],
+    "logger.py": [],
+    "long_term_memory.py": [],
+    "master_planner.py": [],
+    "mcp.py": [],
+    "metadata_engine.py": [],
+    "metrics.py": [],
+    "multi_agent_manager.py": [
+      "system/runtime/agent.py"
+    ],
+    "nervous_system/event_bus.py": [],
+    "nightly_sync.py": [],
+    "orchestrator.py": [],
+    "pdf_reader.py": [],
+    "performance_monitor.py": [],
+    "planner_agent.py": [
+      "system/runtime/agent.py"
+    ],
+    "prompt.py": [],
+    "prompt_manager.py": [],
+    "quality_score.py": [],
+    "query_planner.py": [],
+    "rag/chunker.py": [
+      "rag/indexer.py"
+    ],
+    "rag/embedding.py": [
+      "rag/indexer.py",
+      "rag/search.py"
+    ],
+    "rag/indexer.py": [
+      "app.py"
+    ],
+    "rag/rag.py": [],
+    "rag/search.py": [
+      "api/rag_runtime.py",
+      "app.py"
+    ],
+    "rag/vectordb.py": [],
+    "reflection_engine.py": [],
+    "request_middleware.py": [],
+    "research_agent.py": [],
+    "response.py": [],
+    "rule_engine.py": [],
+    "runtime_health.py": [
+      "api/system.py",
+      "system/observability/layer.py"
+    ],
+    "scheduler.py": [],
+    "scripts/activate_deploy_workflow.py": [],
+    "scripts/health_check.py": [],
+    "security_layer.py": [],
+    "self_improvement.py": [],
+    "services/action_registry.py": [
+      "api/mcp.py"
+    ],
+    "services/ai_runtime.py": [
+      "api/system.py",
+      "services/runtime.py"
+    ],
+    "services/ai_worker.py": [
+      "services/worker_runner.py"
+    ],
+    "services/background_loop.py": [
+      "api/worker.py"
+    ],
+    "services/bootstrap_service.py": [
+      "api/bootstrap.py",
+      "api/mcp.py"
+    ],
+    "services/chat_service.py": [],
+    "services/code_transaction.py": [
+      "api/developer.py"
+    ],
+    "services/code_transformer.py": [
+      "api/developer.py",
+      "services/code_transaction.py"
+    ],
+    "services/command_runner/allowlist.py": [
+      "api/command_runner.py"
+    ],
+    "services/command_runner/audit.py": [],
+    "services/command_runner/sandbox.py": [
+      "api/command_runner.py"
+    ],
+    "services/command_runner/timeout.py": [],
+    "services/dependency_analyzer.py": [
+      "services/repo_refactor.py",
+      "services/repository_manager.py"
+    ],
+    "services/developer_runtime.py": [
+      "api/system.py",
+      "services/ai_worker.py",
+      "services/workflow_engine.py"
+    ],
+    "services/developer_worker.py": [],
+    "services/execution_engine.py": [
+      "mcp.py",
+      "services/action_registry.py",
+      "task_agent.py"
+    ],
+    "services/execution_queue.py": [
+      "api/worker.py",
+      "services/supervisor.py",
+      "services/worker_pool.py",
+      "services/worker_runner.py"
+    ],
+    "services/executive_runtime.py": [],
+    "services/file_ops/audit.py": [],
+    "services/file_ops/copy.py": [],
+    "services/file_ops/move.py": [],
+    "services/file_ops/validators.py": [],
+    "services/github_runtime.py": [
+      "api/github.py",
+      "api/system.py",
+      "kernel/discovery.py",
+      "kernel/observation/tool_observer.py",
+      "services/code_transformer.py",
+      "services/dependency_analyzer.py",
+      "services/developer_runtime.py",
+      "services/import_rewriter.py",
+      "services/repo_refactor.py",
+      "services/repository_health.py",
+      "services/repository_manager.py",
+      "services/repository_tree_loader.py",
+      "services/runtime_diagnostic.py",
+      "services/safe_move_engine.py",
+      "system/security/write_gateway.py"
+    ],
+    "services/github_service.py": [
+      "api/mcp.py",
+      "mcp.py",
+      "services/execution_engine.py"
+    ],
+    "services/health_runtime.py": [
+      "api/system.py"
+    ],
+    "services/import_rewriter.py": [
+      "services/safe_move_engine.py"
+    ],
+    "services/kernel.py": [
+      "api/kernel.py"
+    ],
+    "services/knowledge_service.py": [],
+    "services/observability_tools/cloud.py": [
+      "api/observability_tools.py"
+    ],
+    "services/observability_tools/github_checks.py": [
+      "api/observability_tools.py"
+    ],
+    "services/preflight_service.py": [],
+    "services/repo_refactor.py": [
+      "api/repo.py"
+    ],
+    "services/repository_governor.py": [],
+    "services/repository_health.py": [],
+    "services/repository_manager.py": [
+      "api/repository.py"
+    ],
+    "services/repository_observer.py": [
+      "api/system_status.py"
+    ],
+    "services/repository_tree_loader.py": [
+      "api/system_awareness.py"
+    ],
+    "services/runtime.py": [],
+    "services/runtime_diagnostic.py": [
+      "api/system.py",
+      "services/ai_worker.py"
+    ],
+    "services/safe_move_engine.py": [
+      "services/repo_refactor.py",
+      "services/repository_manager.py"
+    ],
+    "services/security_center.py": [
+      "services/ai_worker.py"
+    ],
+    "services/smoke_tests/foundation.py": [
+      "api/observability_tools.py"
+    ],
+    "services/supervisor.py": [],
+    "services/system_service.py": [
+      "api/mcp.py",
+      "api/system.py"
+    ],
+    "services/task_planner.py": [],
+    "services/worker_pool.py": [
+      "services/supervisor.py"
+    ],
+    "services/worker_registry.py": [
+      "api/worker.py",
+      "services/worker_runner.py"
+    ],
+    "services/worker_runner.py": [
+      "api/worker.py",
+      "services/background_loop.py"
+    ],
+    "services/worker_runtime.py": [],
+    "services/workflow_engine.py": [
+      "api/developer.py",
+      "services/action_registry.py",
+      "services/developer_worker.py",
+      "services/worker_runtime.py"
+    ],
+    "services/workspace.py": [
+      "services/system_service.py"
+    ],
+    "services/workspace_service.py": [
+      "api/chat.py",
+      "api/workspace.py"
+    ],
+    "settings.py": [],
+    "system/adaptation_engine.py": [
+      "system/evolution_system.py",
+      "system/governance_pkg/autonomy.py"
+    ],
+    "system/agent_runtime.py": [],
+    "system/autonomous_governance.py": [],
+    "system/bootstrap.py": [
+      "bootstrap/lifecycle.py"
+    ],
+    "system/capability/dependencies.py": [
+      "system/capability_dependencies.py"
+    ],
+    "system/capability/evolution.py": [
+      "system/capability_evolution.py"
+    ],
+    "system/capability/lineage.py": [
+      "system/capability_lineage.py"
+    ],
+    "system/capability/registry.py": [
+      "system/capability_registry_v3.py"
+    ],
+    "system/capability/risk.py": [
+      "system/dependency_risk.py"
+    ],
+    "system/capability_dependencies.py": [
+      "system/capability_system.py"
+    ],
+    "system/capability_evolution.py": [
+      "system/capability_system.py"
+    ],
+    "system/capability_lineage.py": [
+      "api/graph.py",
+      "system/capability_system.py"
+    ],
+    "system/capability_registry_v3.py": [],
+    "system/capability_system.py": [],
+    "system/constitution.py": [],
+    "system/dependency_risk.py": [
+      "system/capability_system.py"
+    ],
+    "system/digital_twin.py": [
+      "system/observability/layer.py"
+    ],
+    "system/digital_twin_pkg/runtime.py": [
+      "system/digital_twin.py"
+    ],
+    "system/digital_twin_pkg/simulation.py": [
+      "system/digital_twin_simulation.py"
+    ],
+    "system/digital_twin_simulation.py": [
+      "api/digital_twin.py"
+    ],
+    "system/distributed_backend.py": [],
+    "system/distributed_routing.py": [],
+    "system/event_ack.py": [
+      "system/event_system.py"
+    ],
+    "system/event_ack_store.py": [
+      "system/event_system.py"
+    ],
+    "system/event_bus.py": [
+      "system/event_system.py",
+      "system/events/stream.py",
+      "system/evolution/adaptation.py",
+      "system/evolution/engine.py"
+    ],
+    "system/event_retention.py": [
+      "api/system_events.py",
+      "system/event_system.py",
+      "system/scheduler/retention_worker.py"
+    ],
+    "system/event_stream.py": [],
+    "system/event_subscriptions.py": [
+      "system/event_system.py"
+    ],
+    "system/event_system.py": [],
+    "system/events/ack.py": [
+      "system/event_ack.py"
+    ],
+    "system/events/ack_store.py": [
+      "system/event_ack_store.py",
+      "system/events/ack.py"
+    ],
+    "system/events/backend.py": [
+      "system/distributed_backend.py"
+    ],
+    "system/events/bus.py": [
+      "system/event_bus.py"
+    ],
+    "system/events/redis_adapter.py": [
+      "system/redis_event_bus.py"
+    ],
+    "system/events/retention.py": [
+      "system/event_retention.py"
+    ],
+    "system/events/routing.py": [
+      "system/distributed_routing.py"
+    ],
+    "system/events/stream.py": [
+      "system/event_stream.py"
+    ],
+    "system/events/subscriptions.py": [
+      "system/event_subscriptions.py"
+    ],
+    "system/events/ws.py": [
+      "system/ws_subscriptions.py"
+    ],
+    "system/evolution/adaptation.py": [
+      "system/adaptation_engine.py",
+      "system/evolution/engine.py"
+    ],
+    "system/evolution/engine.py": [
+      "system/evolution_engine.py"
+    ],
+    "system/evolution/history.py": [
+      "system/evolution/engine.py",
+      "system/evolution_history.py"
+    ],
+    "system/evolution/learning.py": [
+      "system/evolution/adaptation.py",
+      "system/evolution/engine.py",
+      "system/learning_engine.py"
+    ],
+    "system/evolution/reflection.py": [
+      "system/evolution/engine.py",
+      "system/evolution/learning.py",
+      "system/reflection_engine.py"
+    ],
+    "system/evolution_engine.py": [
+      "system/evolution_system.py",
+      "system/scheduler/evolution_worker.py"
+    ],
+    "system/evolution_history.py": [
+      "system/evolution_system.py"
+    ],
+    "system/evolution_system.py": [],
+    "system/evolution_worker.py": [
+      "system/scheduler/runtime.py",
+      "system/scheduler_system.py"
+    ],
+    "system/facade_policy.py": [],
+    "system/founder_control.py": [],
+    "system/governance.py": [],
+    "system/governance_audit.py": [],
+    "system/governance_pkg/audit.py": [
+      "system/governance_audit.py",
+      "system/governance_pkg/autonomy.py"
+    ],
+    "system/governance_pkg/autonomy.py": [
+      "system/autonomous_governance.py"
+    ],
+    "system/governance_pkg/constitution_runtime.py": [
+      "system/constitution.py"
+    ],
+    "system/governance_pkg/founder.py": [
+      "system/founder_control.py"
+    ],
+    "system/governance_pkg/governance.py": [
+      "system/governance.py"
+    ],
+    "system/knowledge/graph.py": [
+      "system/knowledge_graph.py"
+    ],
+    "system/knowledge_graph.py": [
+      "system/evolution/engine.py"
+    ],
+    "system/learning_engine.py": [
+      "system/evolution_system.py",
+      "system/governance_pkg/autonomy.py"
+    ],
+    "system/observability/awareness.py": [
+      "system/observability/layer.py",
+      "system/system_awareness.py"
+    ],
+    "system/observability/healing.py": [],
+    "system/observability/layer.py": [
+      "system/observability_layer.py"
+    ],
+    "system/observability_layer.py": [],
+    "system/policy_engine.py": [
+      "system/governance_pkg/audit.py"
+    ],
+    "system/production_scheduler.py": [
+      "bootstrap/lifecycle.py",
+      "system/scheduler_system.py"
+    ],
+    "system/redis_event_bus.py": [],
+    "system/reflection_engine.py": [
+      "system/evolution_system.py",
+      "system/governance_pkg/autonomy.py"
+    ],
+    "system/retention_worker.py": [
+      "system/scheduler/runtime.py",
+      "system/scheduler_system.py"
+    ],
+    "system/rule_engine.py": [
+      "system/governance_pkg/audit.py"
+    ],
+    "system/rule_engine_v2.py": [],
+    "system/rules/engine.py": [
+      "system/rule_engine.py"
+    ],
+    "system/rules/engine_v2.py": [
+      "system/rule_engine_v2.py"
+    ],
+    "system/rules/policy.py": [
+      "system/policy_engine.py",
+      "system/rules/engine.py"
+    ],
+    "system/runtime/agent.py": [
+      "system/agent_runtime.py"
+    ],
+    "system/runtime/bootstrap.py": [
+      "system/bootstrap.py"
+    ],
+    "system/runtime/task.py": [
+      "system/task_runtime.py"
+    ],
+    "system/runtime_bootstrap.py": [
+      "api/system_scheduler.py"
+    ],
+    "system/scheduler/bootstrap.py": [
+      "system/runtime_bootstrap.py"
+    ],
+    "system/scheduler/evolution_worker.py": [
+      "system/evolution_worker.py"
+    ],
+    "system/scheduler/production.py": [
+      "system/production_scheduler.py",
+      "system/scheduler/bootstrap.py"
+    ],
+    "system/scheduler/retention_worker.py": [
+      "system/retention_worker.py"
+    ],
+    "system/scheduler/runtime.py": [
+      "system/scheduler_runtime.py"
+    ],
+    "system/scheduler/supervision.py": [
+      "system/worker_supervision.py"
+    ],
+    "system/scheduler_runtime.py": [
+      "api/system_scheduler.py",
+      "system/scheduler_system.py"
+    ],
+    "system/scheduler_system.py": [],
+    "system/security/approval.py": [],
+    "system/security/audit.py": [
+      "system/security/write_gateway.py"
+    ],
+    "system/security/emergency.py": [],
+    "system/security/grant_manager.py": [
+      "system/security/write_gateway.py"
+    ],
+    "system/security/grant_state.py": [],
+    "system/security/grant_store.py": [],
+    "system/security/unlock.py": [
+      "services/action_registry.py",
+      "system/security/write_gateway.py"
+    ],
+    "system/security/write_gateway.py": [],
+    "system/self_healing.py": [
+      "system/observability/healing.py"
+    ],
+    "system/system_awareness.py": [],
+    "system/task_runtime.py": [],
+    "system/tools/refactor/copy_module.py": [
+      "system/tools/refactor/migrate_module.py"
+    ],
+    "system/tools/refactor/create_shim.py": [
+      "system/tools/refactor/migrate_module.py"
+    ],
+    "system/tools/refactor/file_ops.py": [],
+    "system/tools/refactor/migrate_module.py": [],
+    "system/tools/refactor/verify_imports.py": [
+      "system/tools/refactor/migrate_module.py"
+    ],
+    "system/validation/report.py": [
+      "system/validation_report.py"
+    ],
+    "system/validation_report.py": [
+      "scripts/health_check.py",
+      "tests/test_validation_contract.py"
+    ],
+    "system/worker_supervision.py": [
+      "api/system_scheduler.py",
+      "system/scheduler_system.py"
+    ],
+    "system/ws_subscriptions.py": [],
+    "task_agent.py": [
+      "agent_orchestrator.py",
+      "workflow_engine.py"
+    ],
+    "task_queue.py": [
+      "agent_orchestrator.py",
+      "kernel/execution_plan_adapter.py",
+      "kernel/runtime.py",
+      "system/runtime/task.py",
+      "workflow_engine.py"
+    ],
+    "tests/test_validation_contract.py": [],
+    "tool_registry.py": [],
+    "tools/architecture_audit.py": [],
+    "tools/dependency_graph.py": [],
+    "tools/domain_classifier.py": [],
+    "tools/export_repo_manifest.py": [],
+    "tools/generate_all_artifacts.py": [],
+    "tools/import_safety.py": [],
+    "tools/move_recommendation.py": [],
+    "tools/orphan_detector.py": [],
+    "tools/repo_snapshot.py": [],
+    "tools/repo_tree.py": [],
+    "tools/root_audit.py": [],
+    "tools/root_cleanup_candidates.py": [],
+    "tools/root_hotspots.py": [],
+    "vectordb.py": [
+      "api/system.py",
+      "app.py",
+      "rag/indexer.py",
+      "rag/search.py"
+    ],
+    "worker/main.py": [],
+    "workflow_engine.py": [
+      "agent_orchestrator.py"
+    ]
+  },
+  "outbound": {
+    "admin.py": [
+      "fastapi",
+      "services.index_service"
+    ],
+    "agent_orchestrator.py": [
+      "__future__",
+      "dataclasses",
+      "enum",
+      "task_agent",
+      "task_queue",
+      "typing",
+      "workflow_engine"
+    ],
+    "ai_ceo.py": [],
+    "ai_governance.py": [],
+    "answer_validator.py": [],
+    "api/bootstrap.py": [
+      "flask",
+      "services.bootstrap_service"
+    ],
+    "api/chat.py": [
+      "config",
+      "drive",
+      "fastapi",
+      "fastapi.responses",
+      "openai",
+      "pydantic",
+      "services.workspace_service"
+    ],
+    "api/command_runner.py": [
+      "config",
+      "fastapi",
+      "services.command_runner.allowlist",
+      "services.command_runner.sandbox"
+    ],
+    "api/debug.py": [
+      "fastapi",
+      "os"
+    ],
+    "api/deployment.py": [
+      "fastapi",
+      "os",
+      "pydantic",
+      "requests",
+      "subprocess",
+      "typing"
+    ],
+    "api/developer.py": [
+      "fastapi",
+      "pydantic",
+      "services.code_transaction",
+      "services.code_transformer",
+      "services.workflow_engine",
+      "typing"
+    ],
+    "api/digital_twin.py": [
+      "fastapi",
+      "system.digital_twin_simulation"
+    ],
+    "api/drive_manage.py": [
+      "drive",
+      "fastapi",
+      "fastapi.responses",
+      "pydantic",
+      "typing"
+    ],
+    "api/execute.py": [
+      "__future__",
+      "fastapi",
+      "pydantic",
+      "typing"
+    ],
+    "api/github.py": [
+      "ast",
+      "difflib",
+      "fastapi",
+      "pydantic",
+      "re",
+      "services.github_runtime",
+      "time",
+      "typing"
+    ],
+    "api/graph.py": [
+      "fastapi",
+      "system.capability_lineage"
+    ],
+    "api/health.py": [
+      "__future__",
+      "config",
+      "fastapi"
+    ],
+    "api/kernel.py": [
+      "__future__",
+      "fastapi",
+      "pydantic",
+      "services.kernel",
+      "typing"
+    ],
+    "api/knowledge.py": [
+      "fastapi",
+      "knowledge.capture",
+      "pydantic",
+      "typing"
+    ],
+    "api/mcp.py": [
+      "config",
+      "drive",
+      "fastapi",
+      "openai",
+      "os",
+      "pydantic",
+      "requests",
+      "services.action_registry",
+      "services.bootstrap_service",
+      "services.github_service",
+      "services.system_service",
+      "system.security",
+      "typing"
+    ],
+    "api/observability_tools.py": [
+      "fastapi",
+      "os",
+      "services.observability_tools.cloud",
+      "services.observability_tools.github_checks",
+      "services.smoke_tests.foundation"
+    ],
+    "api/planner.py": [
+      "__future__",
+      "fastapi",
+      "kernel.kernel",
+      "pydantic",
+      "typing"
+    ],
+    "api/rag_runtime.py": [
+      "fastapi",
+      "rag.search"
+    ],
+    "api/repo.py": [
+      "__future__",
+      "fastapi",
+      "pydantic",
+      "services.repo_refactor"
+    ],
+    "api/repository.py": [
+      "__future__",
+      "fastapi",
+      "pydantic",
+      "services.repository_manager"
+    ],
+    "api/runtime.py": [
+      "fastapi",
+      "traceback"
+    ],
+    "api/system.py": [
+      "api.mcp",
+      "drive",
+      "fastapi",
+      "pathlib",
+      "pydantic",
+      "runtime_health",
+      "services.ai_runtime",
+      "services.developer_runtime",
+      "services.github_runtime",
+      "services.health_runtime",
+      "services.runtime_diagnostic",
+      "services.system_service",
+      "typing",
+      "vectordb"
+    ],
+    "api/system_awareness.py": [
+      "__future__",
+      "fastapi",
+      "kernel.kernel",
+      "kernel.observation.system_observer",
+      "pydantic",
+      "services.repository_tree_loader",
+      "typing"
+    ],
+    "api/system_events.py": [
+      "fastapi",
+      "system",
+      "system.event_retention"
+    ],
+    "api/system_health.py": [
+      "fastapi",
+      "system"
+    ],
+    "api/system_runtime.py": [
+      "asyncio",
+      "fastapi",
+      "fastapi.responses",
+      "json"
+    ],
+    "api/system_scheduler.py": [
+      "fastapi",
+      "system.runtime_bootstrap",
+      "system.scheduler_runtime",
+      "system.worker_supervision"
+    ],
+    "api/system_startup.py": [
+      "__future__",
+      "datetime",
+      "fastapi",
+      "os",
+      "typing"
+    ],
+    "api/system_status.py": [
+      "fastapi",
+      "os",
+      "services.repository_observer"
+    ],
+    "api/worker.py": [
+      "__future__",
+      "fastapi",
+      "pydantic",
+      "services.background_loop",
+      "services.execution_queue",
+      "services.worker_registry",
+      "services.worker_runner",
+      "typing"
+    ],
+    "api/workspace.py": [
+      "fastapi",
+      "services.workspace_service"
+    ],
+    "app.py": [
+      "api.admin",
+      "api.command_runner",
+      "api.debug",
+      "api.deployment",
+      "api.developer",
+      "api.digital_twin",
+      "api.execute",
+      "api.github",
+      "api.graph",
+      "api.knowledge",
+      "api.mcp",
+      "api.observability_tools",
+      "api.rag_runtime",
+      "api.repo",
+      "api.runtime",
+      "api.system",
+      "api.system_awareness",
+      "api.system_runtime",
+      "api.system_startup",
+      "api.system_status",
+      "api.workspace",
+      "bootstrap.boot",
+      "config",
+      "drive",
+      "fastapi",
+      "fastapi.middleware.cors",
+      "fastapi.responses",
+      "fastapi.staticfiles",
+      "openai",
+      "os",
+      "pydantic",
+      "rag.indexer",
+      "rag.search",
+      "services.production_scheduler",
+      "traceback",
+      "typing",
+      "vectordb"
+    ],
+    "audit_log.py": [
+      "datetime"
+    ],
+    "auth.py": [
+      "fastapi"
+    ],
+    "auto_reindex.py": [
+      "services.embedding_pipeline",
+      "services.sync_service"
+    ],
+    "bootstrap/lifecycle.py": [
+      "system.bootstrap",
+      "system.production_scheduler"
+    ],
+    "bootstrap/router_registry.py": [
+      "api.debug",
+      "api.deployment",
+      "api.digital_twin",
+      "api.graph",
+      "api.runtime",
+      "api.system",
+      "api.system_runtime"
+    ],
+    "brain_agent.py": [
+      "services.semantic_search"
+    ],
+    "cache_service.py": [],
+    "change_detector.py": [],
+    "chat.py": [
+      "pydantic"
+    ],
+    "chat_engine.py": [
+      "agents.brain_agent",
+      "services.context_builder"
+    ],
+    "chunking.py": [],
+    "citation_engine.py": [],
+    "config.py": [
+      "os",
+      "typing"
+    ],
+    "context_builder.py": [],
+    "context_ranker.py": [],
+    "continuous_improvement.py": [],
+    "conversation_memory.py": [],
+    "cosine.py": [
+      "math"
+    ],
+    "decision_engine.py": [],
+    "document_cache.py": [
+      "json",
+      "pathlib"
+    ],
+    "document_ranker.py": [],
+    "drive.py": [
+      "config",
+      "docx",
+      "fitz",
+      "functools",
+      "google.oauth2",
+      "google.oauth2.credentials",
+      "googleapiclient.discovery",
+      "googleapiclient.http",
+      "io",
+      "json",
+      "os",
+      "pandas",
+      "typing",
+      "unicodedata"
+    ],
+    "embedding_cache.py": [
+      "hashlib"
+    ],
+    "exceptions.py": [],
+    "feedback_engine.py": [],
+    "goal_manager.py": [],
+    "hallucination_guard.py": [],
+    "health.py": [
+      "fastapi"
+    ],
+    "kernel/awareness/awareness_manager.py": [
+      "__future__",
+      "capability_observer",
+      "configuration_observer",
+      "dataclasses",
+      "datetime",
+      "observation.system_observer",
+      "runtime_observer",
+      "self_state",
+      "typing"
+    ],
+    "kernel/awareness/capability_observer.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "kernel/awareness/configuration_observer.py": [
+      "__future__",
+      "config",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "kernel/capability.py": [
+      "__future__",
+      "dataclasses",
+      "typing"
+    ],
+    "kernel/discovery.py": [
+      "__future__",
+      "ast",
+      "dataclasses",
+      "datetime",
+      "relationship",
+      "services.github_runtime",
+      "system_node",
+      "typing"
+    ],
+    "kernel/execution_plan_adapter.py": [
+      "__future__",
+      "dataclasses",
+      "task_queue",
+      "typing"
+    ],
+    "kernel/governance.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "kernel/health.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "kernel/kernel.py": [
+      "__future__",
+      "awareness.awareness_manager",
+      "capability",
+      "dataclasses",
+      "datetime",
+      "discovery",
+      "governance",
+      "health",
+      "memory",
+      "planner",
+      "registry",
+      "repository_adapter",
+      "runtime",
+      "system_model",
+      "typing"
+    ],
+    "kernel/memory.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing",
+      "uuid"
+    ],
+    "kernel/observation/observation_result.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "relationship",
+      "system_node",
+      "typing"
+    ],
+    "kernel/observation/repository_observer.py": [
+      "__future__",
+      "dataclasses",
+      "observation_result",
+      "typing"
+    ],
+    "kernel/observation/runtime_observer.py": [
+      "__future__",
+      "dataclasses",
+      "observation_result",
+      "typing"
+    ],
+    "kernel/observation/system_observer.py": [
+      "__future__",
+      "dataclasses",
+      "observation_result",
+      "repository_observer",
+      "runtime_observer",
+      "tool_observer",
+      "typing"
+    ],
+    "kernel/observation/tool_observer.py": [
+      "__future__",
+      "dataclasses",
+      "observation_result",
+      "services.github_runtime",
+      "typing"
+    ],
+    "kernel/planner.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing",
+      "uuid"
+    ],
+    "kernel/registry.py": [
+      "__future__",
+      "config",
+      "dataclasses",
+      "typing"
+    ],
+    "kernel/relationship.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "enum",
+      "typing"
+    ],
+    "kernel/repository_adapter.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "repository_scanner",
+      "typing"
+    ],
+    "kernel/repository_scanner.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "kernel/runtime.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "task_queue",
+      "typing"
+    ],
+    "kernel/runtime_observer.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "kernel/self_state.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "kernel/system_model.py": [
+      "__future__",
+      "dataclasses",
+      "relationship",
+      "system_node",
+      "typing"
+    ],
+    "kernel/system_node.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "enum",
+      "typing"
+    ],
+    "kernel/tool_registry.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "enum",
+      "typing"
+    ],
+    "knowledge/capture.py": [
+      "knowledge.drive",
+      "knowledge.markdown",
+      "knowledge.template"
+    ],
+    "knowledge/drive.py": [
+      "config",
+      "drive",
+      "googleapiclient.errors",
+      "googleapiclient.http",
+      "typing"
+    ],
+    "knowledge/index.py": [],
+    "knowledge/markdown.py": [
+      "re",
+      "unicodedata"
+    ],
+    "knowledge/models.py": [
+      "pydantic",
+      "typing"
+    ],
+    "knowledge/service.py": [],
+    "knowledge/template.py": [
+      "datetime"
+    ],
+    "knowledge_evolution.py": [],
+    "knowledge_graph.py": [
+      "collections"
+    ],
+    "learning_engine.py": [],
+    "legacy/sprint2_integration.py": [],
+    "legacy/sync_job.py": [
+      "services.sync_service"
+    ],
+    "logger.py": [
+      "logging"
+    ],
+    "long_term_memory.py": [
+      "json",
+      "pathlib"
+    ],
+    "master_planner.py": [],
+    "mcp.py": [
+      "config",
+      "drive",
+      "fastapi",
+      "openai",
+      "pydantic",
+      "requests",
+      "services.execution_engine",
+      "services.github_service",
+      "typing"
+    ],
+    "metadata_engine.py": [],
+    "metrics.py": [],
+    "multi_agent_manager.py": [],
+    "nervous_system/event_bus.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "nightly_sync.py": [
+      "services.recursive_indexer"
+    ],
+    "orchestrator.py": [],
+    "pdf_reader.py": [],
+    "performance_monitor.py": [
+      "time"
+    ],
+    "planner_agent.py": [
+      "__future__",
+      "typing"
+    ],
+    "prompt.py": [],
+    "prompt_manager.py": [],
+    "quality_score.py": [],
+    "query_planner.py": [],
+    "rag/chunker.py": [],
+    "rag/embedding.py": [
+      "config",
+      "openai"
+    ],
+    "rag/indexer.py": [
+      "drive",
+      "qdrant_client.models",
+      "rag.chunker",
+      "rag.embedding",
+      "typing",
+      "uuid",
+      "vectordb"
+    ],
+    "rag/rag.py": [],
+    "rag/search.py": [
+      "rag.embedding",
+      "vectordb"
+    ],
+    "rag/vectordb.py": [
+      "config",
+      "qdrant_client",
+      "qdrant_client.models"
+    ],
+    "reflection_engine.py": [],
+    "request_middleware.py": [
+      "fastapi"
+    ],
+    "research_agent.py": [],
+    "response.py": [
+      "fastapi.responses"
+    ],
+    "rule_engine.py": [],
+    "runtime_health.py": [
+      "__future__",
+      "datetime",
+      "typing"
+    ],
+    "scheduler.py": [
+      "datetime"
+    ],
+    "scripts/activate_deploy_workflow.py": [
+      "base64",
+      "os",
+      "pathlib",
+      "requests",
+      "sys"
+    ],
+    "scripts/health_check.py": [
+      "system.validation_report"
+    ],
+    "security_layer.py": [],
+    "self_improvement.py": [],
+    "services/action_registry.py": [
+      "__future__",
+      "dataclasses",
+      "services.execution_engine",
+      "services.workflow_engine",
+      "system.security",
+      "system.security.unlock",
+      "typing"
+    ],
+    "services/ai_runtime.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "services/ai_worker.py": [
+      "__future__",
+      "datetime",
+      "services.developer_runtime",
+      "services.runtime_diagnostic",
+      "services.security_center",
+      "typing"
+    ],
+    "services/background_loop.py": [
+      "__future__",
+      "datetime",
+      "services.worker_runner",
+      "time",
+      "typing"
+    ],
+    "services/bootstrap_service.py": [
+      "config",
+      "drive"
+    ],
+    "services/chat_service.py": [],
+    "services/code_transaction.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "services.code_transformer",
+      "typing"
+    ],
+    "services/code_transformer.py": [
+      "__future__",
+      "ast",
+      "dataclasses",
+      "difflib",
+      "hashlib",
+      "services.github_runtime",
+      "typing"
+    ],
+    "services/command_runner/allowlist.py": [],
+    "services/command_runner/audit.py": [],
+    "services/command_runner/sandbox.py": [
+      "allowlist",
+      "audit",
+      "subprocess",
+      "timeout",
+      "typing"
+    ],
+    "services/command_runner/timeout.py": [],
+    "services/dependency_analyzer.py": [
+      "__future__",
+      "ast",
+      "dataclasses",
+      "services.github_runtime",
+      "typing"
+    ],
+    "services/developer_runtime.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "os",
+      "services.github_runtime",
+      "subprocess",
+      "sys",
+      "typing"
+    ],
+    "services/developer_worker.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "services.workflow_engine",
+      "typing"
+    ],
+    "services/execution_engine.py": [
+      "__future__",
+      "dataclasses",
+      "services.github_service",
+      "typing"
+    ],
+    "services/execution_queue.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "services/executive_runtime.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "services/file_ops/audit.py": [],
+    "services/file_ops/copy.py": [
+      "audit",
+      "validators"
+    ],
+    "services/file_ops/move.py": [
+      "audit",
+      "validators"
+    ],
+    "services/file_ops/validators.py": [],
+    "services/github_runtime.py": [
+      "__future__",
+      "base64",
+      "datetime",
+      "difflib",
+      "os",
+      "requests",
+      "time",
+      "typing"
+    ],
+    "services/github_service.py": [
+      "base64",
+      "os",
+      "requests",
+      "typing"
+    ],
+    "services/health_runtime.py": [
+      "__future__",
+      "datetime",
+      "requests",
+      "typing"
+    ],
+    "services/import_rewriter.py": [
+      "__future__",
+      "ast",
+      "dataclasses",
+      "services.github_runtime",
+      "typing"
+    ],
+    "services/kernel.py": [
+      "__future__",
+      "datetime",
+      "typing"
+    ],
+    "services/knowledge_service.py": [],
+    "services/observability_tools/cloud.py": [
+      "google.cloud",
+      "googleapiclient.discovery",
+      "os",
+      "typing"
+    ],
+    "services/observability_tools/github_checks.py": [
+      "os",
+      "requests",
+      "typing"
+    ],
+    "services/preflight_service.py": [
+      "typing"
+    ],
+    "services/repo_refactor.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "services.dependency_analyzer",
+      "services.github_runtime",
+      "services.safe_move_engine",
+      "typing"
+    ],
+    "services/repository_governor.py": [
+      "__future__",
+      "dataclasses",
+      "typing"
+    ],
+    "services/repository_health.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "services.github_runtime",
+      "typing"
+    ],
+    "services/repository_manager.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "services.dependency_analyzer",
+      "services.github_runtime",
+      "services.safe_move_engine",
+      "typing"
+    ],
+    "services/repository_observer.py": [
+      "ast",
+      "base64",
+      "concurrent.futures",
+      "datetime",
+      "os",
+      "requests",
+      "typing"
+    ],
+    "services/repository_tree_loader.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "services.github_runtime",
+      "typing"
+    ],
+    "services/runtime.py": [
+      "services.ai_runtime"
+    ],
+    "services/runtime_diagnostic.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "os",
+      "services.github_runtime",
+      "traceback",
+      "typing"
+    ],
+    "services/safe_move_engine.py": [
+      "__future__",
+      "dataclasses",
+      "services.github_runtime",
+      "services.import_rewriter",
+      "typing"
+    ],
+    "services/security_center.py": [
+      "__future__",
+      "datetime",
+      "typing"
+    ],
+    "services/smoke_tests/foundation.py": [
+      "os",
+      "requests"
+    ],
+    "services/supervisor.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "services.execution_queue",
+      "services.worker_pool",
+      "typing"
+    ],
+    "services/system_service.py": [
+      "drive",
+      "services.workspace"
+    ],
+    "services/task_planner.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "typing"
+    ],
+    "services/worker_pool.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "services.execution_queue",
+      "typing"
+    ],
+    "services/worker_registry.py": [
+      "__future__",
+      "datetime",
+      "typing"
+    ],
+    "services/worker_runner.py": [
+      "__future__",
+      "datetime",
+      "services.ai_worker",
+      "services.execution_queue",
+      "services.worker_registry",
+      "typing"
+    ],
+    "services/worker_runtime.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "services.workflow_engine",
+      "typing"
+    ],
+    "services/workflow_engine.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "services.developer_runtime",
+      "typing"
+    ],
+    "services/workspace.py": [
+      "drive"
+    ],
+    "services/workspace_service.py": [
+      "drive"
+    ],
+    "settings.py": [],
+    "system/adaptation_engine.py": [
+      "system.evolution.adaptation"
+    ],
+    "system/agent_runtime.py": [
+      "system.runtime.agent"
+    ],
+    "system/autonomous_governance.py": [
+      "system.governance_pkg.autonomy"
+    ],
+    "system/bootstrap.py": [
+      "system.runtime.bootstrap"
+    ],
+    "system/capability/dependencies.py": [],
+    "system/capability/evolution.py": [],
+    "system/capability/lineage.py": [
+      "datetime"
+    ],
+    "system/capability/registry.py": [],
+    "system/capability/risk.py": [],
+    "system/capability_dependencies.py": [
+      "system.capability.dependencies"
+    ],
+    "system/capability_evolution.py": [
+      "system.capability.evolution"
+    ],
+    "system/capability_lineage.py": [
+      "system.capability.lineage"
+    ],
+    "system/capability_registry_v3.py": [
+      "system.capability.registry"
+    ],
+    "system/capability_system.py": [
+      "system.capability_dependencies",
+      "system.capability_evolution",
+      "system.capability_lineage",
+      "system.dependency_risk"
+    ],
+    "system/constitution.py": [
+      "system.governance_pkg.constitution_runtime"
+    ],
+    "system/dependency_risk.py": [
+      "system.capability.risk"
+    ],
+    "system/digital_twin.py": [
+      "system.digital_twin_pkg.runtime"
+    ],
+    "system/digital_twin_pkg/runtime.py": [
+      "__future__",
+      "datetime",
+      "pathlib",
+      "typing",
+      "yaml"
+    ],
+    "system/digital_twin_pkg/simulation.py": [],
+    "system/digital_twin_simulation.py": [
+      "system.digital_twin_pkg.simulation"
+    ],
+    "system/distributed_backend.py": [
+      "system.events.backend"
+    ],
+    "system/distributed_routing.py": [
+      "system.events.routing"
+    ],
+    "system/event_ack.py": [
+      "system.events.ack"
+    ],
+    "system/event_ack_store.py": [
+      "system.events.ack_store"
+    ],
+    "system/event_bus.py": [
+      "system.events.bus"
+    ],
+    "system/event_retention.py": [
+      "system.events.retention"
+    ],
+    "system/event_stream.py": [
+      "system.events.stream"
+    ],
+    "system/event_subscriptions.py": [
+      "system.events.subscriptions"
+    ],
+    "system/event_system.py": [
+      "system.event_ack",
+      "system.event_ack_store",
+      "system.event_bus",
+      "system.event_retention",
+      "system.event_subscriptions"
+    ],
+    "system/events/ack.py": [
+      "datetime",
+      "system.events.ack_store"
+    ],
+    "system/events/ack_store.py": [
+      "json",
+      "pathlib"
+    ],
+    "system/events/backend.py": [],
+    "system/events/bus.py": [
+      "collections",
+      "datetime",
+      "typing"
+    ],
+    "system/events/redis_adapter.py": [
+      "os"
+    ],
+    "system/events/retention.py": [
+      "datetime"
+    ],
+    "system/events/routing.py": [],
+    "system/events/stream.py": [
+      "json",
+      "pathlib",
+      "system.event_bus"
+    ],
+    "system/events/subscriptions.py": [
+      "collections"
+    ],
+    "system/events/ws.py": [],
+    "system/evolution/adaptation.py": [
+      "datetime",
+      "pathlib",
+      "system.event_bus",
+      "system.evolution.learning",
+      "yaml"
+    ],
+    "system/evolution/engine.py": [
+      "system.event_bus",
+      "system.evolution.adaptation",
+      "system.evolution.history",
+      "system.evolution.learning",
+      "system.evolution.reflection",
+      "system.knowledge_graph"
+    ],
+    "system/evolution/history.py": [
+      "datetime"
+    ],
+    "system/evolution/learning.py": [
+      "pathlib",
+      "system.evolution.reflection",
+      "yaml"
+    ],
+    "system/evolution/reflection.py": [
+      "datetime",
+      "pathlib",
+      "system",
+      "yaml"
+    ],
+    "system/evolution_engine.py": [
+      "system.evolution.engine"
+    ],
+    "system/evolution_history.py": [
+      "system.evolution.history"
+    ],
+    "system/evolution_system.py": [
+      "system.adaptation_engine",
+      "system.evolution_engine",
+      "system.evolution_history",
+      "system.learning_engine",
+      "system.reflection_engine"
+    ],
+    "system/evolution_worker.py": [
+      "system.scheduler.evolution_worker"
+    ],
+    "system/facade_policy.py": [],
+    "system/founder_control.py": [
+      "system.governance_pkg.founder"
+    ],
+    "system/governance.py": [
+      "system.governance_pkg.governance"
+    ],
+    "system/governance_audit.py": [
+      "system.governance_pkg.audit"
+    ],
+    "system/governance_pkg/audit.py": [
+      "datetime",
+      "system.policy_engine",
+      "system.rule_engine"
+    ],
+    "system/governance_pkg/autonomy.py": [
+      "system.adaptation_engine",
+      "system.governance_pkg.audit",
+      "system.learning_engine",
+      "system.reflection_engine"
+    ],
+    "system/governance_pkg/constitution_runtime.py": [
+      "pathlib",
+      "yaml"
+    ],
+    "system/governance_pkg/founder.py": [],
+    "system/governance_pkg/governance.py": [
+      "system"
+    ],
+    "system/knowledge/graph.py": [
+      "pathlib",
+      "yaml"
+    ],
+    "system/knowledge_graph.py": [
+      "system.knowledge.graph"
+    ],
+    "system/learning_engine.py": [
+      "system.evolution.learning"
+    ],
+    "system/observability/awareness.py": [
+      "pathlib",
+      "typing",
+      "yaml"
+    ],
+    "system/observability/healing.py": [
+      "system.self_healing"
+    ],
+    "system/observability/layer.py": [
+      "runtime_health",
+      "system.digital_twin",
+      "system.observability.awareness"
+    ],
+    "system/observability_layer.py": [
+      "system.observability.layer"
+    ],
+    "system/policy_engine.py": [
+      "system.rules.policy"
+    ],
+    "system/production_scheduler.py": [
+      "system.scheduler.production"
+    ],
+    "system/redis_event_bus.py": [
+      "system.events.redis_adapter"
+    ],
+    "system/reflection_engine.py": [
+      "system.evolution.reflection"
+    ],
+    "system/retention_worker.py": [
+      "system.scheduler.retention_worker"
+    ],
+    "system/rule_engine.py": [
+      "system.rules.engine"
+    ],
+    "system/rule_engine_v2.py": [
+      "system.rules.engine_v2"
+    ],
+    "system/rules/engine.py": [
+      "system",
+      "system.rules.policy",
+      "typing"
+    ],
+    "system/rules/engine_v2.py": [
+      "system"
+    ],
+    "system/rules/policy.py": [
+      "system",
+      "typing"
+    ],
+    "system/runtime/agent.py": [
+      "multi_agent_manager",
+      "planner_agent"
+    ],
+    "system/runtime/bootstrap.py": [
+      "__future__",
+      "json",
+      "pathlib",
+      "system"
+    ],
+    "system/runtime/task.py": [
+      "task_queue"
+    ],
+    "system/runtime_bootstrap.py": [
+      "system.scheduler.bootstrap"
+    ],
+    "system/scheduler/bootstrap.py": [
+      "os",
+      "system.scheduler.production"
+    ],
+    "system/scheduler/evolution_worker.py": [
+      "datetime",
+      "system.evolution_engine"
+    ],
+    "system/scheduler/production.py": [],
+    "system/scheduler/retention_worker.py": [
+      "datetime",
+      "system.event_retention"
+    ],
+    "system/scheduler/runtime.py": [
+      "datetime",
+      "system.evolution_worker",
+      "system.retention_worker"
+    ],
+    "system/scheduler/supervision.py": [],
+    "system/scheduler_runtime.py": [
+      "system.scheduler.runtime"
+    ],
+    "system/scheduler_system.py": [
+      "system.evolution_worker",
+      "system.production_scheduler",
+      "system.retention_worker",
+      "system.scheduler_runtime",
+      "system.worker_supervision"
+    ],
+    "system/security/approval.py": [
+      "datetime",
+      "uuid"
+    ],
+    "system/security/audit.py": [
+      "datetime",
+      "json"
+    ],
+    "system/security/emergency.py": [
+      "datetime"
+    ],
+    "system/security/grant_manager.py": [
+      "datetime"
+    ],
+    "system/security/grant_state.py": [],
+    "system/security/grant_store.py": [
+      "datetime",
+      "google.cloud",
+      "json",
+      "pathlib",
+      "uuid"
+    ],
+    "system/security/unlock.py": [
+      "datetime",
+      "google.cloud"
+    ],
+    "system/security/write_gateway.py": [
+      "services.github_runtime",
+      "system.security.audit",
+      "system.security.grant_manager",
+      "system.security.unlock",
+      "typing"
+    ],
+    "system/self_healing.py": [
+      "importlib",
+      "typing"
+    ],
+    "system/system_awareness.py": [
+      "system.observability.awareness"
+    ],
+    "system/task_runtime.py": [
+      "system.runtime.task"
+    ],
+    "system/tools/refactor/copy_module.py": [
+      "__future__",
+      "hashlib",
+      "pathlib",
+      "shutil",
+      "sys"
+    ],
+    "system/tools/refactor/create_shim.py": [
+      "__future__",
+      "pathlib",
+      "sys"
+    ],
+    "system/tools/refactor/file_ops.py": [
+      "__future__",
+      "argparse",
+      "hashlib",
+      "json",
+      "pathlib",
+      "shutil",
+      "typing"
+    ],
+    "system/tools/refactor/migrate_module.py": [
+      "__future__",
+      "argparse",
+      "json",
+      "pathlib",
+      "system.tools.refactor.copy_module",
+      "system.tools.refactor.create_shim",
+      "system.tools.refactor.verify_imports",
+      "typing"
+    ],
+    "system/tools/refactor/verify_imports.py": [
+      "__future__",
+      "importlib",
+      "json",
+      "sys",
+      "typing"
+    ],
+    "system/validation/report.py": [],
+    "system/validation_report.py": [
+      "system.validation.report"
+    ],
+    "system/worker_supervision.py": [
+      "system.scheduler.supervision"
+    ],
+    "system/ws_subscriptions.py": [
+      "system.events.ws"
+    ],
+    "task_agent.py": [
+      "__future__",
+      "services.execution_engine",
+      "typing"
+    ],
+    "task_queue.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "enum",
+      "typing",
+      "uuid"
+    ],
+    "tests/test_validation_contract.py": [
+      "system.validation_report"
+    ],
+    "tool_registry.py": [],
+    "tools/architecture_audit.py": [
+      "json",
+      "pathlib"
+    ],
+    "tools/dependency_graph.py": [
+      "ast",
+      "json",
+      "pathlib"
+    ],
+    "tools/domain_classifier.py": [
+      "json",
+      "pathlib"
+    ],
+    "tools/export_repo_manifest.py": [
+      "json",
+      "pathlib"
+    ],
+    "tools/generate_all_artifacts.py": [
+      "subprocess",
+      "sys"
+    ],
+    "tools/import_safety.py": [
+      "json",
+      "pathlib"
+    ],
+    "tools/move_recommendation.py": [
+      "json",
+      "pathlib"
+    ],
+    "tools/orphan_detector.py": [
+      "ast",
+      "json",
+      "pathlib"
+    ],
+    "tools/repo_snapshot.py": [
+      "json",
+      "pathlib"
+    ],
+    "tools/repo_tree.py": [
+      "pathlib"
+    ],
+    "tools/root_audit.py": [
+      "json",
+      "pathlib"
+    ],
+    "tools/root_cleanup_candidates.py": [
+      "json",
+      "pathlib"
+    ],
+    "tools/root_hotspots.py": [
+      "json",
+      "pathlib"
+    ],
+    "vectordb.py": [
+      "config",
+      "qdrant_client",
+      "qdrant_client.models"
+    ],
+    "worker/main.py": [
+      "__future__",
+      "agent_orchestrator",
+      "datetime",
+      "kernel.kernel",
+      "typing"
+    ],
+    "workflow_engine.py": [
+      "__future__",
+      "task_agent",
+      "task_queue",
+      "typing"
+    ]
+  }
+}
