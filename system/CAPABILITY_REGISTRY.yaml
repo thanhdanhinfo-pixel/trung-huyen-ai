@@ -360,6 +360,48 @@ capability_groups:
       - digital_twin.py is not yet implemented
       - system/DIGITAL_TWIN.yaml is not yet created
 
+  autonomous_execution:
+    id: autonomous_execution
+    status: planned
+    criticality: core
+    owner_layer: runtime
+    dependencies:
+      - deploy_cloud_run.sh
+      - cloudbuild.yaml
+      - services/github_service.py
+      - mcp.py
+    runtime_binding:
+      module: action_registry
+      required_on_boot: true
+      implementation_status: missing_runtime_actions
+      required_tools:
+        - github_create_file
+        - github_upsert_file
+        - github_delete_file
+        - shell_exec
+        - git_pull_rebase
+        - cloud_build_submit
+        - cloud_run_deploy
+        - cloud_run_logs
+    health:
+      state: blocked_until_runtime_actions_exposed
+      last_verified: 2026-06-29
+      verification_method: action_registry_status
+    capabilities:
+      - Create new repository files
+      - Upsert repository files
+      - Delete repository files with approval
+      - Pull and rebase Cloud Shell working tree
+      - Build Cloud Run image
+      - Deploy Cloud Run service
+      - Verify runtime endpoints after deploy
+      - Update TASK_REGISTRY after execution
+      - Resume previous unfinished tasks after interruption
+    limitations:
+      - Runtime action registry currently does not expose shell_exec
+      - Runtime action registry currently does not expose cloud_build_submit
+      - Runtime action registry currently does not expose cloud_run_deploy
+
   unified_observability:
     id: unified_observability
     status: planned
