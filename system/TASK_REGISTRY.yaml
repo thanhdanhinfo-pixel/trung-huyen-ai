@@ -41,6 +41,10 @@ paused_tasks:
     reason: superseded_by_production_startup_completion
 
 waiting_tasks:
+  - id: TASK-005
+    title: Drive Visibility 100%
+    status: waiting_runtime_deploy
+    next_step: verify_after_current_active_task
 
 completed:
   - TASK-001
@@ -51,6 +55,8 @@ completed:
   - CLOUD_RUN_DEPLOY_SUCCESS
   - RULE_020_ADDED
   - RULE_020_ENGINE_V2_INTEGRATED
+  - TASK-005
+  - TASK-SELF-AWARENESS-V1
 
 backlog:
   - TASK-006
