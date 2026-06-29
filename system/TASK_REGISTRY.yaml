@@ -3,7 +3,7 @@ version: 2.0
 current_active_task:
   id: TASK-SELF-AWARENESS-V1
   title: Hoàn thiện Self Awareness và Active Work Context
-  status: done
+  status: in_progress
   owner: TRUNG_HUYEN_AI_OS
   priority: core
   current_step: IMPLEMENT_ACTIVE_TASK_CONTINUITY
@@ -40,11 +40,7 @@ paused_tasks:
     status: paused
     reason: superseded_by_production_startup_completion
 
-waiting_tasks:
-  - id: TASK-005
-    title: Drive Visibility 100%
-    status: waiting_runtime_deploy
-    next_step: verify_after_current_active_task
+waiting_tasks: []
 
 completed:
   - TASK-001
