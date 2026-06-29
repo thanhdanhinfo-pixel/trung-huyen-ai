@@ -243,15 +243,12 @@ def list_recursive(parent_id: Optional[str] = None, current_path: str = "") -> L
                 metadata["source_id"] = master.get("id")
                 items.append(metadata)
             except Exception as exc:
-                items.append({
-                    "id": master["id"],
-                    "name": master.get("name", "master"),
-                    "path": master.get("name", "master"),
-                    "mimeType": GOOGLE_DOC,
-                    "source": master.get("name", "master"),
-                    "source_id": master.get("id"),
-                    "read_error": str(exc),
-                })
+                print(
+                    "MASTER_DOCUMENT_UNAVAILABLE:",
+                    master.get("id"),
+                    type(exc).__name__,
+                    str(exc),
+                )
         return items
 
     service = get_drive_service()
