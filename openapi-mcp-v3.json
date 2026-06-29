@@ -3,7 +3,7 @@
   "info": {
     "title": "TRUNG_HUYEN_AI_OS_RUNTIME",
     "version": "3.6.0",
-    "description": "Stable GPT Actions schema for TRUNG_HUYEN_AI_OS with mandatory startup preflight"
+    "description": "Stable GPT Actions schema for TRUNG_HUYEN_AI_OS with mandatory startup preflight, MCP discovery, and safe shell/cloud build capability"
   },
   "servers": [
     {
