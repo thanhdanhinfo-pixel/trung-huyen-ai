@@ -161,12 +161,6 @@ def _active_task() -> Dict[str, Any]:
                 "status": "in_progress",
                 "next_step": "deploy_and_verify_active_task_endpoints",
             },
-            {
-                "id": "TASK-005",
-                "title": "Drive Visibility 100%",
-                "status": "waiting_runtime_deploy",
-                "next_step": "verify_after_current_active_task",
-            },
         ],
         "continuity_policy": {
             "before_switching_task": "pause_current_task",
