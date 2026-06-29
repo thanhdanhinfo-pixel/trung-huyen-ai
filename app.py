@@ -170,20 +170,16 @@ app.include_router(system_router)
 app.include_router(debug_router)
 app.include_router(runtime_router)
 app.include_router(deployment_router)
-if system_runtime_router:
-    app.include_router(system_runtime_router)
-if digital_twin_router:
-    app.include_router(digital_twin_router)
-if graph_router:
-    app.include_router(graph_router)
-if system_status_router:
-    app.include_router(system_status_router)
-if rag_runtime_router:
-    app.include_router(rag_runtime_router)
-if command_runner_router:
-    app.include_router(command_runner_router)
-if observability_tools_router:
-    app.include_router(observability_tools_router)
+include_runtime_routers(
+    app,
+    system_runtime_router=system_runtime_router,
+    digital_twin_router=digital_twin_router,
+    graph_router=graph_router,
+    system_status_router=system_status_router,
+    rag_runtime_router=rag_runtime_router,
+    command_runner_router=command_runner_router,
+    observability_tools_router=observability_tools_router,
+)
 app.mount('/dashboard', StaticFiles(directory='static/dashboard', html=True), name='dashboard')
 
 class ChatRequest(BaseModel):
