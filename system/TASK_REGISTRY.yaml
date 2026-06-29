@@ -1,28 +1,68 @@
-version: 1.1
+version: 2.0
 
-active_tasks:
-  - id: TASK-003
-    title: Xây dựng Task Registry
-    status: completed
+current_active_task:
+  id: TASK-SELF-AWARENESS-V1
+  title: Hoàn thiện Self Awareness và Active Work Context
+  status: in_progress
+  owner: TRUNG_HUYEN_AI_OS
+  priority: core
+  current_step: IMPLEMENT_ACTIVE_TASK_CONTINUITY
+  next_step: deploy_and_verify_active_task_endpoints
+  source_of_truth: system/TASK_REGISTRY.yaml
+  must_not_forget: true
+  started_from:
+    - SAFE_STARTUP_FIXED
+    - PRODUCTION_SCHEDULER_ENABLED
+    - HEALTH_ENDPOINT_OK
+    - RULE_020_CAPABILITY_DENIAL_PROHIBITION
+  remaining:
+    - verify /system/active-task
+    - verify /system/khoi-dong includes active_task
+    - verify /system/boot-v3 includes active_task
+    - update GPT Action OpenAPI schema if missing
 
+active_task_policy:
+  single_current_active_task: true
+  before_switching_task: pause_current_task
+  before_answering_work_status: read_current_active_task
+  forbidden:
+    - forget_current_active_task
+    - create_parallel_active_task_without_pause
+    - overwrite_current_active_task_without_founder_intent
+  required_behavior:
+    - remind_current_active_task_when_context_switch_detected
+    - ask_continue_pause_or_switch_when_new_work_conflicts
+    - persist_next_step_after_each_execution
+
+paused_tasks:
   - id: TASK-004
     title: Runtime Activation Bootstrap
-    status: blocked
+    status: paused
+    reason: superseded_by_production_startup_completion
 
+waiting_tasks:
   - id: TASK-005
     title: Drive Visibility 100%
     status: waiting_runtime_deploy
+    next_step: verify_after_current_active_task
+
+completed:
+  - TASK-001
+  - TASK-002
+  - TASK-003
+  - SAFE_STARTUP_FIXED
+  - PRODUCTION_SCHEDULER_ENABLED
+  - CLOUD_RUN_DEPLOY_SUCCESS
+  - RULE_020_ADDED
+  - RULE_020_ENGINE_V2_INTEGRATED
 
 backlog:
   - TASK-006
   - TASK-007
   - TASK-008
 
-completed:
-  - TASK-001
-  - TASK-002
-  - TASK-003
-
-blocked:
-  - BLOCKER-001
-  - BLOCKER-002
+switch_history:
+  - timestamp: 2026-06-29T10:20:00Z
+    from: production_startup_activation
+    to: active_work_context_continuity
+    reason: Founder identified recurring loss of active work context
