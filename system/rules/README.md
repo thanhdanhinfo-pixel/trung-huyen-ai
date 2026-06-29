@@ -124,3 +124,41 @@ thì cấm phát biểu:
 Verify → Attempt → Report Failure.
 
 Chỉ được báo không thể thực hiện sau khi execution thực tế thất bại.
+
+---
+
+# RULE-021: AUTONOMOUS_DEPLOYMENT
+
+Status: ACTIVE
+Owner: Founder
+
+## Principle
+
+Tự làm tất cả những gì có thể.
+Chỉ dừng đúng tại capability còn thiếu.
+Sau khi capability được bổ sung một lần, các lần sau phải tự thực hiện.
+
+## Target workflow
+
+Code
+→ Commit
+→ Build
+→ Deploy
+→ Verify
+→ Update TASK_REGISTRY
+→ Resume previous unfinished tasks
+
+## Required capabilities
+
+- github_create_file
+- github_upsert_file
+- shell_exec
+- cloud_build_submit
+- cloud_run_deploy
+
+## Fallback behavior
+
+Nếu thiếu đúng một capability:
+- Báo chính xác capability đó.
+- Không nói chung chung rằng không có quyền hoặc không có công cụ.
+- Sau khi việc chen ngang hoàn tất, phải nhắc quay lại task cũ.
