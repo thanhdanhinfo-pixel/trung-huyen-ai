@@ -81,7 +81,15 @@ def system_bootstrap():
         "next_action": "Use this endpoint before answering questions about system state, continuity, current work or operating context.",
     }
 
+@router.get("/khoi-dong")
+def system_khoi_dong():
+    return system_bootstrap()
 
+
+@router.get("/boot-v3")
+def system_boot_v3():
+    return system_bootstrap()
+    
 @router.get("/files")
 def files():
     from drive import list_recursive
