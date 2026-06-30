@@ -4,7 +4,7 @@ from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
 from config import DRIVE_FOLDER_ID
-from drive import list_files
+from drive import list_files, search_files
 
 router = APIRouter(prefix="/drive", tags=["drive"])
 
