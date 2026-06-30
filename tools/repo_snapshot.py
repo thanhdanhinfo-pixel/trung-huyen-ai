@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib import Path 
 import json
 ROOT=Path(__file__).resolve().parents[1]
 IGNORE={'.git','__pycache__','.venv','venv','node_modules'}
