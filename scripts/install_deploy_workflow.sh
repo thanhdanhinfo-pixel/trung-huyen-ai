@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -euo pipefail 
 
 SRC="system/deployment/templates/deploy-cloud-run.workflow.yml"
 DST=".github/workflows/deploy-cloud-run.yml"
