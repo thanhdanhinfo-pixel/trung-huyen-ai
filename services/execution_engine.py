@@ -1,4 +1,4 @@
-"""Execution Plan Engine for TRUNG_HUYEN_AI_OS.
+"""Execution Plan Engine for TRUNG_HUYEN_AI_OS. 
 
 This module is the Level-4 execution layer:
 AI produces an intent/plan, while the engine translates it into safe GitHub
