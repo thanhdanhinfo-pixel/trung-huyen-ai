@@ -12,6 +12,7 @@ from api.routes.rag import router as rag_routes_router
 from api.routes.rag_runtime import router as rag_runtime_routes_router
 from api.routes.chat import router as chat_routes_router
 from api.routes.system_core import router as system_core_routes_router
+from api.routes.actions import router as actions_routes_router
 from api.app_startup import run_startup_boot
 from api.router_registry import include_runtime_routers
 
