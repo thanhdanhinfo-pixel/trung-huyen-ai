@@ -1,4 +1,4 @@
-from services.sync_service import sync_drive
+from services.sync_service import sync_drive 
 from services.embedding_pipeline import build_embeddings
 
 def run():
