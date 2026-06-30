@@ -5,7 +5,7 @@
 The repository token available to TRUNG_HUYEN_AI_OS can write normal repository files, but GitHub returned `403 Forbidden` for:
 
 ```text
-.github/workflows/deploy-cloud-run.yml
+.github/workflows/deploy-cloud-run.yml 
 ```
 
 This means the token lacks the GitHub `workflow` permission. 
