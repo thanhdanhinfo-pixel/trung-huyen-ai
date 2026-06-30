@@ -135,41 +135,55 @@ def drive_list_path(path: str = "/"):
 
 
 @router.get("/root")
-def drive_root():
+def drive_root(limit: int = Query(default=200, ge=1, le=500)):
     try:
-        files = read_folder("/")
+        files = list_files(limit=limit)
         return {
             "status": "ok",
-            "root": "/",
+            "root": "DRIVE_FOLDER_ID",
+            "folder_limited": bool(DRIVE_FOLDER_ID),
             "entries": len(files),
-            "files": files[:50],
+            "files": files,
         }
     except Exception as exc:
         return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
 
 
 @router.get("/tree")
-def drive_tree(path: str = "/"):
+def drive_tree(path: str = "/", limit: int = Query(default=200, ge=1, le=500)):
     try:
-        files = read_folder(path)
+        if path == "/":
+            files = list_files(limit=limit)
+        else:
+            files = read_folder(path)
         return {"status": "ok", "path": path, "tree": files}
     except Exception as exc:
         return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
 
 
 @router.get("/audit")
-def drive_audit():
+def drive_audit(limit: int = Query(default=200, ge=1, le=500)):
     try:
-        files = read_folder("/")
-        names = [f.get("name", "") for f in files]
+        files = list_files(limit=limit)
+        folders = [
+            f for f in files
+            if f.get("mimeType") == "application/vnd.google-apps.folder"
+        ]
+        names = [f.get("name", "") for f in folders]
+        all_names = [f.get("name", "") for f in files]
         return {
             "status": "ok",
+            "source": "DRIVE_FOLDER_ID",
+            "folder_limited": bool(DRIVE_FOLDER_ID),
             "top_level_count": len(names),
             "top_level_folders": names,
+            "all_entries_count": len(all_names),
+            "all_entries": all_names,
             "recommended_domains": {
-                "academy": [n for n in names if "academy" in n.lower()],
-                "projects": [n for n in names if "project" in n.lower() or "ai" in n.lower()],
-                "strategy": [n for n in names if "strategy" in n.lower()],
+                "academy": [n for n in names if "academy" in n.lower() or "học viện" in n.lower()],
+                "projects": [n for n in names if "project" in n.lower() or "dự án" in n.lower() or "ai" in n.lower()],
+                "strategy": [n for n in names if "strategy" in n.lower() or "chiến lược" in n.lower()],
+                "global_memory": [n for n in names if "bộ não" in n.lower() or "memory" in n.lower() or "global" in n.lower()],
             },
         }
     except Exception as exc:
