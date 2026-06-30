@@ -1,4 +1,4 @@
-from services.semantic_search import search
+from services.semantic_search import search 
 
 class BrainAgent:
     def answer(self, question:str):
