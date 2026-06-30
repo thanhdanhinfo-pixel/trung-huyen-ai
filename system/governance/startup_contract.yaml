@@ -1,0 +1,17 @@
+version: 1
+startup:
+  commands:
+    - START
+    - THOS START
+    - Khởi động
+  mandatory_load_order:
+    - system/governance/execution_rules.yaml
+    - system/governance/founder_principles.yaml
+    - system/governance/communication_rules.yaml
+    - system/founder/working_style.yaml
+    - system/planner/work_queue.json
+    - system/checkpoints/latest.json
+  behavior:
+    continue_previous_work: true
+    do_not_ask_for_history: true
+    restore_context_before_reply: true
