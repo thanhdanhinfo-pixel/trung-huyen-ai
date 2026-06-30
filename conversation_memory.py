@@ -1,4 +1,4 @@
-class ConversationMemory:
+class ConversationMemory: 
     def __init__(self):
         self.history=[]
     def add(self,role,content):
