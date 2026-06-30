@@ -45,30 +45,18 @@ class SystemRegistry:
     def load(cls) -> "SystemRegistry":
         knowledge_sources: List[RegistryResource] = []
 
-        for source in drive_root_sources():
-            source_id = source.get("id", "")
-            if not source_id:
-                continue
+        if DRIVE_FOLDER_ID:
             knowledge_sources.append(
                 RegistryResource(
-                    name=source.get("name", "unknown"),
-                    type=source.get("type", "drive"),
-                    id=source_id,
+                    name="founder_drive_root",
+                    type="drive",
+                    id=DRIVE_FOLDER_ID,
                     role="knowledge_source",
-                    metadata={"source": "KNOWLEDGE_SOURCES"},
+                    metadata={"source": "DRIVE_FOLDER_ID"},
                 )
             )
 
-        master = master_document_source()
         master_resource = None
-        if master and master.get("id"):
-            master_resource = RegistryResource(
-                name=master.get("name", "master"),
-                type=master.get("type", "doc"),
-                id=master.get("id", MASTER_DOCUMENT_ID),
-                role="master_document",
-                metadata={"source": "MASTER_DOCUMENT_ID or KNOWLEDGE_SOURCES"},
-            )
 
         fallback = None
         if DRIVE_FOLDER_ID:
