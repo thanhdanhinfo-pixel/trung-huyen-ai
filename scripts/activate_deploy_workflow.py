@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Activate the Cloud Run GitHub Actions workflow using a GitHub token.
+"""Activate the Cloud Run GitHub Actions workflow using a GitHub token. 
 
 Why this exists:
 The runtime token used by TRUNG_HUYEN_AI_OS may have repo contents write access
