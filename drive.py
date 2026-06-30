@@ -127,21 +127,6 @@ def list_files(limit: int = 50, folder_id: Optional[str] = None) -> List[Dict[st
 
 
 def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> List[Dict[str, Any]]:
-    if not folder_id and len(_configured_drive_roots()) > 1:
-        results: List[Dict[str, Any]] = []
-        for source in _configured_drive_roots():
-            remaining = limit - len(results)
-            if remaining <= 0:
-                break
-            for item in list_files_recursive(folder_id=source["id"], limit=remaining):
-                enriched = dict(item)
-                enriched["source"] = source.get("name")
-                enriched["source_id"] = source.get("id")
-                results.append(enriched)
-                if len(results) >= limit:
-                    break
-        return results
-
     service = get_drive_service()
     root_id = _root_folder_id(folder_id)
     results: List[Dict[str, Any]] = []
