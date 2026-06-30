@@ -1,4 +1,4 @@
-class DependencyRisk:
+class DependencyRisk: 
     def score(
         self,
         dependency_count: int,
