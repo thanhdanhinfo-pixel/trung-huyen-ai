@@ -3,8 +3,19 @@ from __future__ import annotations
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from time import perf_counter
+from collections import defaultdict, deque
+from time import perf_counter, time
 from uuid import uuid4
+
+# Soft, per-instance rate limiting. This is not a distributed security control.
+# Use Cloud Armor or Redis-backed counters for strict production enforcement.
+RATE_LIMIT_WINDOW_SECONDS = 60
+RATE_LIMITS = {
+    "/chat": 30,
+    "/drive/search-read": 20,
+    "/rag/": 10,
+}
+_rate_limit_buckets: dict[str, deque[float]] = defaultdict(deque)
 
 PAYLOAD_LIMITS = {
     "/chat": 50 * 1024,
