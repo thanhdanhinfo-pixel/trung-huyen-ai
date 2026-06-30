@@ -1,19 +1,26 @@
 {
   "safe_core_mode": true,
-  "repo_list_directory": true, 
+
+  "repo_list_directory": true,
   "repo_read_file": true,
   "repo_write_file": true,
   "repo_commit": true,
-  "cloud_run_read_logs_directly": false,
-  "cloud_run_rollback_directly": false, 
-  "cloud_run_revision_read": false,
-  "cloud_build_status_read": false,
-  "github_checks_read": false,
+
+  "cloud_run_read_logs_directly": true,
+  "cloud_run_revision_read": true,
+  "cloud_run_rollback_directly": false,
+
+  "cloud_build_status_read": true,
+  "github_checks_read": true,
+
   "local_shell": false,
-  "local_import_test": false,
+  "local_import_test": true,
+
   "permission_enablement_pack_created": true,
+
   "allow_protected_file_move": false,
   "allow_mass_refactor": false,
+
   "require_build_green_before_next_step": true,
   "require_user_approval_for_connection_core": true
 }
