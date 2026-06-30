@@ -611,20 +611,7 @@ def actions_schema():
 # =====================================
 
 # /drive/files migrated to api.routes.drive
-@app.get("/drive/search")
-def drive_search(q: str, limit: int = Query(default=20, ge=1, le=200)):
-    try:
-        files = search_files(q=q, limit=limit)
-        return {
-            "status": "ok",
-            "query": q,
-            "files": files,
-        }
-    except Exception as exc:
-        return JSONResponse(
-            status_code=500,
-            content={"status": "error", "message": str(exc)}
-        )
+# /drive/search migrated to api.routes.drive
 
 @app.get("/rag/search")
 def rag_search(q: str, limit: int = 5):
