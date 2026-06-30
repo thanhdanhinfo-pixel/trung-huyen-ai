@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 set -euo pipefail
 
 PROJECT_ID=${PROJECT_ID:-${GOOGLE_CLOUD_PROJECT:-}}
