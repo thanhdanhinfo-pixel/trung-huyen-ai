@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib import Path 
 import yaml
 BASE=Path(__file__).parent
 class KnowledgeGraph:
