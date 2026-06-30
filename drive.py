@@ -94,40 +94,18 @@ def get_sheets_service():
     return build("sheets", "v4", credentials=_credentials(), cache_discovery=False)
 
 
-def _configured_drive_roots() -> List[Dict[str, str]]:
-    """
-    Return configured Drive roots.
-
-    Preferred source: KNOWLEDGE_SOURCES drive entries.
-    Backward-compatible fallback: DRIVE_FOLDER_ID.
-    """
-    roots = drive_root_sources()
-    if roots:
-        return roots
-    if DRIVE_FOLDER_ID:
-        return [{"type": "drive", "name": "default", "id": DRIVE_FOLDER_ID}]
-    return []
-
-
 def _root_folder_id(folder_id: Optional[str] = None) -> str:
     fid = (folder_id or "").strip()
     if fid:
         return fid
-
-    roots = _configured_drive_roots()
-    if roots:
-        return roots[0]["id"]
-
-    raise RuntimeError("Missing DRIVE_FOLDER_ID or KNOWLEDGE_SOURCES drive source.")
+    if DRIVE_FOLDER_ID:
+        return DRIVE_FOLDER_ID
+    raise RuntimeError("Missing DRIVE_FOLDER_ID")
 
 
 def _folder_clause(folder_id: Optional[str] = None) -> str:
-    fid = (folder_id or "").strip()
-    if not fid:
-        roots = _configured_drive_roots()
-        if len(roots) == 1:
-            fid = roots[0]["id"]
-    return f" and '{fid}' in parents" if fid else ""
+    fid = _root_folder_id(folder_id)
+    return f" and '{fid}' in parents"
 
 
 # =====================================
