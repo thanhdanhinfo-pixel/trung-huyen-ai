@@ -626,6 +626,7 @@
         "in": "header",
         "name": "X-API-Key"
       }
-    }
+    },
+    "schemas": {}
   }
 }
