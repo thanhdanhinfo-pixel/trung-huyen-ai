@@ -62,3 +62,28 @@ def drive_read(file_id: str):
             status_code=500,
             content={"status": "error", "message": str(exc)},
         )
+
+
+@router.post("/search-read")
+def drive_search_read(req: SearchReadRequest):
+    try:
+        files = search_and_read(
+            q=req.q,
+            limit=req.limit,
+            max_chars_per_file=req.max_chars_per_file,
+        )
+
+        return {
+            "status": "ok",
+            "query": req.q,
+            "files": files,
+        }
+    except Exception as exc:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": str(exc),
+                "type": type(exc).__name__,
+            },
+        )
