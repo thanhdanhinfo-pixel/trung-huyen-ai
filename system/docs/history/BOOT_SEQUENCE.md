@@ -10,4 +10,4 @@
 8. Initialize `digital_twin.py`
 9. Initialize `observability_layer.py`
 10. Load `TASK_REGISTRY.yaml`
-11. Publish system snapshot
+11. Publish system snapshot 
