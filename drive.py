@@ -164,41 +164,6 @@ def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> L
 
 
 def list_recursive(parent_id: Optional[str] = None, current_path: str = "") -> List[Dict[str, Any]]:
-    if not parent_id and not current_path and len(_configured_drive_roots()) > 1:
-        items: List[Dict[str, Any]] = []
-        for source in _configured_drive_roots():
-            source_name = source.get("name") or "source"
-            source_root = {
-                "id": source["id"],
-                "name": source_name,
-                "path": source_name,
-                "mimeType": GOOGLE_FOLDER,
-                "source": source_name,
-                "source_id": source["id"],
-            }
-            items.append(source_root)
-            for child in list_recursive(source["id"], source_name):
-                enriched = dict(child)
-                enriched["source"] = source_name
-                enriched["source_id"] = source["id"]
-                items.append(enriched)
-        master = master_document_source()
-        if master:
-            try:
-                metadata = get_file_metadata(master["id"])
-                metadata["path"] = master.get("name", "master")
-                metadata["source"] = master.get("name", "master")
-                metadata["source_id"] = master.get("id")
-                items.append(metadata)
-            except Exception as exc:
-                print(
-                    "MASTER_DOCUMENT_UNAVAILABLE:",
-                    master.get("id"),
-                    type(exc).__name__,
-                    str(exc),
-                )
-        return items
-
     service = get_drive_service()
     parent_id = _root_folder_id(parent_id)
     query = f"'{parent_id}' in parents and trashed=false"
