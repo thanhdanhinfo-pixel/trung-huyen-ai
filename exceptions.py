@@ -1,2 +1,2 @@
 class BrainOSError(Exception):
-    pass
+    pass 
