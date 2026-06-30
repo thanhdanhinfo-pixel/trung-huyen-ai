@@ -476,25 +476,6 @@ def search_files(q: str, limit: int = 20):
     return results[:limit]
 
 
-def _master_doc_result() -> Optional[Dict[str, Any]]:
-    master = master_document_source()
-    if not master:
-        return None
-    try:
-        metadata = get_file_metadata(master["id"])
-        metadata["source"] = master.get("name", "master")
-        metadata["source_id"] = master.get("id")
-        return metadata
-    except Exception as exc:
-        print(
-            "MASTER_DOCUMENT_UNAVAILABLE:",
-            master.get("id"),
-            type(exc).__name__,
-            str(exc),
-        )
-        return None
-
-
 def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> List[Dict[str, Any]]:
     query = normalize_text(q)
     query_words = query.split()
