@@ -1,3 +1,3 @@
 # Memory Log
 
-Archived from `system/MEMORY_LOG.md` during root cleanup.
+Archived from `system/MEMORY_LOG.md` during root cleanup. 
