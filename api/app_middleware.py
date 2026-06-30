@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from uuid import uuid4
 
 
 def configure_cors(app: FastAPI) -> None:
