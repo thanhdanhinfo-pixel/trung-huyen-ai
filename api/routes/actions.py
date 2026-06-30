@@ -9,6 +9,14 @@ router = APIRouter(tags=["actions"])
 
 @router.get("/actions.json", include_in_schema=False)
 def actions_schema():
+    basic_object = {
+        "type": "object",
+        "properties": {
+            "status": {"type": "string"},
+            "message": {"type": "string"},
+        },
+    }
+
     file_item = {
         "type": "object",
         "properties": {
