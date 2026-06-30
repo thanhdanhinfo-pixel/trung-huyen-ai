@@ -65,9 +65,15 @@ except Exception as exc:
 
 
 STARTUP_TIMEOUT_SECONDS = 30
+STARTUP_METRICS = {
+    "boot": "pending",
+    "scheduler": "pending",
+    "startup_time_ms": None,
+}
 
 @app.on_event("startup")
 async def system_startup_boot():
+    started = perf_counter()
     await asyncio.wait_for(
         run_startup_boot(
             boot=boot,
@@ -75,6 +81,10 @@ async def system_startup_boot():
         ),
         timeout=STARTUP_TIMEOUT_SECONDS,
     )
+    STARTUP_METRICS["boot"] = "ok"
+    STARTUP_METRICS["scheduler"] = "ok"
+    STARTUP_METRICS["startup_time_ms"] = round((perf_counter() - started) * 1000, 2)
+    print("Startup metrics:", STARTUP_METRICS)
 
 
 @app.on_event("shutdown")
