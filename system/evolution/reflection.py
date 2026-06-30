@@ -1,5 +1,5 @@
 from datetime import date
-from pathlib import Path
+from pathlib import Path 
 import yaml
 from system import event_bus
 BASE=Path(__file__).parent.parent/'knowledge'
