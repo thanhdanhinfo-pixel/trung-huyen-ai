@@ -28,8 +28,12 @@ class SearchReadRequest(BaseModel):
 @router.get("/files")
 def drive_files(limit: int = Query(default=50, ge=1, le=200)):
     try:
+        root_meta = get_file_metadata(DRIVE_FOLDER_ID) if DRIVE_FOLDER_ID else {}
         return {
             "status": "ok",
+            "root_id": root_meta.get("id"),
+            "root_name": root_meta.get("name"),
+            "root_link": root_meta.get("webViewLink"),
             "folder_limited": bool(DRIVE_FOLDER_ID),
             "files": list_files(limit=limit),
         }
