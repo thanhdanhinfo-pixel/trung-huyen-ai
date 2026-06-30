@@ -1,5 +1,5 @@
 import json
-from pathlib import Path
+from pathlib import Path 
 
 DB = Path("storage/memory/long_term_memory.json")
 
