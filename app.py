@@ -636,59 +636,8 @@ def rag_count():
                 "type": type(exc).__name__
             }
         )
-@app.get("/drive/read-path")
-def drive_read_path(path: str):
-    try:
-        item = find_file_by_path(path)
-
-        if not item:
-            return JSONResponse(
-                status_code=404,
-                content={
-                    "status": "error",
-                    "message": "Path not found",
-                    "path": path,
-                },
-            )
-
-        content = read_file_content(item["id"], item.get("mimeType"))
-
-        return {
-            "status": "ok",
-            "path": path,
-            "file_id": item["id"],
-            "name": item.get("name"),
-            "content_length": len(content),
-            "content": content,
-        }
-
-    except Exception as exc:
-        return JSONResponse(
-            status_code=500,
-            content={
-                "status": "error",
-                "type": type(exc).__name__,
-                "message": str(exc),
-            },
-        )
-
-@app.get("/drive/list-path")
-def drive_list_path(path: str = "/"):
-    try:
-        return {
-            "status": "ok",
-            "path": path,
-            "files": read_folder(path),
-        }
-
-    except Exception as exc:
-        return JSONResponse(
-            status_code=500,
-            content={
-                "status": "error",
-                "message": str(exc),
-            },
-        )
+# /drive/read-path migrated to api.routes.drive
+# /drive/list-path migrated to api.routes.drive
 # =====================================
 # CHAT
 # =====================================
