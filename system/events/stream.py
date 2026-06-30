@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib import Path 
 import json
 from system.event_bus import event_bus
 STORE=Path('system/knowledge/event_history.json')
