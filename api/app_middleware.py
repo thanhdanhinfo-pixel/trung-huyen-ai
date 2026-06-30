@@ -35,6 +35,19 @@ def register_request_logging(app: FastAPI, register_error) -> None:
             if key in safe_headers:
                 safe_headers[key] = "***REDACTED***"
 
+        payload_limit = PAYLOAD_LIMITS.get(request.url.path)
+        content_length = int(request.headers.get("content-length", "0") or 0)
+        if payload_limit and content_length > payload_limit:
+            return JSONResponse(
+                status_code=413,
+                content={
+                    "status": "error",
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "limit_bytes": payload_limit,
+                    "request_id": request_id,
+                },
+            )
+
         start = perf_counter()
         print(f"[req:{request_id}] start method={request.method} path={request.url.path} query={request.url.query}")
         print(f"[req:{request_id}] headers={safe_headers}")
