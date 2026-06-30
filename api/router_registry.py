@@ -15,6 +15,16 @@ def include_optional_router(app: FastAPI, router, name: str) -> None:
         print(f"{name} router not loaded")
 
 
+def configure_optional_routers(
+    app: FastAPI,
+    *,
+    admin_router=None,
+    mcp_router=None,
+) -> None:
+    include_optional_router(app, admin_router, "Admin")
+    include_optional_router(app, mcp_router, "MCP")
+
+
 def include_runtime_routers(
     app: FastAPI,
     *,
