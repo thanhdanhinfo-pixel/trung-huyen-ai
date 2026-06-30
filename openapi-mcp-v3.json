@@ -10,6 +10,11 @@
       "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
     }
   ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
   "paths": {
     "/system/khoi-dong": {
       "get": {
