@@ -1,4 +1,4 @@
-# Runtime Activation Packet 
+# Runtime Activation Packet  
 
 This packet exists because TRUNG_HUYEN_AI_OS has finished source-level deployment work, but the current Cloud Run image is old and cannot expose new runtime endpoints until one external activation occurs.
 
