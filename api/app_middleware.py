@@ -28,20 +28,22 @@ def register_request_logging(app: FastAPI, register_error) -> None:
             if key in safe_headers:
                 safe_headers[key] = "***REDACTED***"
 
-        print("========== REQUEST ==========")
-        print("Method:", request.method)
-        print("Path:", request.url.path)
-        print("Query:", request.url.query)
-        print("Headers:", safe_headers)
+        start = perf_counter()
+        print(f"[req:{request_id}] start method={request.method} path={request.url.path} query={request.url.query}")
+        print(f"[req:{request_id}] headers={safe_headers}")
 
         try:
             response = await call_next(request)
         except Exception as exc:  # noqa: BLE001
+            latency_ms = round((perf_counter() - start) * 1000, 2)
+            print(f"[req:{request_id}] error type={type(exc).__name__} latency_ms={latency_ms}")
             register_error(exc)
             raise
 
-        print("Status:", response.status_code)
-        print("=============================")
+        latency_ms = round((perf_counter() - start) * 1000, 2)
+        response.headers["X-Request-ID"] = request_id
+        response.headers["X-Response-Time-Ms"] = str(latency_ms)
+        print(f"[req:{request_id}] done status={response.status_code} latency_ms={latency_ms}")
         return response
 
 
