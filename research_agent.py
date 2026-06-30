@@ -1,5 +1,5 @@
 class ResearchAgent:
-    def analyze(self, query:str):
+    def analyze(self, query:str): 
         return {
             "query": query,
             "keywords": query.split(),
