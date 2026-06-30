@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=Path(__file__).resolve().parents[1] 
 root_py=sorted([p.name for p in ROOT.glob('*.py')])
 keep={'app.py'}
 candidates=[x for x in root_py if x not in keep]
