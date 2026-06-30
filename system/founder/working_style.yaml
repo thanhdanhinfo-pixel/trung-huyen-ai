@@ -1,4 +1,4 @@
-version: 1
+version: 1 
 working_style:
   execute_after_single_approval: true
   prefer_action_over_discussion: true
