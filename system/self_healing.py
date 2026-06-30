@@ -2,7 +2,7 @@
 Preferred implementation lives in system.observability.healing.
 """
 
-from importlib import import_module
+from importlib import import_module 
 from typing import Any
 
 _TARGET = 'system.observability.healing'
