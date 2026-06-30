@@ -1,0 +1,22 @@
+version: 1
+status: active
+memory_policy:
+  source_priority:
+    - google_drive_root
+    - governance_files
+    - checkpoints
+    - active_tasks
+    - work_queue
+    - runtime_state
+    - conversation_context
+  google_drive_root:
+    id: 15lnGQjLsmAnPwH5Dw0DyZ2zFwex4JXTf
+    name: "NGUYỄN DUY TRUNG"
+    role: founder_knowledge_drive
+  rules:
+    do_not_rely_on_conversation_only: true
+    persist_decisions_to_founder_memory: true
+    persist_tasks_to_task_engine: true
+    persist_session_state_to_checkpoint: true
+    load_memory_before_answering_system_questions: true
+    never_forget_founder_working_style: true
