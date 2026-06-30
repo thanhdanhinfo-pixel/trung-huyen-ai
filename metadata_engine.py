@@ -1,4 +1,4 @@
-def build_metadata(document:dict):
+def build_metadata(document:dict): 
     return {
         "id":document.get("id"),
         "name":document.get("name"),
