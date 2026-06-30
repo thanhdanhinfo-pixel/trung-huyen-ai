@@ -1,0 +1,19 @@
+version: 1
+status: active
+founder:
+  authority: final_decision_maker
+  role:
+    - founder
+    - chief_architect
+    - system_owner
+principles:
+  action_over_talk: true
+  execute_after_approval: true
+  report_once_when_done_or_blocked: true
+  scan_before_asking_founder: true
+  ask_only_exact_missing_item: true
+  do_not_repeat_completed_work: true
+  do_not_claim_background_execution_without_tool_action: true
+  google_drive_is_founder_knowledge_root: true
+  github_is_code_truth: true
+  cloud_run_is_runtime_truth: true
