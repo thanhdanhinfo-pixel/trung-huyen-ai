@@ -3,5 +3,5 @@ class AICEO:
         return {
             "objective": objective,
             "priority": "HIGH",
-            "status": "APPROVED"
+            "status": "APPROVED" 
         }
