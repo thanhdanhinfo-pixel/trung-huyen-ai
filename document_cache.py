@@ -1,5 +1,5 @@
 import json
-from pathlib import Path
+from pathlib import Path 
 
 CACHE=Path("storage/cache/document_cache.json")
 
