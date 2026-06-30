@@ -190,11 +190,7 @@ include_runtime_routers(
 )
 app.mount('/dashboard', StaticFiles(directory='static/dashboard', html=True), name='dashboard')
 
-class ChatRequest(BaseModel):
-    question: str = Field(..., min_length=1)
-    limit: int = Field(default=5, ge=1, le=20)
-    max_chars_per_file: int = Field(default=6000, ge=1000, le=20000)
-
+# ChatRequest migrated to api.routes.chat
 
 class SearchReadRequest(BaseModel):
     q: str = Field(..., min_length=1)
