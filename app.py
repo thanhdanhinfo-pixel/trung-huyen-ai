@@ -615,32 +615,7 @@ def actions_schema():
 # /drive/files migrated to api.routes.drive
 # /drive/search migrated to api.routes.drive
 
-@app.get("/rag/search")
-def rag_search(q: str, limit: int = 5):
-    if search_knowledge is None:
-        return JSONResponse(
-            status_code=503,
-            content={
-                "status": "error",
-                "message": "search_knowledge not available"
-            }
-        )
-
-    try:
-        return {
-            "status": "ok",
-            "query": q,
-            "results": search_knowledge(q, limit)
-        }
-    except Exception as exc:
-        return JSONResponse(
-            status_code=500,
-            content={
-                "status": "error",
-                "message": str(exc),
-                "type": type(exc).__name__
-            }
-        )
+# /rag/search migrated to api.routes.rag
 
 # /drive/read migrated to api.routes.drive
 
