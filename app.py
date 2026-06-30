@@ -329,17 +329,7 @@ def rag_index(limit: int = 10):
 def ping_post():
     return {"status": "ok"}
 
-@app.post("/drive/rebuild-index")
-def rebuild_drive_index():
-
-    get_path_index.cache_clear()
-
-    index = get_path_index()
-
-    return {
-        "status": "ok",
-        "files": len(index)
-    }
+# /drive/rebuild-index migrated to api.routes.drive
 # =====================================
 # RAG
 # =====================================
