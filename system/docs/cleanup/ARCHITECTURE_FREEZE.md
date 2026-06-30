@@ -1,4 +1,4 @@
-# Architecture Freeze
+# Architecture Freeze 
 
 Moved from `system/ARCHITECTURE_FREEZE.md`.
 
