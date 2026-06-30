@@ -126,6 +126,7 @@ app.include_router(rag_routes_router)
 app.include_router(rag_runtime_routes_router)
 app.include_router(chat_routes_router)
 app.include_router(system_core_routes_router)
+app.include_router(actions_routes_router)
 
 from api.system import router as system_router
 from api.debug import router as debug_router
