@@ -1,4 +1,4 @@
-def build_citations(documents):
+def build_citations(documents): 
     refs=[]
     for d in documents:
         refs.append({
