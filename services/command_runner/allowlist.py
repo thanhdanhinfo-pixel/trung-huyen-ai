@@ -1,6 +1,6 @@
 ALLOWED_COMMANDS = {
     'import_app': ['python', '-c', "import app; print('APP_IMPORT_OK')"],
-    'compileall': ['python', '-m', 'compileall', '.'],
+    'compileall': ['python', '-m', 'compileall', '.'], 
 }
 
 
