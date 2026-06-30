@@ -12,6 +12,7 @@ from drive import (
     search_and_read,
     find_file_by_path,
     read_folder,
+    get_path_index,
 )
 
 router = APIRouter(prefix="/drive", tags=["drive"])
