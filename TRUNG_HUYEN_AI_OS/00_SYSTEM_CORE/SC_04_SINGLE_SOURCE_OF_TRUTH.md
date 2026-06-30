@@ -1,6 +1,6 @@
 # SINGLE SOURCE OF TRUTH
 
-System Awareness -> Identity Truth
+System Awareness -> Identity Truth 
 Runtime -> Operational Truth
 Mission Engine -> Mission Truth
 Planning Engine -> Planning Truth
