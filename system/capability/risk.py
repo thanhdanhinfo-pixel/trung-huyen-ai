@@ -1,5 +1,5 @@
 class DependencyRisk: 
-    def score(
+    def score( 
         self,
         dependency_count: int,
         has_cycle: bool = False
