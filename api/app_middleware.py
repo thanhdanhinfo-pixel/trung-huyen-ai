@@ -24,6 +24,19 @@ PAYLOAD_LIMITS = {
 }
 
 
+def _client_ip(request: Request) -> str:
+    forwarded_for = request.headers.get("x-forwarded-for")
+    if forwarded_for:
+        return forwarded_for.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+def _rate_limit_for_path(path: str) -> int | None:
+    if path.startswith("/rag/"):
+        return RATE_LIMITS["/rag/"]
+    return RATE_LIMITS.get(path)
+
+
 def configure_cors(app: FastAPI) -> None:
     app.add_middleware(
         CORSMiddleware,
