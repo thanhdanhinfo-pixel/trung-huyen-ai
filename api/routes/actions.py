@@ -189,6 +189,12 @@ def actions_schema():
                     },
                 }
             },
+            "/system/khoi-dong": {"get": {"operationId": "startupBoot", "summary": "Load startup state and global memory", "responses": {"200": {"description": "Startup payload", "content": {"application/json": {"schema": basic_object}}}}}},
+            "/system/boot-v3": {"get": {"operationId": "startupBootV3", "summary": "Compatibility startup endpoint", "responses": {"200": {"description": "Boot V3 payload", "content": {"application/json": {"schema": basic_object}}}}}},
+            "/system/active-task": {"get": {"operationId": "activeTask", "summary": "Get current active task", "responses": {"200": {"description": "Active task", "content": {"application/json": {"schema": basic_object}}}}}},
+            "/system/global-memory": {"get": {"operationId": "globalMemory", "summary": "Get global memory layers", "responses": {"200": {"description": "Global memory", "content": {"application/json": {"schema": basic_object}}}}}},
+            "/system/next-actions": {"get": {"operationId": "nextActions", "summary": "Get next actions", "responses": {"200": {"description": "Next actions", "content": {"application/json": {"schema": basic_object}}}}}},
+            "/system/tool-health": {"get": {"operationId": "toolHealth", "summary": "Get runtime tool health", "responses": {"200": {"description": "Tool health", "content": {"application/json": {"schema": basic_object}}}}}},
             "/chat": {
                 "post": {
                     "operationId": "chatWithKnowledge",
