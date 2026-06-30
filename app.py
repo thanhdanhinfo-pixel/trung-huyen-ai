@@ -252,19 +252,7 @@ async def log_requests(request: Request, call_next):
     print("=============================")
     return response
 
-@app.get("/health")
-def health():
-    return {
-        "server": "ok",
-        "version": "1.0.0",
-        "google_service_account_json": bool(GOOGLE_SERVICE_ACCOUNT_JSON),
-        "drive_folder_id": bool(DRIVE_FOLDER_ID),
-        "openai_api_key": bool(OPENAI_API_KEY),
-        "openai_model": OPENAI_MODEL,
-        "mcp_loaded": bool(mcp_router),
-        "qdrant_url": bool(QDRANT_URL),
-        "qdrant_api_key": bool(QDRANT_API_KEY),
-    }
+# /health migrated to api.routes.system_core
 
 # /rag/index migrated to api.routes.rag_runtime
 # /ping-post migrated to api.routes.system_core
