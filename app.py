@@ -610,16 +610,7 @@ def actions_schema():
 # GOOGLE DRIVE
 # =====================================
 
-@app.get("/drive/files")
-def drive_files(limit: int = Query(default=50, ge=1, le=200)):
-    try:
-        return {
-            "status": "ok",
-            "folder_limited": bool(DRIVE_FOLDER_ID),
-            "files": list_files(limit=limit),
-        }
-    except Exception as exc:
-        return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
+# /drive/files migrated to api.routes.drive
 @app.get("/drive/search")
 def drive_search(q: str, limit: int = Query(default=20, ge=1, le=200)):
     try:
