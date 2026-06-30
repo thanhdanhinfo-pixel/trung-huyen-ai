@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib import Path 
 import yaml
 DATA=yaml.safe_load(Path(__file__).parent.parent.joinpath('constitution.yaml').read_text(encoding='utf-8'))
 class Constitution:
