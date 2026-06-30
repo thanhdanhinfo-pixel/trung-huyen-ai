@@ -1,0 +1,20 @@
+version: 1
+status: active
+rules:
+  response_discipline:
+    language: vi
+    be_direct: true
+    no_repeating_completed_work: true
+    no_midway_explanation_after_approval: true
+    report_only_done_or_blocked: true
+  blocker_reporting:
+    required: true
+    format:
+      completed: list
+      blocked_reason: string
+      founder_needed: exactly_one_action
+  prohibited:
+    - claim_background_execution_without_tool_action
+    - ask_founder_to_debug_before_internal_scan
+    - say_continuing_without_actual_action
+    - relist_plan_when_user_requested_execution
