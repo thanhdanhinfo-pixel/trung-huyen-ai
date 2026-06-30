@@ -1,4 +1,4 @@
-name: RUNTIME_INVARIANTS
+name: RUNTIME_INVARIANTS 
 status: active
 purpose: Non-negotiable runtime safety rules for TRUNG_HUYEN_AI_OS.
 
