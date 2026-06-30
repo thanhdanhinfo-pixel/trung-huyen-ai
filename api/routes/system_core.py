@@ -29,17 +29,9 @@ def version():
 
 @router.get("/health")
 def health():
-    return {
-        "server": "ok",
-        "version": "1.0.0",
-        "google_service_account_json": bool(GOOGLE_SERVICE_ACCOUNT_JSON),
-        "drive_folder_id": bool(DRIVE_FOLDER_ID),
-        "openai_api_key": bool(OPENAI_API_KEY),
-        "openai_model": OPENAI_MODEL,
-        "mcp_loaded": _mcp_loaded(),
-        "qdrant_url": bool(QDRANT_URL),
-        "qdrant_api_key": bool(QDRANT_API_KEY),
-    }
+    payload = system_health()
+    payload["mcp_loaded"] = _mcp_loaded()
+    return payload
 
 
 @router.post("/ping-post")
