@@ -132,3 +132,18 @@ def drive_list_path(path: str = "/"):
             status_code=500,
             content={"status": "error", "message": str(exc)},
         )
+
+
+@router.post("/rebuild-index")
+def rebuild_drive_index():
+    try:
+        index = get_path_index(force_refresh=True)
+        return {
+            "status": "ok",
+            "entries": len(index),
+        }
+    except Exception as exc:
+        return JSONResponse(
+            status_code=500,
+            content={"status": "error", "message": str(exc)},
+        )
