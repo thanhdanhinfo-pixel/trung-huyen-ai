@@ -6,5 +6,5 @@ class CapabilityEvolution:
             return CAPABILITY_STATES[min(idx+1,len(CAPABILITY_STATES)-1)]
         except ValueError:
             return 'PROPOSED'
-capability_evolution=CapabilityEvolution() 
+capability_evolution=CapabilityEvolution()  
 
