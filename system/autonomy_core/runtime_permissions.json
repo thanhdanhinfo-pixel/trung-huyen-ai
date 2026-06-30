@@ -1,6 +1,6 @@
 {
   "safe_core_mode": true,
-  "repo_list_directory": true, 
+  "repo_list_directory": true,
   "repo_read_file": true,
   "repo_write_file": true,
   "repo_commit": true,
