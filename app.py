@@ -575,32 +575,7 @@ def actions_schema():
 # /drive/read migrated to api.routes.drive
 
 # /drive/search-read migrated to api.routes.drive
-@app.get("/rag/count")
-def rag_count():
-    try:
-        from vectordb import client, COLLECTION_NAME, ensure_collection
-
-        ensure_collection()
-
-        result = client.count(
-            collection_name=COLLECTION_NAME,
-            exact=True
-        )
-
-        return {
-            "status": "ok",
-            "count": result.count
-        }
-
-    except Exception as exc:
-        return JSONResponse(
-            status_code=500,
-            content={
-                "status": "error",
-                "message": str(exc),
-                "type": type(exc).__name__
-            }
-        )
+# /rag/count migrated to api.routes.rag_runtime
 # /drive/read-path migrated to api.routes.drive
 # /drive/list-path migrated to api.routes.drive
 # =====================================
