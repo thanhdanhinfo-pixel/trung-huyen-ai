@@ -76,6 +76,17 @@ async def system_startup_boot():
     )
 
 
+@app.on_event("shutdown")
+async def system_shutdown():
+    stop = getattr(production_scheduler, "stop", None)
+    if callable(stop):
+        try:
+            stop()
+            print("Production scheduler stopped cleanly")
+        except Exception as exc:
+            print("Scheduler shutdown error:", exc)
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
