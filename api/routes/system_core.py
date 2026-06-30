@@ -2,14 +2,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-from config import (
-    DRIVE_FOLDER_ID,
-    GOOGLE_SERVICE_ACCOUNT_JSON,
-    OPENAI_API_KEY,
-    OPENAI_MODEL,
-    QDRANT_URL,
-    QDRANT_API_KEY,
-)
+from services.health_service import system_health
 
 router = APIRouter(tags=["system-core"])
 
