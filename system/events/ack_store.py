@@ -1,5 +1,5 @@
 from pathlib import Path
-import json
+import json 
 P=Path('system/knowledge/event_acks.json')
 class EventAckStore:
     def append(self,ack):
