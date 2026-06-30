@@ -1,9 +1,9 @@
-{ 
+{
   "openapi": "3.1.0",
   "info": {
     "title": "TRUNG_HUYEN_AI_OS_RUNTIME",
-    "version": "3.7.0",
-    "description": "Stable GPT Actions schema for TRUNG_HUYEN_AI_OS with mandatory startup preflight, MCP discovery, and safe shell/cloud build capability"
+    "version": "3.8.0",
+    "description": "System GPT Actions schema for TRUNG_HUYEN_AI_OS. Handles startup, governance, runtime, MCP, GitHub, deployment, memory, tasks, and checkpoints."
   },
   "servers": [
     {
@@ -14,350 +14,98 @@
     "/system/khoi-dong": {
       "get": {
         "operationId": "startupSystem",
-        "summary": "Khởi động TRUNG_HUYEN_AI_OS and load Startup Memory Pack",
-        "responses": {
-          "200": {
-            "description": "Startup bootstrap state and memory pack",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "summary": "Khởi động TRUNG_HUYEN_AI_OS",
+        "responses": { "200": { "description": "Startup state" } }
       }
     },
     "/system/preflight": {
       "get": {
         "operationId": "getPreflight",
-        "summary": "Get mandatory preflight context before any system conclusion or action",
-        "responses": {
-          "200": {
-            "description": "Preflight state",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/system/boot-v3": {
-      "get": {
-        "operationId": "bootV3",
-        "summary": "Compatibility boot endpoint for TRUNG_HUYEN_AI_OS",
-        "responses": {
-          "200": {
-            "description": "Boot V3 startup state",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "summary": "Get system preflight",
+        "responses": { "200": { "description": "Preflight state" } }
       }
     },
     "/system/self-state": {
       "get": {
         "operationId": "getSelfState",
-        "summary": "Get TRUNG_HUYEN_AI_OS self state",
-        "responses": {
-          "200": {
-            "description": "Self state",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "summary": "Get self state",
+        "responses": { "200": { "description": "Self state" } }
       }
     },
     "/system/active-task": {
       "get": {
         "operationId": "getActiveTask",
-        "summary": "Get current active task and unfinished task continuity context",
-        "responses": {
-          "200": {
-            "description": "Active task continuity state",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/system/active-task/pause": {
-      "post": {
-        "operationId": "pauseActiveTask",
-        "summary": "Pause current active task before switching context",
-        "responses": {
-          "200": {
-            "description": "Paused active task context",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/system/active-task/resume": {
-      "post": {
-        "operationId": "resumeActiveTask",
-        "summary": "Resume current active task from next_step",
-        "responses": {
-          "200": {
-            "description": "Resumed active task context",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/system/active-task/complete": {
-      "post": {
-        "operationId": "completeActiveTask",
-        "summary": "Request completion of current active task and review unfinished tasks",
-        "responses": {
-          "200": {
-            "description": "Active task completion review",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/system/global-memory": {
-      "get": {
-        "operationId": "getGlobalMemory",
-        "summary": "Get global memory layer",
-        "responses": {
-          "200": {
-            "description": "Global memory",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "summary": "Get active task",
+        "responses": { "200": { "description": "Active task" } }
       }
     },
     "/system/last-actions": {
       "get": {
         "operationId": "getLastActions",
-        "summary": "Get last verified system actions",
-        "responses": {
-          "200": {
-            "description": "Last actions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "summary": "Get last actions",
+        "responses": { "200": { "description": "Last actions" } }
       }
     },
     "/system/next-actions": {
       "get": {
         "operationId": "getNextActions",
-        "summary": "Get next actions from startup checkpoint",
-        "responses": {
-          "200": {
-            "description": "Next actions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "summary": "Get next actions",
+        "responses": { "200": { "description": "Next actions" } }
       }
     },
-    "/system/tool-health": {
+    "/system/global-memory": {
       "get": {
-        "operationId": "getToolHealth",
-        "summary": "Get runtime tool health",
-        "responses": {
-          "200": {
-            "description": "Tool health",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "operationId": "getGlobalMemory",
+        "summary": "Get global memory",
+        "responses": { "200": { "description": "Global memory" } }
       }
     },
     "/system/memory-pack": {
       "get": {
         "operationId": "getMemoryPack",
-        "summary": "Get Governance Memory Pack",
-        "responses": {
-          "200": {
-            "description": "Governance memory pack",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "summary": "Get memory pack",
+        "responses": { "200": { "description": "Memory pack" } }
       }
     },
     "/system/governance-rules": {
       "get": {
         "operationId": "getGovernanceRules",
-        "summary": "Get governance rules including RULE-017 and RULE-018",
-        "responses": {
-          "200": {
-            "description": "Governance rules",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "summary": "Get governance rules",
+        "responses": { "200": { "description": "Governance rules" } }
+      }
+    },
+    "/system/tool-health": {
+      "get": {
+        "operationId": "getToolHealth",
+        "summary": "Get tool health",
+        "responses": { "200": { "description": "Tool health" } }
       }
     },
     "/mcp/tools": {
       "get": {
         "operationId": "listMcpTools",
-        "summary": "List available MCP tools including shell_exec and trigger_cloud_build after deploy",
-        "responses": {
-          "200": {
-            "description": "MCP tool list",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "summary": "List MCP tools",
+        "responses": { "200": { "description": "MCP tools" } }
       }
     },
     "/mcp/manifest": {
       "get": {
         "operationId": "getMcpManifest",
-        "summary": "Get MCP manifest including tool descriptions",
-        "responses": {
-          "200": {
-            "description": "MCP manifest",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "summary": "Get MCP manifest",
+        "responses": { "200": { "description": "MCP manifest" } }
       }
     },
     "/mcp/ping": {
       "get": {
         "operationId": "pingMcp",
         "summary": "Ping MCP runtime",
-        "responses": {
-          "200": {
-            "description": "Runtime status",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": { "type": "string" },
-                    "mcp": { "type": "string" }
-                  },
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "responses": { "200": { "description": "MCP status" } }
       }
     },
     "/mcp/call": {
       "post": {
         "operationId": "callMcpTool",
-        "summary": "Call internal MCP tool",
+        "summary": "Call MCP tool",
         "requestBody": {
           "required": true,
           "content": {
@@ -366,72 +114,38 @@
                 "type": "object",
                 "required": ["tool"],
                 "properties": {
-                  "tool": {
-                    "type": "string",
-                    "description": "Internal tool name"
-                  },
+                  "tool": { "type": "string" },
                   "arguments": {
                     "type": "object",
-                    "properties": {},
                     "additionalProperties": true
                   }
-                },
-                "additionalProperties": false
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Tool call result",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
                 }
               }
             }
           }
-        }
+        },
+        "responses": { "200": { "description": "Tool result" } }
       }
     },
     "/github/list": {
       "get": {
         "operationId": "listDirectory",
-        "summary": "List repository directory",
+        "summary": "List GitHub repository directory",
         "parameters": [
           {
             "name": "path",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "string",
-              "default": ""
-            }
+            "schema": { "type": "string", "default": "" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Directory listing",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "responses": { "200": { "description": "Directory listing" } }
       }
     },
     "/github/read": {
       "post": {
         "operationId": "readFile",
-        "summary": "Read file from repository",
+        "summary": "Read GitHub repository file",
         "requestBody": {
           "required": true,
           "content": {
@@ -440,59 +154,13 @@
                 "type": "object",
                 "required": ["path"],
                 "properties": {
-                  "path": {
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": false
+                  "path": { "type": "string" }
+                }
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "File content",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mcp/read-drive-path": {
-      "get": {
-        "operationId": "readDrivePath",
-        "summary": "Read Google Drive file by logical path",
-        "parameters": [
-          {
-            "name": "path",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Drive file content",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "responses": { "200": { "description": "File content" } }
       }
     }
   }
