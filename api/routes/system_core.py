@@ -41,6 +41,11 @@ def livez():
     return {"status": "alive"}
 
 
+@router.get("/system/startup-metrics")
+def startup_metrics():
+    return STARTUP_METRICS
+
+
 @router.get("/readiness")
 def readiness():
     payload = system_health()
