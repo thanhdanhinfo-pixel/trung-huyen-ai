@@ -139,9 +139,12 @@ def drive_list_path(path: str = "/"):
 def drive_root(limit: int = Query(default=200, ge=1, le=500)):
     try:
         files = list_files(limit=limit)
+        root_meta = get_file_metadata(DRIVE_FOLDER_ID) if DRIVE_FOLDER_ID else {}
         return {
             "status": "ok",
-            "root": "DRIVE_FOLDER_ID",
+            "root_id": root_meta.get("id"),
+            "root_name": root_meta.get("name"),
+            "root_link": root_meta.get("webViewLink"),
             "folder_limited": bool(DRIVE_FOLDER_ID),
             "entries": len(files),
             "files": files,
