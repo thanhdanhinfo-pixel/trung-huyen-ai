@@ -179,9 +179,12 @@ def drive_audit(limit: int = Query(default=200, ge=1, le=500)):
         ]
         names = [f.get("name", "") for f in folders]
         all_names = [f.get("name", "") for f in files]
+        root_meta = get_file_metadata(DRIVE_FOLDER_ID) if DRIVE_FOLDER_ID else {}
         return {
             "status": "ok",
-            "source": "DRIVE_FOLDER_ID",
+            "root_id": root_meta.get("id"),
+            "root_name": root_meta.get("name"),
+            "root_link": root_meta.get("webViewLink"),
             "folder_limited": bool(DRIVE_FOLDER_ID),
             "top_level_count": len(names),
             "top_level_folders": names,
