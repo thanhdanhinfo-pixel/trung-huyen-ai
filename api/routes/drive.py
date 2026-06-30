@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field
 
 from config import DRIVE_FOLDER_ID
-from drive import list_files, search_files, read_file_content
+from drive import list_files, search_files, read_file_content, search_and_read
 
 router = APIRouter(prefix="/drive", tags=["drive"])
 
