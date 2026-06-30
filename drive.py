@@ -15,8 +15,6 @@ from config import (
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
     GOOGLE_REFRESH_TOKEN,
-    drive_root_sources,
-    master_document_source,
 )
 
 SCOPES = [
