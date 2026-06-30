@@ -1,5 +1,5 @@
 class MultiAgentManager:
-    def dispatch(self, task):
+    def dispatch(self, task): 
         return {
             "task": task,
             "agents": [
