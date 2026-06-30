@@ -1,4 +1,4 @@
-# Shim Usage Report
+# Shim Usage Report 
 
 Moved from `system/SHIM_USAGE_REPORT.md`. 
 
