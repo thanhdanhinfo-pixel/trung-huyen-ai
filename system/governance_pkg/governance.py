@@ -7,4 +7,4 @@ class GovernanceLayer:
         if twin.get('capabilities',{}).get('registry_version')!=rv: issues.append('DIGITAL_TWIN capabilities.registry_version mismatch')
         return {'status':'ok' if not issues else 'drift_detected','issue_count':len(issues),'issues':issues}
     def health_report(self): return {'governance':self.consistency_report(),'observability':observability.system_snapshot()}
-governance=GovernanceLayer()
+governance=GovernanceLayer() 
