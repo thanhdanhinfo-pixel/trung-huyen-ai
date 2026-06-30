@@ -1,4 +1,4 @@
-class WorkerSupervision:
+class WorkerSupervision: 
     def inspect(self):
         return {'status':'supervising','workers':{'evolution_worker':'ready','retention_worker':'ready'}}
     def restart(self,worker_name:str):
