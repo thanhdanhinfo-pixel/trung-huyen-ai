@@ -10,6 +10,12 @@ from drive import list_files, search_files, read_file_content, search_and_read
 router = APIRouter(prefix="/drive", tags=["drive"])
 
 
+class SearchReadRequest(BaseModel):
+    q: str = Field(..., min_length=1)
+    limit: int = Field(default=5, ge=1, le=20)
+    max_chars_per_file: int = Field(default=6000, ge=1000, le=20000)
+
+
 @router.get("/files")
 def drive_files(limit: int = Query(default=50, ge=1, le=200)):
     try:
