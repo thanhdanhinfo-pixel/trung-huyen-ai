@@ -1,5 +1,5 @@
 version: 1
-patterns:
+patterns: 
   - id: P001
     name: always_refresh_context_before_patch
     confidence: 0.95
