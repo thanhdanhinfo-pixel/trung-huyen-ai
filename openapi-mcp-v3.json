@@ -15,91 +15,238 @@
       "get": {
         "operationId": "startupSystem",
         "summary": "Khởi động TRUNG_HUYEN_AI_OS",
-        "responses": { "200": { "description": "Startup state" } }
+        "responses": {
+          "200": {
+            "description": "Startup state"
+          }
+        }
+      }
+    },
+    "/system/boot-v3": {
+      "get": {
+        "operationId": "bootV3",
+        "summary": "Compatibility boot endpoint",
+        "responses": {
+          "200": {
+            "description": "Boot V3 startup state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/system/preflight": {
       "get": {
         "operationId": "getPreflight",
         "summary": "Get system preflight",
-        "responses": { "200": { "description": "Preflight state" } }
+        "responses": {
+          "200": {
+            "description": "Preflight state"
+          }
+        }
       }
     },
     "/system/self-state": {
       "get": {
         "operationId": "getSelfState",
         "summary": "Get self state",
-        "responses": { "200": { "description": "Self state" } }
+        "responses": {
+          "200": {
+            "description": "Self state"
+          }
+        }
+      }
+    },
+    "/system/session-checkpoint": {
+      "get": {
+        "operationId": "getSessionCheckpoint",
+        "summary": "Get current session checkpoint",
+        "responses": {
+          "200": {
+            "description": "Session checkpoint state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/system/active-task": {
       "get": {
         "operationId": "getActiveTask",
         "summary": "Get active task",
-        "responses": { "200": { "description": "Active task" } }
+        "responses": {
+          "200": {
+            "description": "Active task"
+          }
+        }
       }
     },
     "/system/last-actions": {
       "get": {
         "operationId": "getLastActions",
         "summary": "Get last actions",
-        "responses": { "200": { "description": "Last actions" } }
+        "responses": {
+          "200": {
+            "description": "Last actions"
+          }
+        }
       }
     },
     "/system/next-actions": {
       "get": {
         "operationId": "getNextActions",
         "summary": "Get next actions",
-        "responses": { "200": { "description": "Next actions" } }
+        "responses": {
+          "200": {
+            "description": "Next actions"
+          }
+        }
       }
     },
     "/system/global-memory": {
       "get": {
         "operationId": "getGlobalMemory",
         "summary": "Get global memory",
-        "responses": { "200": { "description": "Global memory" } }
+        "responses": {
+          "200": {
+            "description": "Global memory"
+          }
+        }
       }
     },
     "/system/memory-pack": {
       "get": {
         "operationId": "getMemoryPack",
         "summary": "Get memory pack",
-        "responses": { "200": { "description": "Memory pack" } }
+        "responses": {
+          "200": {
+            "description": "Memory pack"
+          }
+        }
       }
     },
     "/system/governance-rules": {
       "get": {
         "operationId": "getGovernanceRules",
         "summary": "Get governance rules",
-        "responses": { "200": { "description": "Governance rules" } }
+        "responses": {
+          "200": {
+            "description": "Governance rules"
+          }
+        }
       }
     },
     "/system/tool-health": {
       "get": {
         "operationId": "getToolHealth",
         "summary": "Get tool health",
-        "responses": { "200": { "description": "Tool health" } }
+        "responses": {
+          "200": {
+            "description": "Tool health"
+          }
+        }
+      }
+    },
+    "/system/import-scan": {
+      "get": {
+        "operationId": "getImportScan",
+        "summary": "Get repository import scan",
+        "responses": {
+          "200": {
+            "description": "Import scan results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/orphan-modules": {
+      "get": {
+        "operationId": "getOrphanModules",
+        "summary": "Get orphan modules",
+        "responses": {
+          "200": {
+            "description": "Orphan modules report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/refactor-plan": {
+      "get": {
+        "operationId": "getRefactorPlan",
+        "summary": "Get refactor plan",
+        "responses": {
+          "200": {
+            "description": "Refactor plan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/mcp/tools": {
       "get": {
         "operationId": "listMcpTools",
         "summary": "List MCP tools",
-        "responses": { "200": { "description": "MCP tools" } }
+        "responses": {
+          "200": {
+            "description": "MCP tools"
+          }
+        }
       }
     },
     "/mcp/manifest": {
       "get": {
         "operationId": "getMcpManifest",
         "summary": "Get MCP manifest",
-        "responses": { "200": { "description": "MCP manifest" } }
+        "responses": {
+          "200": {
+            "description": "MCP manifest"
+          }
+        }
       }
     },
     "/mcp/ping": {
       "get": {
         "operationId": "pingMcp",
         "summary": "Ping MCP runtime",
-        "responses": { "200": { "description": "MCP status" } }
+        "responses": {
+          "200": {
+            "description": "MCP status"
+          }
+        }
       }
     },
     "/mcp/call": {
@@ -114,7 +261,9 @@
                 "type": "object",
                 "required": ["tool"],
                 "properties": {
-                  "tool": { "type": "string" },
+                  "tool": {
+                    "type": "string"
+                  },
                   "arguments": {
                     "type": "object",
                     "additionalProperties": true
@@ -124,7 +273,30 @@
             }
           }
         },
-        "responses": { "200": { "description": "Tool result" } }
+        "responses": {
+          "200": {
+            "description": "Tool result"
+          }
+        }
+      }
+    },
+    "/mcp/drive-tree": {
+      "get": {
+        "operationId": "getDriveTree",
+        "summary": "Get Google Drive tree",
+        "responses": {
+          "200": {
+            "description": "Drive tree",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/github/list": {
@@ -136,10 +308,17 @@
             "name": "path",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "default": "" }
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
           }
         ],
-        "responses": { "200": { "description": "Directory listing" } }
+        "responses": {
+          "200": {
+            "description": "Directory listing"
+          }
+        }
       }
     },
     "/github/read": {
@@ -154,228 +333,125 @@
                 "type": "object",
                 "required": ["path"],
                 "properties": {
-                  "path": { "type": "string" }
+                  "path": {
+                    "type": "string"
+                  }
                 }
               }
             }
           }
         },
-        "/system/boot-v3": {
-  "get": {
-    "operationId": "bootV3",
-    "summary": "Compatibility boot endpoint",
-    "responses": {
-      "200": {
-        "description": "Boot V3 startup state",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "additionalProperties": true
+        "responses": {
+          "200": {
+            "description": "File content"
+          }
+        }
+      }
+    },
+    "/github/runtime/status": {
+      "get": {
+        "operationId": "getGithubRuntimeStatus",
+        "summary": "Get GitHub runtime status",
+        "responses": {
+          "200": {
+            "description": "GitHub runtime status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
             }
           }
         }
       }
-    }
-  }
-},
-"/system/session-checkpoint": {
-  "get": {
-    "operationId": "getSessionCheckpoint",
-    "summary": "Get current session checkpoint",
-    "responses": {
-      "200": {
-        "description": "Session checkpoint state",
-        "content": {
-          "application/json": {
+    },
+    "/drive/search": {
+      "get": {
+        "operationId": "searchDrive",
+        "summary": "Search Google Drive",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
             "schema": {
-              "type": "object",
-              "additionalProperties": true
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Drive search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
             }
           }
         }
       }
-    }
-  }
-},
-"/github/runtime/status": {
-  "get": {
-    "operationId": "getGithubRuntimeStatus",
-    "summary": "Get GitHub runtime status",
-    "responses": {
-      "200": {
-        "description": "GitHub runtime status",
-        "content": {
-          "application/json": {
+    },
+    "/drive/read-path": {
+      "get": {
+        "operationId": "readDrivePathV2",
+        "summary": "Read Google Drive file by path",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
             "schema": {
-              "type": "object",
-              "additionalProperties": true
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Drive file content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
             }
           }
         }
       }
-    }
-  }
-},
-"/mcp/drive-tree": {
-  "get": {
-    "operationId": "getDriveTree",
-    "summary": "Get Google Drive tree",
-    "responses": {
-      "200": {
-        "description": "Drive tree",
-        "content": {
-          "application/json": {
+    },
+    "/rag/search": {
+      "get": {
+        "operationId": "searchRag",
+        "summary": "Search RAG knowledge",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
             "schema": {
-              "type": "object",
-              "additionalProperties": true
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "RAG search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
             }
           }
         }
-      }
-    }
-  }
-},
-"/drive/search": {
-  "get": {
-    "operationId": "searchDrive",
-    "summary": "Search Google Drive",
-    "parameters": [
-      {
-        "name": "q",
-        "in": "query",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Drive search results",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "additionalProperties": true
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/drive/read-path": {
-  "get": {
-    "operationId": "readDrivePathV2",
-    "summary": "Read Google Drive file by path",
-    "parameters": [
-      {
-        "name": "path",
-        "in": "query",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Drive file content",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "additionalProperties": true
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/rag/search": {
-  "get": {
-    "operationId": "searchRag",
-    "summary": "Search RAG knowledge",
-    "parameters": [
-      {
-        "name": "q",
-        "in": "query",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "RAG search results",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "additionalProperties": true
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/system/import-scan": {
-  "get": {
-    "operationId": "getImportScan",
-    "summary": "Get repository import scan",
-    "responses": {
-      "200": {
-        "description": "Import scan results",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "additionalProperties": true
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/system/orphan-modules": {
-  "get": {
-    "operationId": "getOrphanModules",
-    "summary": "Get orphan modules",
-    "responses": {
-      "200": {
-        "description": "Orphan modules report",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "additionalProperties": true
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/system/refactor-plan": {
-  "get": {
-    "operationId": "getRefactorPlan",
-    "summary": "Get refactor plan",
-    "responses": {
-      "200": {
-        "description": "Refactor plan",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "additionalProperties": true
-            }
-          }
-        }  
       }
     }
   }
