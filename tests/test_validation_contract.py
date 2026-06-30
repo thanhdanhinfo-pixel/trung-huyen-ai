@@ -1,4 +1,4 @@
-from system.validation_report import validation_report
+from system.validation_report import validation_report 
 
 def test_validation_contract():
     data = validation_report.run()
