@@ -1,4 +1,4 @@
-from agents.brain_agent import BrainAgent
+from agents.brain_agent import BrainAgent 
 from services.context_builder import build_context
 
 agent = BrainAgent()
