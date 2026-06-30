@@ -135,10 +135,7 @@ def _default_create_folder_id(parent_id: str | None = None) -> str:
         return parent_id
     if DRIVE_FOLDER_ID:
         return DRIVE_FOLDER_ID
-    roots = drive_root_sources()
-    if roots:
-        return roots[0]["id"]
-    raise RuntimeError("Missing parent_id, DRIVE_FOLDER_ID or KNOWLEDGE_SOURCES drive root.")
+    raise RuntimeError("Missing parent_id or DRIVE_FOLDER_ID.")
 
 
 def create_document_via_apps_script(
