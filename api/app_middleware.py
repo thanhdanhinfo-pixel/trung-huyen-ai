@@ -59,6 +59,34 @@ def register_request_logging(app: FastAPI, register_error) -> None:
             if key in safe_headers:
                 safe_headers[key] = "***REDACTED***"
 
+        rate_limit = _rate_limit_for_path(request.url.path)
+        if rate_limit:
+            ip = _client_ip(request)
+            bucket_key = f"{request.url.path}:{ip}"
+            bucket = _rate_limit_buckets[bucket_key]
+            now = time()
+
+            while bucket and now - bucket[0] > RATE_LIMIT_WINDOW_SECONDS:
+                bucket.popleft()
+
+            if len(bucket) >= rate_limit:
+                return JSONResponse(
+                    status_code=429,
+                    headers={
+                        "Retry-After": str(RATE_LIMIT_WINDOW_SECONDS),
+                        "X-RateLimit-Limit": str(rate_limit),
+                        "X-RateLimit-Remaining": "0",
+                    },
+                    content={
+                        "status": "error",
+                        "code": "RATE_LIMITED",
+                        "retry_after_seconds": RATE_LIMIT_WINDOW_SECONDS,
+                        "request_id": request_id,
+                    },
+                )
+
+            bucket.append(now)
+
         payload_limit = PAYLOAD_LIMITS.get(request.url.path)
         content_length = int(request.headers.get("content-length", "0") or 0)
         if payload_limit and content_length > payload_limit:
