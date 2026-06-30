@@ -3,4 +3,4 @@ class DistributedBackend:
     def status(self):
         return {'supported':self.SUPPORTED,'active':'redis-streams','mode':'single-node-compatible'}
 
-distributed_backend=DistributedBackend()
+distributed_backend=DistributedBackend() 
