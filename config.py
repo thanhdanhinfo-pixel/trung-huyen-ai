@@ -1,5 +1,4 @@
 import os
-from typing import Dict, List
 
 DRIVE_FOLDER_ID = os.getenv("DRIVE_FOLDER_ID", "")
 GOOGLE_SERVICE_ACCOUNT_JSON = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON", "")
@@ -7,11 +6,6 @@ GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
 GOOGLE_REFRESH_TOKEN = os.getenv("GOOGLE_REFRESH_TOKEN", "")
 
-# TRUNG_HUYEN_AI_OS knowledge source model
-# Format:
-# KNOWLEDGE_SOURCES=drive:core_brain:<folder_id>,drive:group:<folder_id>,doc:master:<doc_id>
-KNOWLEDGE_SOURCES = os.getenv("KNOWLEDGE_SOURCES", "")
-MASTER_DOCUMENT_ID = os.getenv("MASTER_DOCUMENT_ID", "")
 AI_SYSTEM_MODE = os.getenv("AI_SYSTEM_MODE", "observer")
 AI_SYSTEM_VERSION = os.getenv("AI_SYSTEM_VERSION", "1.0.0")
 
