@@ -1,5 +1,5 @@
 {
-  "runtime_entrypoint": "app:app",
+  "runtime_entrypoint": "app:app", 
   "connection_core": [
     "app.py",
     "config.py", 
