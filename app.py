@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+from time import perf_counter
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
