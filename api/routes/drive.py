@@ -134,6 +134,48 @@ def drive_list_path(path: str = "/"):
         )
 
 
+@router.get("/root")
+def drive_root():
+    try:
+        files = read_folder("/")
+        return {
+            "status": "ok",
+            "root": "/",
+            "entries": len(files),
+            "files": files[:50],
+        }
+    except Exception as exc:
+        return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
+
+
+@router.get("/tree")
+def drive_tree(path: str = "/"):
+    try:
+        files = read_folder(path)
+        return {"status": "ok", "path": path, "tree": files}
+    except Exception as exc:
+        return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
+
+
+@router.get("/audit")
+def drive_audit():
+    try:
+        files = read_folder("/")
+        names = [f.get("name", "") for f in files]
+        return {
+            "status": "ok",
+            "top_level_count": len(names),
+            "top_level_folders": names,
+            "recommended_domains": {
+                "academy": [n for n in names if "academy" in n.lower()],
+                "projects": [n for n in names if "project" in n.lower() or "ai" in n.lower()],
+                "strategy": [n for n in names if "strategy" in n.lower()],
+            },
+        }
+    except Exception as exc:
+        return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
+
+
 @router.post("/rebuild-index")
 def rebuild_drive_index():
     try:
