@@ -3,12 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-from config import (
-    DRIVE_FOLDER_ID,
-    MASTER_DOCUMENT_ID,
-    drive_root_sources,
-    master_document_source,
-)
+from config import DRIVE_FOLDER_ID
 
 
 @dataclass
