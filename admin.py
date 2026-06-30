@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from services.index_service import build_index
+from services.index_service import build_index 
 
 router=APIRouter(prefix="/admin",tags=["Admin"])
 
