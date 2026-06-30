@@ -17,7 +17,7 @@ from api.execute import router as execute_router
 from api.github import router as github_router
 from api.knowledge import router as knowledge_router
 from api.repo import router as repo_router
-from api.router_registry import include_runtime_routers
+from api.router_registry import configure_core_routers, configure_optional_routers, include_runtime_routers
 from api.routes.actions import router as actions_routes_router
 from api.routes.chat import router as chat_routes_router
 from api.routes.drive import router as drive_routes_router
