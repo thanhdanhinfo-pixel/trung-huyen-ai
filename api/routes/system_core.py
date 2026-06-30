@@ -4,6 +4,15 @@ from fastapi import APIRouter
 
 from services.health_service import system_health
 
+try:
+    from app import STARTUP_METRICS
+except Exception:
+    STARTUP_METRICS = {
+        "boot": "unknown",
+        "scheduler": "unknown",
+        "startup_time_ms": None,
+    }
+
 router = APIRouter(tags=["system-core"])
 
 
