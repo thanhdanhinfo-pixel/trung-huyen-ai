@@ -1,1 +1,158 @@
-{"openapi":"3.1.0","info":{"title":"BRAIN_GPT","version":"1.2.0"},"servers":[{"url":"https://trung-huyen-ai-779121307308.asia-southeast1.run.app"}],"paths":{"/system/khoi-dong":{"get":{"operationId":"startupSystem","summary":"Startup"}},"/system/active-task":{"get":{"operationId":"getActiveTask","summary":"Active Task"}},"/system/preflight":{"get":{"operationId":"getPreflight","summary":"Mandatory preflight"}},"/system/tool-health":{"get":{"operationId":"getToolHealth","summary":"Tool Health"}},"/system/last-actions":{"get":{"operationId":"getLastActions","summary":"Last Actions"}},"/system/next-actions":{"get":{"operationId":"getNextActions","summary":"Next Actions"}},"/system/memory-pack":{"get":{"operationId":"memoryPack","summary":"Memory Pack"}},"/system/global-memory":{"get":{"operationId":"globalMemory","summary":"Global Memory"}},"/mcp/read-drive-path":{"get":{"operationId":"readDrivePath","summary":"Read Drive"}},"/mcp/test-search":{"get":{"operationId":"searchKnowledge","summary":"Search Knowledge"}}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "BRAIN_GPT",
+    "version": "1.3.0",
+    "description": "Brain GPT Actions schema. Focuses on memory, recall, knowledge graph, concept connection, summarization, and Founder knowledge brain."
+  },
+  "servers": [
+    {
+      "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+    }
+  ],
+  "paths": {
+    "/system/khoi-dong": {
+      "get": {
+        "operationId": "startupSystem",
+        "summary": "Khởi động hệ thống trước khi truy xuất bộ não",
+        "responses": { "200": { "description": "Startup state" } }
+      }
+    },
+    "/brain/search": {
+      "get": {
+        "operationId": "searchBrain",
+        "summary": "Search brain knowledge",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Brain search results" } }
+      }
+    },
+    "/brain/remember": {
+      "post": {
+        "operationId": "rememberKnowledge",
+        "summary": "Store knowledge into brain memory",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["content"],
+                "properties": {
+                  "content": { "type": "string" },
+                  "source": { "type": "string" },
+                  "tags": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                },
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Knowledge remembered" } }
+      }
+    },
+    "/brain/recall": {
+      "get": {
+        "operationId": "recallMemory",
+        "summary": "Recall brain memory",
+        "parameters": [
+          {
+            "name": "topic",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Recalled memory" } }
+      }
+    },
+    "/brain/summarize": {
+      "post": {
+        "operationId": "summarizeKnowledge",
+        "summary": "Summarize knowledge content",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["content"],
+                "properties": {
+                  "content": { "type": "string" },
+                  "style": { "type": "string" }
+                },
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Summary result" } }
+      }
+    },
+    "/brain/connect-concepts": {
+      "post": {
+        "operationId": "connectConcepts",
+        "summary": "Connect concepts inside the knowledge brain",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["concepts"],
+                "properties": {
+                  "concepts": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "context": { "type": "string" }
+                },
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Concept connection result" } }
+      }
+    },
+    "/brain/knowledge-graph": {
+      "get": {
+        "operationId": "getKnowledgeGraph",
+        "summary": "Get knowledge graph",
+        "parameters": [
+          {
+            "name": "root",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Knowledge graph" } }
+      }
+    },
+    "/brain/read-drive-path": {
+      "get": {
+        "operationId": "readBrainDrivePath",
+        "summary": "Read Founder knowledge Drive path",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Drive content" } }
+      }
+    }
+  }
+}
