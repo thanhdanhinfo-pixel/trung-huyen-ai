@@ -483,9 +483,6 @@ def search_and_read(q: str, limit: int = 5, max_chars_per_file: int = 6000) -> L
         return []
 
     candidates = list_files_recursive(limit=30)
-    master_candidate = _master_doc_result()
-    if master_candidate:
-        candidates.append(master_candidate)
 
     scored_results: List[Dict[str, Any]] = []
     seen_ids = set()
