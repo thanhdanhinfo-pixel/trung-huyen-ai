@@ -315,23 +315,7 @@ def ping_post():
 # RAG
 # =====================================
 
-@app.post("/rag/init")
-def rag_init():
-    try:
-        from vectordb import ensure_collection
-        ensure_collection()
-        return {
-            "status": "ok",
-            "message": "Qdrant collection ready"
-        }
-    except Exception as exc:
-        return JSONResponse(
-            status_code=500,
-            content={
-                "status": "error",
-                "message": str(exc)
-            }
-        )    
+# /rag/init migrated to api.routes.rag_runtime
 
 @app.get("/actions.json", include_in_schema=False)
 def actions_schema():
