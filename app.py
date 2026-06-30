@@ -57,9 +57,17 @@ except Exception as exc:
     production_scheduler = _NoopScheduler()
 
 
+STARTUP_TIMEOUT_SECONDS = 30
+
 @app.on_event("startup")
 async def system_startup_boot():
-    await run_startup_boot(boot=boot, production_scheduler=production_scheduler)
+    await asyncio.wait_for(
+        run_startup_boot(
+            boot=boot,
+            production_scheduler=production_scheduler,
+        ),
+        timeout=STARTUP_TIMEOUT_SECONDS,
+    )
 
 
 app.add_middleware(
