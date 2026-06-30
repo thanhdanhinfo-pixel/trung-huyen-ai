@@ -182,6 +182,21 @@ class ActionRegistry:
             return audit
 
         try:
+            from security.guard import pre_execute
+            pre_execute(
+                action_name=name,
+                payload=payload,
+                approved=bool(payload.get("approved", False)),
+            )
+        except Exception as exc:
+            return {
+                "status": "error",
+                "message": str(exc),
+                "action": name,
+                "type": type(exc).__name__,
+            }
+
+        try:
             result = action.handler(payload, context)
         except Exception as exc:
             return {
