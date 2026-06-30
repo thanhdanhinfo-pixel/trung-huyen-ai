@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter 
 from system import event_bus
 from system.event_retention import event_retention
 
