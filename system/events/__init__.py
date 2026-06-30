@@ -1,4 +1,4 @@
-# Event infrastructure package.
+# Event infrastructure package. 
 from .bus import EventBus, event_bus
 
 from .ack import EventAck, event_ack
