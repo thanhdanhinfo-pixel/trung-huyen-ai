@@ -267,9 +267,7 @@ def health():
     }
 
 # /rag/index migrated to api.routes.rag_runtime
-@app.post("/ping-post")
-def ping_post():
-    return {"status": "ok"}
+# /ping-post migrated to api.routes.system_core
 
 # /drive/rebuild-index migrated to api.routes.drive
 # =====================================
