@@ -73,17 +73,9 @@ def parse_knowledge_sources() -> List[Dict[str, str]]:
             "id": DRIVE_FOLDER_ID,
         })
 
-    has_master_doc = any(
-        source.get("type") == "doc" and source.get("name") == "master"
-        for source in sources
-    )
-    if MASTER_DOCUMENT_ID and not has_master_doc:
-        sources.append({
-            "type": "doc",
-            "name": "master",
-            "id": MASTER_DOCUMENT_ID,
-        })
-
+    # MASTER_DOCUMENT_ID is deprecated.
+    # The single source of truth is now DRIVE_FOLDER_ID / KNOWLEDGE_SOURCES.
+    # No implicit master document injection.
     return sources
 
 
