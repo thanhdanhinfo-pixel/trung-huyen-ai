@@ -7,6 +7,7 @@ from api.knowledge import router as knowledge_router
 from api.execute import router as execute_router
 from api.system_awareness import router as system_awareness_router
 from api.system_startup import router as system_startup_router
+from api.routes.drive import router as drive_routes_router
 from api.app_startup import run_startup_boot
 from api.router_registry import include_runtime_routers
 
