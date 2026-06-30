@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "ACADEMY_GPT",
-    "version": "1.2.0",
-    "description": "GPT Actions schema for Academy workspace, knowledge, startup, memory, and Drive document access."
+    "version": "1.3.0",
+    "description": "Academy GPT Actions schema. Focuses on learning programs, courses, lessons, roadmap, progress, quizzes, and Academy knowledge."
   },
   "servers": [
     {
@@ -14,213 +14,137 @@
     "/system/khoi-dong": {
       "get": {
         "operationId": "startupSystem",
-        "summary": "Startup system",
-        "responses": {
-          "200": {
-            "description": "Startup state",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "summary": "Khởi động hệ thống trước khi học tập",
+        "responses": { "200": { "description": "Startup state" } }
       }
     },
-    "/system/active-task": {
+    "/academy/courses": {
       "get": {
-        "operationId": "getActiveTask",
-        "summary": "Get active task",
-        "responses": {
-          "200": {
-            "description": "Active task state",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "operationId": "listAcademyCourses",
+        "summary": "List Academy courses",
+        "responses": { "200": { "description": "Course list" } }
       }
     },
-    "/system/preflight": {
+    "/academy/modules": {
       "get": {
-        "operationId": "getPreflight",
-        "summary": "Mandatory preflight",
-        "responses": {
-          "200": {
-            "description": "Preflight context",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/system/tool-health": {
-      "get": {
-        "operationId": "getToolHealth",
-        "summary": "Tool health",
-        "responses": {
-          "200": {
-            "description": "Tool health state",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/system/last-actions": {
-      "get": {
-        "operationId": "getLastActions",
-        "summary": "Last actions",
-        "responses": {
-          "200": {
-            "description": "Last verified actions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/system/next-actions": {
-      "get": {
-        "operationId": "getNextActions",
-        "summary": "Next actions",
-        "responses": {
-          "200": {
-            "description": "Next actions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/system/global-memory": {
-      "get": {
-        "operationId": "getGlobalMemory",
-        "summary": "Global memory",
-        "responses": {
-          "200": {
-            "description": "Global memory",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mcp/read-drive-path": {
-      "get": {
-        "operationId": "readDrivePath",
-        "summary": "Read Academy docs by Drive logical path",
+        "operationId": "listAcademyModules",
+        "summary": "List Academy modules",
         "parameters": [
           {
-            "name": "path",
+            "name": "course_id",
             "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Logical path or Drive path to read"
+            "required": false,
+            "schema": { "type": "string" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Drive document content",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "responses": { "200": { "description": "Module list" } }
       }
     },
-    "/knowledge/save": {
+    "/academy/lessons": {
+      "get": {
+        "operationId": "listAcademyLessons",
+        "summary": "List Academy lessons",
+        "parameters": [
+          {
+            "name": "module_id",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Lesson list" } }
+      }
+    },
+    "/academy/search": {
+      "get": {
+        "operationId": "searchAcademyKnowledge",
+        "summary": "Search Academy knowledge",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Search results" } }
+      }
+    },
+    "/academy/roadmap": {
+      "get": {
+        "operationId": "getAcademyRoadmap",
+        "summary": "Get learning roadmap",
+        "parameters": [
+          {
+            "name": "goal",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Learning roadmap" } }
+      }
+    },
+    "/academy/quiz": {
       "post": {
-        "operationId": "saveKnowledge",
-        "summary": "Save knowledge",
+        "operationId": "createAcademyQuiz",
+        "summary": "Create quiz from lesson or topic",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "properties": {
+                  "topic": { "type": "string" },
+                  "lesson_id": { "type": "string" },
+                  "difficulty": { "type": "string" }
+                },
                 "additionalProperties": true
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Knowledge saved",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
+        "responses": { "200": { "description": "Generated quiz" } }
       }
     },
-    "/workspace/load": {
+    "/academy/progress": {
       "get": {
-        "operationId": "loadWorkspace",
-        "summary": "Load workspace",
-        "responses": {
-          "200": {
-            "description": "Workspace loaded",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
+        "operationId": "getAcademyProgress",
+        "summary": "Get learning progress",
+        "parameters": [
+          {
+            "name": "learner_id",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Learning progress" } }
+      }
+    },
+    "/academy/save-learning-note": {
+      "post": {
+        "operationId": "saveLearningNote",
+        "summary": "Save Academy learning note",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["content"],
+                "properties": {
+                  "content": { "type": "string" },
+                  "course_id": { "type": "string" },
+                  "lesson_id": { "type": "string" }
+                },
+                "additionalProperties": true
               }
             }
           }
-        }
+        },
+        "responses": { "200": { "description": "Learning note saved" } }
       }
     }
   }
