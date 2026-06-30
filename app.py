@@ -642,40 +642,7 @@ def rag_search(q: str, limit: int = 5):
 
 # /drive/read migrated to api.routes.drive
 
-@app.post("/drive/search-read")
-def drive_search_read(req: SearchReadRequest):
-
-    print("=== SEARCH READ START ===")
-    print(req.model_dump())
-
-    try:
-        files = search_and_read(
-            q=req.q,
-            limit=req.limit,
-            max_chars_per_file=req.max_chars_per_file,
-        )
-
-        print("=== SEARCH READ DONE ===")
-        print(len(files))
-
-        return {
-            "status": "ok",
-            "query": req.q,
-            "files": files,
-        }
-
-    except Exception as exc:
-        import traceback
-        traceback.print_exc()
-
-        return JSONResponse(
-            status_code=500,
-            content={
-                "status": "error",
-                "message": str(exc),
-                "type": type(exc).__name__,
-            },
-        )
+# /drive/search-read migrated to api.routes.drive
 @app.get("/rag/count")
 def rag_count():
     try:
