@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "mode": "execute_until_finished",
+  "active": [
+    "repository_legacy_sweep",
+    "cloud_build_stabilization",
+    "task_engine",
+    "checkpoint_engine",
+    "reminder_engine",
+    "anti_forget_protocol"
+  ],
+  "blocked": [],
+  "completed": [
+    "single_drive_root_migration"
+  ]
+}
