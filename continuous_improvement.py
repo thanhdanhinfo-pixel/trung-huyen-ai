@@ -1,4 +1,4 @@
-class ContinuousImprovementPipeline:
+class ContinuousImprovementPipeline: 
     def run(self):
         return {
             "steps":[
