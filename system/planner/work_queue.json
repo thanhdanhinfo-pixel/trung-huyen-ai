@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 1, 
   "mode": "execute_until_finished",
   "active": [
     "repository_legacy_sweep",
