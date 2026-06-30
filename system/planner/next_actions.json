@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "status": "active",
+  "next_actions": [
+    {
+      "id": "repository_legacy_sweep",
+      "priority": "P0",
+      "status": "active",
+      "objective": "Remove remaining legacy references to MASTER_DOCUMENT_ID, KNOWLEDGE_SOURCES, drive_root_sources, and master_document_source."
+    },
+    {
+      "id": "cloud_build_stabilization",
+      "priority": "P0",
+      "status": "active",
+      "objective": "Ensure python import app and Cloud Build complete successfully."
+    },
+    {
+      "id": "task_engine_runtime_loader",
+      "priority": "P1",
+      "status": "active",
+      "objective": "Load governance, checkpoint, work queue, and tasks at runtime startup."
+    },
+    {
+      "id": "auto_resume_startup",
+      "priority": "P1",
+      "status": "active",
+      "objective": "Make START / THOS START / Khởi động continue from latest checkpoint and active work queue."
+    }
+  ]
+}
