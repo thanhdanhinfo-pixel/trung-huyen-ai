@@ -172,30 +172,33 @@ except Exception as exc:
     traceback.print_exc()
     mcp_router = None
 
-include_runtime_routers(
+configure_optional_routers(
     app,
     admin_router=admin_router,
     mcp_router=mcp_router,
 )
 
-app.include_router(github_router)
-app.include_router(developer_router)
-app.include_router(repo_router)
-app.include_router(workspace_router)
-app.include_router(knowledge_router)
-app.include_router(execute_router)
-app.include_router(system_awareness_router)
-app.include_router(system_startup_router)
-app.include_router(drive_routes_router)
-app.include_router(rag_routes_router)
-app.include_router(rag_runtime_routes_router)
-app.include_router(chat_routes_router)
-app.include_router(system_core_routes_router)
-app.include_router(actions_routes_router)
-app.include_router(system_router)
-app.include_router(debug_router)
-app.include_router(runtime_router)
-app.include_router(deployment_router)
+configure_core_routers(
+    app,
+    github_router,
+    developer_router,
+    repo_router,
+    workspace_router,
+    knowledge_router,
+    execute_router,
+    system_awareness_router,
+    system_startup_router,
+    drive_routes_router,
+    rag_routes_router,
+    rag_runtime_routes_router,
+    chat_routes_router,
+    system_core_routes_router,
+    actions_routes_router,
+    system_router,
+    debug_router,
+    runtime_router,
+    deployment_router,
+)
 
 try:
     from api.system_runtime import router as system_runtime_router
