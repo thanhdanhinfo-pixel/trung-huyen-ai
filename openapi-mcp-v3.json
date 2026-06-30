@@ -4,7 +4,7 @@
     "title": "TRUNG_HUYEN_AI_OS_RUNTIME",
     "version": "3.7.0",
     "description": "Stable GPT Actions schema for TRUNG_HUYEN_AI_OS with mandatory startup preflight, MCP discovery, and safe shell/cloud build capability"
-  }
+  },
   "servers": [
     {
       "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
