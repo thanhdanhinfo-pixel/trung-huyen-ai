@@ -1,6 +1,6 @@
 import ast,json
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=Path(__file__).resolve().parents[1] 
 IGNORE={'.git','__pycache__','.venv','venv','node_modules'}
 result={}
 for p in ROOT.rglob('*.py'):
