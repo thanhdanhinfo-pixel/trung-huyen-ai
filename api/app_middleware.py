@@ -6,6 +6,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from time import perf_counter
 from uuid import uuid4
 
+PAYLOAD_LIMITS = {
+    "/chat": 50 * 1024,
+    "/drive/search-read": 100 * 1024,
+    "/rag/index": 200 * 1024,
+}
+
 
 def configure_cors(app: FastAPI) -> None:
     app.add_middleware(
