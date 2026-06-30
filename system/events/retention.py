@@ -7,4 +7,4 @@ class EventRetention:
     def cleanup_status(self):
         return {'last_run': datetime.utcnow().isoformat()+'Z','status':'scheduled'}
 
-event_retention = EventRetention()
+event_retention = EventRetention() 
