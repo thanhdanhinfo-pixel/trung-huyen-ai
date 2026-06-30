@@ -3,6 +3,11 @@ from __future__ import annotations
 from fastapi import FastAPI
 
 
+def configure_core_routers(app: FastAPI, *routers) -> None:
+    for router in routers:
+        app.include_router(router)
+
+
 def include_optional_router(app: FastAPI, router, name: str) -> None:
     if router:
         app.include_router(router)
