@@ -27,6 +27,25 @@ def version():
     }
 
 
+@router.get("/livez")
+def livez():
+    return {"status": "alive"}
+
+
+@router.get("/readiness")
+def readiness():
+    payload = system_health()
+    payload["mcp_loaded"] = _mcp_loaded()
+    payload["ready"] = all(
+        [
+            payload.get("server") == "ok",
+            payload.get("drive", {}).get("status") in {"ok", "degraded"},
+            payload.get("openai", {}).get("status") != "missing",
+        ]
+    )
+    return payload
+
+
 @router.get("/health")
 def health():
     payload = system_health()
