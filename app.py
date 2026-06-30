@@ -204,16 +204,7 @@ class SearchReadRequest(BaseModel):
 
 # build_context migrated to services.chat_service
 
-@app.get("/version")
-def version():
-    return {
-        "system": "TRUNG_HUYEN_AI_OS",
-        "version": "1.0.0",
-        "ai_brain": "v1",
-        "rag": True,
-        "qdrant": True,
-        "drive": True,
-    }
+# /version migrated to api.routes.system_core
 # =====================================
 # SYSTEM
 # =====================================
