@@ -1,4 +1,4 @@
-class SecurityLayer:
+class SecurityLayer: 
     def check(self, user):
         return {
             "user": user,
