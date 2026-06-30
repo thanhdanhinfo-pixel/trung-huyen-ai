@@ -198,11 +198,7 @@ class SearchReadRequest(BaseModel):
     max_chars_per_file: int = Field(default=6000, ge=1000, le=20000)
 
 
-def openai_client() -> OpenAI:
-    if not OPENAI_API_KEY:
-        raise RuntimeError("Missing OPENAI_API_KEY environment variable.")
-    return OpenAI(api_key=OPENAI_API_KEY)
-
+# openai_client migrated to services.chat_service
 
 def build_context(files: List[Dict[str, Any]], max_context_chars: int) -> str:
     blocks: List[str] = []
