@@ -8,4 +8,4 @@ class DistributedRouting:
             return {'route': 'governance_bus', 'event_type': event_type}
         return {'route': 'default_bus', 'event_type': event_type}
 
-distributed_routing = DistributedRouting()
+distributed_routing = DistributedRouting() 
