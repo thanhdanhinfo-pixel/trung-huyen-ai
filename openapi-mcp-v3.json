@@ -3,7 +3,7 @@
   "info": {
     "title": "TRUNG_HUYEN_AI_OS_RUNTIME",
     "version": "3.8.0",
-    "description": "System GPT Actions schema for TRUNG_HUYEN_AI_OS. Handles startup, governance, runtime, MCP, GitHub, deployment, memory, tasks, and checkpoints."
+    "description": "System GPT Actions schema for TRUNG_HUYEN_AI_OS. Handles startup, governance, runtime, MCP, GitHub, Drive, RAG, observability, memory, tasks, and checkpoints."
   },
   "servers": [
     {
@@ -17,7 +17,15 @@
         "summary": "Khởi động TRUNG_HUYEN_AI_OS",
         "responses": {
           "200": {
-            "description": "Startup state"
+            "description": "Startup state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -47,7 +55,15 @@
         "summary": "Get system preflight",
         "responses": {
           "200": {
-            "description": "Preflight state"
+            "description": "Preflight state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -58,7 +74,34 @@
         "summary": "Get self state",
         "responses": {
           "200": {
-            "description": "Self state"
+            "description": "Self state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/active-task": {
+      "get": {
+        "operationId": "getActiveTask",
+        "summary": "Get active task",
+        "responses": {
+          "200": {
+            "description": "Active task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -82,24 +125,21 @@
         }
       }
     },
-    "/system/active-task": {
-      "get": {
-        "operationId": "getActiveTask",
-        "summary": "Get active task",
-        "responses": {
-          "200": {
-            "description": "Active task"
-          }
-        }
-      }
-    },
     "/system/last-actions": {
       "get": {
         "operationId": "getLastActions",
         "summary": "Get last actions",
         "responses": {
           "200": {
-            "description": "Last actions"
+            "description": "Last actions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -110,7 +150,15 @@
         "summary": "Get next actions",
         "responses": {
           "200": {
-            "description": "Next actions"
+            "description": "Next actions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -121,7 +169,15 @@
         "summary": "Get global memory",
         "responses": {
           "200": {
-            "description": "Global memory"
+            "description": "Global memory",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -132,7 +188,15 @@
         "summary": "Get memory pack",
         "responses": {
           "200": {
-            "description": "Memory pack"
+            "description": "Memory pack",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -143,7 +207,15 @@
         "summary": "Get governance rules",
         "responses": {
           "200": {
-            "description": "Governance rules"
+            "description": "Governance rules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -154,7 +226,15 @@
         "summary": "Get tool health",
         "responses": {
           "200": {
-            "description": "Tool health"
+            "description": "Tool health",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -222,7 +302,15 @@
         "summary": "List MCP tools",
         "responses": {
           "200": {
-            "description": "MCP tools"
+            "description": "MCP tools",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -233,7 +321,15 @@
         "summary": "Get MCP manifest",
         "responses": {
           "200": {
-            "description": "MCP manifest"
+            "description": "MCP manifest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -244,7 +340,15 @@
         "summary": "Ping MCP runtime",
         "responses": {
           "200": {
-            "description": "MCP status"
+            "description": "MCP status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -268,14 +372,23 @@
                     "type": "object",
                     "additionalProperties": true
                   }
-                }
+                },
+                "additionalProperties": false
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Tool result"
+            "description": "Tool result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -287,6 +400,25 @@
         "responses": {
           "200": {
             "description": "Drive tree",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/github/runtime/status": {
+      "get": {
+        "operationId": "getGithubRuntimeStatus",
+        "summary": "Get GitHub runtime status",
+        "responses": {
+          "200": {
+            "description": "GitHub runtime status",
             "content": {
               "application/json": {
                 "schema": {
@@ -316,7 +448,15 @@
         ],
         "responses": {
           "200": {
-            "description": "Directory listing"
+            "description": "Directory listing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -336,25 +476,15 @@
                   "path": {
                     "type": "string"
                   }
-                }
+                },
+                "additionalProperties": false
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "File content"
-          }
-        }
-      }
-    },
-    "/github/runtime/status": {
-      "get": {
-        "operationId": "getGithubRuntimeStatus",
-        "summary": "Get GitHub runtime status",
-        "responses": {
-          "200": {
-            "description": "GitHub runtime status",
+            "description": "File content",
             "content": {
               "application/json": {
                 "schema": {
@@ -398,7 +528,7 @@
     },
     "/drive/read-path": {
       "get": {
-        "operationId": "readDrivePathV2",
+        "operationId": "readDrivePath",
         "summary": "Read Google Drive file by path",
         "parameters": [
           {
