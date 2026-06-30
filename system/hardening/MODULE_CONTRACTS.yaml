@@ -1,4 +1,4 @@
-name: MODULE_CONTRACTS
+name: MODULE_CONTRACTS 
 status: active
 purpose: Standard contract for all runtime modules.
 
