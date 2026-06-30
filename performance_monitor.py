@@ -1,4 +1,4 @@
-from time import perf_counter
+from time import perf_counter 
 
 class PerformanceMonitor:
     def start(self):
