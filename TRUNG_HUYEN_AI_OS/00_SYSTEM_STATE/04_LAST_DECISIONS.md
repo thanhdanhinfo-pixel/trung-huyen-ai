@@ -1,6 +1,6 @@
 # LAST_DECISIONS
 
-D001 TRUNG_HUYEN_AI_OS is one entity.
+D001 TRUNG_HUYEN_AI_OS is one entity. 
 
 D002 Google Drive is the primary system memory.
 
