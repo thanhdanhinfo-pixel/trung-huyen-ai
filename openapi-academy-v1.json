@@ -1,1 +1,227 @@
-{"openapi":"3.1.0","info":{"title":"ACADEMY_GPT","version":"1.2.0"},"servers":[{"url":"https://trung-huyen-ai-779121307308.asia-southeast1.run.app"}],"paths":{"/system/khoi-dong":{"get":{"operationId":"startupSystem","summary":"Startup"}},"/system/active-task":{"get":{"operationId":"getActiveTask","summary":"Active Task"}},"/system/preflight":{"get":{"operationId":"getPreflight","summary":"Mandatory preflight"}},"/system/tool-health":{"get":{"operationId":"getToolHealth","summary":"Tool Health"}},"/system/last-actions":{"get":{"operationId":"getLastActions","summary":"Last Actions"}},"/system/next-actions":{"get":{"operationId":"getNextActions","summary":"Next Actions"}},"/system/global-memory":{"get":{"operationId":"globalMemory","summary":"Global Memory"}},"/mcp/read-drive-path":{"get":{"operationId":"readDrivePath","summary":"Read Academy Docs"}},"/knowledge/save":{"post":{"operationId":"saveKnowledge","summary":"Save Knowledge"}},"/workspace/load":{"get":{"operationId":"loadWorkspace","summary":"Load Workspace"}}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ACADEMY_GPT",
+    "version": "1.2.0",
+    "description": "GPT Actions schema for Academy workspace, knowledge, startup, memory, and Drive document access."
+  },
+  "servers": [
+    {
+      "url": "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+    }
+  ],
+  "paths": {
+    "/system/khoi-dong": {
+      "get": {
+        "operationId": "startupSystem",
+        "summary": "Startup system",
+        "responses": {
+          "200": {
+            "description": "Startup state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/active-task": {
+      "get": {
+        "operationId": "getActiveTask",
+        "summary": "Get active task",
+        "responses": {
+          "200": {
+            "description": "Active task state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/preflight": {
+      "get": {
+        "operationId": "getPreflight",
+        "summary": "Mandatory preflight",
+        "responses": {
+          "200": {
+            "description": "Preflight context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/tool-health": {
+      "get": {
+        "operationId": "getToolHealth",
+        "summary": "Tool health",
+        "responses": {
+          "200": {
+            "description": "Tool health state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/last-actions": {
+      "get": {
+        "operationId": "getLastActions",
+        "summary": "Last actions",
+        "responses": {
+          "200": {
+            "description": "Last verified actions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/next-actions": {
+      "get": {
+        "operationId": "getNextActions",
+        "summary": "Next actions",
+        "responses": {
+          "200": {
+            "description": "Next actions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/global-memory": {
+      "get": {
+        "operationId": "getGlobalMemory",
+        "summary": "Global memory",
+        "responses": {
+          "200": {
+            "description": "Global memory",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/read-drive-path": {
+      "get": {
+        "operationId": "readDrivePath",
+        "summary": "Read Academy docs by Drive logical path",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Logical path or Drive path to read"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Drive document content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge/save": {
+      "post": {
+        "operationId": "saveKnowledge",
+        "summary": "Save knowledge",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Knowledge saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspace/load": {
+      "get": {
+        "operationId": "loadWorkspace",
+        "summary": "Load workspace",
+        "responses": {
+          "200": {
+            "description": "Workspace loaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
