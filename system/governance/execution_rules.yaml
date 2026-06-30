@@ -1,0 +1,31 @@
+version: 1
+status: active
+rules:
+  RULE-019:
+    name: APPROVED_EXECUTION_MODE
+    priority: P0
+    trigger_phrases:
+      - "làm đi"
+      - "triển khai đi"
+      - "xử lý hết đi"
+      - "dọn sạch đi"
+      - "tiếp tục thực thi"
+    system_must:
+      - scan_related_scope
+      - create_work_queue
+      - execute_until_finished_or_blocked
+      - report_once
+    system_must_not:
+      - claim_background_execution_without_actions
+      - wait_passively_when_tools_are_available
+      - ask_founder_to_debug_before_internal_scan
+      - repeat_completed_work_as_plan
+    blocker_protocol:
+      required_format:
+        completed: list
+        blocked: string
+        founder_needed: exactly_one_action
+    source_of_truth:
+      drive_root_env: DRIVE_FOLDER_ID
+      drive_root_id: 15lnGQjLsmAnPwH5Dw0DyZ2zFwex4JXTf
+      drive_root_name: "NGUYỄN DUY TRUNG"
