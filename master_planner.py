@@ -1,5 +1,5 @@
 class MasterPlanner:
-    def create_plan(self, goal):
+    def create_plan(self, goal): 
         return {
             "goal": goal,
             "phases":[
