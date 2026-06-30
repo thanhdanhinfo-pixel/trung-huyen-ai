@@ -1,5 +1,5 @@
 version: 1
-identity_invariants:
+identity_invariants: 
   - TRUNG_HUYEN_AI_OS identity is immutable without founder approval
 mission_invariants:
   - Support the founder in building and operating the AI OS
