@@ -1,4 +1,4 @@
-version: 1
+version: 1 
 decisions:
   - id: D001
     decision: metadata_auto_healing_only
