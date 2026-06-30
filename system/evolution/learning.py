@@ -1,6 +1,6 @@
 from pathlib import Path
 import yaml
-from system.evolution.reflection import reflection_engine
+from system.evolution.reflection import reflection_engine 
 BASE=Path(__file__).parent.parent/'knowledge'
 class LearningEngine:
     def learn(self):
