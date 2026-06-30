@@ -2,7 +2,7 @@
 
 Root `.py` files that remain are compatibility shims or public facades.
 
-## Keep forever
+## Keep forever 
 - `system/__init__.py`
 - source-of-truth YAML files
 - identity/continuity documents until boot dependency audit is complete
