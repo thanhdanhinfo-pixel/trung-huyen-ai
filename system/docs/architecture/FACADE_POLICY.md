@@ -1,6 +1,6 @@
 # Facade Policy
 
-Facade modules:
+Facade modules: 
 - system.event_system
 - system.scheduler_system
 - system.capability_system
