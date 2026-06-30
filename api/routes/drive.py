@@ -38,3 +38,20 @@ def drive_search(q: str, limit: int = Query(default=20, ge=1, le=200)):
             status_code=500,
             content={"status": "error", "message": str(exc)},
         )
+
+
+@router.get("/read")
+def drive_read(file_id: str):
+    try:
+        content = read_file_content(file_id=file_id)
+        return {
+            "status": "ok",
+            "file_id": file_id,
+            "content_length": len(content),
+            "content": content,
+        }
+    except Exception as exc:
+        return JSONResponse(
+            status_code=500,
+            content={"status": "error", "message": str(exc)},
+        )
