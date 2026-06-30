@@ -2,7 +2,7 @@ from datetime import datetime
 from system.evolution_worker import evolution_worker
 from system.retention_worker import retention_worker
 
-class SchedulerRuntime:
+class SchedulerRuntime: 
     def __init__(self):
         self._runs=[]
     def run_cycle(self):
