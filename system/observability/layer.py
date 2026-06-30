@@ -1,6 +1,6 @@
 from system.observability.awareness import system_awareness
 from system.digital_twin import digital_twin 
-from runtime_health import runtime_health
+from runtime_health import runtime_health 
 class ObservabilityLayer:
     def system_snapshot(self):
         return {'awareness':system_awareness.snapshot(),'digital_twin':digital_twin.snapshot(),'runtime':runtime_health.status()}
