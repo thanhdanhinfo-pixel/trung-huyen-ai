@@ -640,19 +640,8 @@ def rag_search(q: str, limit: int = 5):
             }
         )
 
-@app.get("/drive/read")
-def drive_read(file_id: str):
-    try:
-        content = read_file_content(file_id=file_id)
-        return {
-            "status": "ok",
-            "file_id": file_id,
-            "content_length": len(content),
-            "content": content,
-        }
-    except Exception as exc:
-        return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
-                                                
+# /drive/read migrated to api.routes.drive
+
 @app.post("/drive/search-read")
 def drive_search_read(req: SearchReadRequest):
 
