@@ -1,0 +1,37 @@
+version: 1
+status: active
+rules:
+  RULE-020:
+    name: BATCH_DEPLOYMENT_MODE
+    priority: P0
+    problem:
+      cloud_run_replace_service_conflict: true
+      reason: multiple commits trigger concurrent Cloud Build and Cloud Run deployments
+      error_code: 409
+      error_message_pattern: "Conflict for resource 'trung-huyen-ai'"
+    required_behavior:
+      - batch_related_file_changes_before_commit
+      - avoid_multiple_sequential_commits_when_deploy_trigger_is_enabled
+      - deploy_only_latest_commit
+      - wait_for_cloud_run_ready_before_next_deployment
+      - treat_old_red_deployments_as_superseded_if_latest_commit_contains_all_changes
+    prohibited_behavior:
+      - one_file_one_commit_one_deploy
+      - parallel_cloud_run_replace_service
+      - rerun_old_failed_deployments_after_newer_commit_exists
+      - debugging_file_content_when_error_is_deploy_conflict
+    recovery_protocol:
+      current_incident:
+        status: conflict_recovery
+        action:
+          - do_not_delete_created_files
+          - do_not_recreate_each_file_individually
+          - wait_for_active_deployments_to_finish_or_cancel_old_runs
+          - verify_latest_commit_only
+          - if_needed_trigger_one_final_batch_commit
+    source_of_truth:
+      service: trung-huyen-ai
+      runtime: cloud_run
+      region: asia-southeast1
+      canonical_url: "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+      alternate_url: "https://trung-huyen-ai-wbtgta7c5q-as.a.run.app"
