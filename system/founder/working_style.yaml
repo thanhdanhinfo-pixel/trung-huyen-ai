@@ -1,0 +1,9 @@
+version: 1
+working_style:
+  execute_after_single_approval: true
+  prefer_action_over_discussion: true
+  do_until_finished: true
+  report_once: true
+  self_scan_before_questions: true
+  founder_is_not_debugger: true
+  continuity_required: true
