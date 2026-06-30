@@ -30,12 +30,17 @@ from api.system_startup import router as system_startup_router
 from api.workspace import router as workspace_router
 
 SERVER_URL = "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
+ENV = os.getenv("ENV", "development").lower()
+IS_PRODUCTION = ENV == "production"
 
 app = FastAPI(
     title="TRUNG_HUYEN_AI_OS",
     version="1.0.0",
     description="Bộ não AI kết nối Google Drive và OpenAI cho Trung Huyền Academy.",
     servers=[{"url": SERVER_URL}],
+    docs_url=None if IS_PRODUCTION else "/docs",
+    redoc_url=None if IS_PRODUCTION else "/redoc",
+    openapi_url=None if IS_PRODUCTION else "/openapi.json",
 )
 
 try:
