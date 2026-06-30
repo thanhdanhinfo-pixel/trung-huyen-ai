@@ -3,7 +3,7 @@
   "info": {
     "title": "TRUNG_HUYEN_AI_OS_RUNTIME",
     "version": "3.8.0",
-    "description": "System GPT Actions schema for TRUNG_HUYEN_AI_OS. Handles startup, governance, runtime, MCP, GitHub, Drive, RAG, observability, memory, tasks, and checkpoints."
+    "description": "System GPT Actions schema for TRUNG_HUYEN_AI_OS. Handles startup, governance, runtime, MCP, GitHub, deployment, memory, tasks, and checkpoints."
   },
   "servers": [
     {
@@ -22,7 +22,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -41,7 +42,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -60,7 +62,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -79,26 +82,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/system/active-task": {
-      "get": {
-        "operationId": "getActiveTask",
-        "summary": "Get active task",
-        "responses": {
-          "200": {
-            "description": "Active task",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -117,7 +102,28 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/active-task": {
+      "get": {
+        "operationId": "getActiveTask",
+        "summary": "Get active task",
+        "responses": {
+          "200": {
+            "description": "Active task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -136,7 +142,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -155,7 +162,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -174,7 +182,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -193,7 +202,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -212,7 +222,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -231,7 +242,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -250,7 +262,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -269,7 +282,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -288,7 +302,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -307,7 +322,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -326,7 +342,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -345,7 +362,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -363,17 +381,19 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["tool"],
                 "properties": {
                   "tool": {
                     "type": "string"
                   },
                   "arguments": {
                     "type": "object",
-                    "additionalProperties": true
+                    "properties": {},
+                    "required": []
                   }
                 },
-                "additionalProperties": false
+                "required": [
+                  "tool"
+                ]
               }
             }
           }
@@ -385,7 +405,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -404,26 +425,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/github/runtime/status": {
-      "get": {
-        "operationId": "getGithubRuntimeStatus",
-        "summary": "Get GitHub runtime status",
-        "responses": {
-          "200": {
-            "description": "GitHub runtime status",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -453,7 +456,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -471,13 +475,14 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["path"],
                 "properties": {
                   "path": {
                     "type": "string"
                   }
                 },
-                "additionalProperties": false
+                "required": [
+                  "path"
+                ]
               }
             }
           }
@@ -489,7 +494,28 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/github/runtime/status": {
+      "get": {
+        "operationId": "getGithubRuntimeStatus",
+        "summary": "Get GitHub runtime status",
+        "responses": {
+          "200": {
+            "description": "GitHub runtime status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -518,7 +544,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -528,7 +555,7 @@
     },
     "/drive/read-path": {
       "get": {
-        "operationId": "readDrivePath",
+        "operationId": "readDrivePathV2",
         "summary": "Read Google Drive file by path",
         "parameters": [
           {
@@ -547,7 +574,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
@@ -576,7 +604,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "properties": {},
+                  "required": []
                 }
               }
             }
