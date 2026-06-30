@@ -200,33 +200,7 @@ class SearchReadRequest(BaseModel):
 
 # openai_client migrated to services.chat_service
 
-def build_context(files: List[Dict[str, Any]], max_context_chars: int) -> str:
-    blocks: List[str] = []
-    used = 0
-
-    for idx, file in enumerate(files, start=1):
-        content = (file.get("content") or file.get("snippet") or "").strip()
-        if not content:
-            continue
-
-        block = (
-            f"[TÀI LIỆU {idx}]\n"
-            f"Tên: {file.get('name')}\n"
-            f"ID: {file.get('id')}\n"
-            f"Link: {file.get('webViewLink')}\n"
-            f"Nội dung:\n{content}\n"
-        )
-
-        if used + len(block) > max_context_chars:
-            remaining = max_context_chars - used
-            if remaining > 1000:
-                blocks.append(block[:remaining])
-            break
-
-        blocks.append(block)
-        used += len(block)
-
-    return "\n---\n".join(blocks)
+# build_context migrated to services.chat_service
 
 @app.get("/version")
 def version():
