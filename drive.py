@@ -115,19 +115,6 @@ def _folder_clause(folder_id: Optional[str] = None) -> str:
 def list_files(limit: int = 50, folder_id: Optional[str] = None) -> List[Dict[str, Any]]:
     service = get_drive_service()
 
-    if not folder_id and len(_configured_drive_roots()) > 1:
-        results: List[Dict[str, Any]] = []
-        per_root_limit = max(limit, 1)
-        for source in _configured_drive_roots():
-            for item in list_files(limit=per_root_limit, folder_id=source["id"]):
-                enriched = dict(item)
-                enriched["source"] = source.get("name")
-                enriched["source_id"] = source.get("id")
-                results.append(enriched)
-                if len(results) >= limit:
-                    return results
-        return results
-
     result = service.files().list(
         q=f"trashed = false{_folder_clause(folder_id)}",
         pageSize=limit,
