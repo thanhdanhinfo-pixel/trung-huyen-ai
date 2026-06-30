@@ -18,7 +18,11 @@ def configure_cors(app: FastAPI) -> None:
 def register_request_logging(app: FastAPI, register_error) -> None:
     @app.middleware("http")
     async def log_requests(request: Request, call_next):
+        request_id = request.headers.get("x-request-id") or str(uuid4())
+        request.state.request_id = request_id
+
         safe_headers = dict(request.headers)
+        safe_headers["x-request-id"] = request_id
         for key in ["authorization", "cookie", "x-api-key"]:
             if key in safe_headers:
                 safe_headers[key] = "***REDACTED***"
