@@ -160,7 +160,222 @@
             }
           }
         },
-        "responses": { "200": { "description": "File content" } }
+        "/system/boot-v3": {
+  "get": {
+    "operationId": "bootV3",
+    "summary": "Compatibility boot endpoint",
+    "responses": {
+      "200": {
+        "description": "Boot V3 startup state",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/system/session-checkpoint": {
+  "get": {
+    "operationId": "getSessionCheckpoint",
+    "summary": "Get current session checkpoint",
+    "responses": {
+      "200": {
+        "description": "Session checkpoint state",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/github/runtime/status": {
+  "get": {
+    "operationId": "getGithubRuntimeStatus",
+    "summary": "Get GitHub runtime status",
+    "responses": {
+      "200": {
+        "description": "GitHub runtime status",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/mcp/drive-tree": {
+  "get": {
+    "operationId": "getDriveTree",
+    "summary": "Get Google Drive tree",
+    "responses": {
+      "200": {
+        "description": "Drive tree",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/drive/search": {
+  "get": {
+    "operationId": "searchDrive",
+    "summary": "Search Google Drive",
+    "parameters": [
+      {
+        "name": "q",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Drive search results",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/drive/read-path": {
+  "get": {
+    "operationId": "readDrivePathV2",
+    "summary": "Read Google Drive file by path",
+    "parameters": [
+      {
+        "name": "path",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Drive file content",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/rag/search": {
+  "get": {
+    "operationId": "searchRag",
+    "summary": "Search RAG knowledge",
+    "parameters": [
+      {
+        "name": "q",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "RAG search results",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/system/import-scan": {
+  "get": {
+    "operationId": "getImportScan",
+    "summary": "Get repository import scan",
+    "responses": {
+      "200": {
+        "description": "Import scan results",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/system/orphan-modules": {
+  "get": {
+    "operationId": "getOrphanModules",
+    "summary": "Get orphan modules",
+    "responses": {
+      "200": {
+        "description": "Orphan modules report",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/system/refactor-plan": {
+  "get": {
+    "operationId": "getRefactorPlan",
+    "summary": "Get refactor plan",
+    "responses": {
+      "200": {
+        "description": "Refactor plan",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }  
       }
     }
   }
