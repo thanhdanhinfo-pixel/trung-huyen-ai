@@ -305,28 +305,7 @@ def health():
         "qdrant_api_key": bool(QDRANT_API_KEY),
     }
 
-@app.post("/rag/index")
-def rag_index(limit: int = 10):
-    if index_drive is None:
-        return JSONResponse(
-            status_code=503,
-            content={
-                "status": "error",
-                "message": "index_drive not available"
-            }
-        )
-
-    try:
-        return index_drive(limit=limit)
-    except Exception as exc:
-        return JSONResponse(
-            status_code=500,
-            content={
-                "status": "error",
-                "message": str(exc),
-                "type": type(exc).__name__
-            }
-        ) 
+# /rag/index migrated to api.routes.rag_runtime
 @app.post("/ping-post")
 def ping_post():
     return {"status": "ok"}
