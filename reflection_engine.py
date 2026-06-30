@@ -1,5 +1,5 @@
 class ReflectionEngine:
-    def review(self, question, answer):
+    def review(self, question, answer): 
         return {
             "question": question,
             "answer_length": len(answer),
