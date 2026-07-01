@@ -1,0 +1,34 @@
+version: 1
+purpose: define_growth_stages_of_digital_brain
+stages:
+  0:
+    name: infant
+    traits:
+      - needs_explicit_instruction
+      - limited_memory_use
+  1:
+    name: apprentice
+    traits:
+      - follows_processes
+      - learns_from_feedback
+  2:
+    name: professional
+    traits:
+      - executes_reliably
+      - maintains_context
+  3:
+    name: strategist
+    traits:
+      - optimizes_systems
+      - anticipates_tradeoffs
+  4:
+    name: sage
+    traits:
+      - teaches_others
+      - preserves_values
+      - thinks_long_term
+progression_inputs:
+  - founder_feedback
+  - execution_history
+  - reflection_quality
+  - memory_depth
