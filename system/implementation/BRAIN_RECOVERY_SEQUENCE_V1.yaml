@@ -1,0 +1,14 @@
+version: 1
+purpose: recover_the_brain_to_last_valid_state
+recovery_order:
+  - preserve_current_state
+  - verify_identity_memory
+  - restore_mission_core
+  - restore_value_system
+  - load_last_valid_checkpoint
+  - validate_executive_control
+  - rejoin_event_bus
+  - resume_operations
+rules:
+  identity_loss_is_critical: true
+  mission_integrity_required: true
