@@ -174,6 +174,69 @@ def _active_task() -> Dict[str, Any]:
     }
 
 
+def _global_governance() -> Dict[str, Any]:
+    return {
+        "status": "ok",
+        "constitution": {
+            "path": "system/GLOBAL_GOVERNANCE/00_SYSTEM_CONSTITUTION.md",
+            "mandatory": True,
+            "rule": "NO_CONSTITUTION_NO_WORK",
+        },
+        "index": {
+            "path": "system/GLOBAL_GOVERNANCE/INDEX.yaml",
+            "mandatory_on_startup": True,
+        },
+        "protocols": [
+            {
+                "name": "THOS_PARALLEL_COLLABORATION_PROTOCOL_V1",
+                "path": "system/GLOBAL_PROTOCOLS/THOS_PARALLEL_COLLABORATION_PROTOCOL_V1.md",
+                "mandatory": True,
+            }
+        ],
+        "mandatory_rules": [
+            "NO_CONSTITUTION_NO_WORK",
+            "FOUNDER_FINAL_AUTHORITY",
+            "EXPLICIT_APPROVAL_REQUIRED_FOR_WRITES",
+            "PARALLEL_MODE_ON",
+            "SINGLE_DEPLOYMENT_AUTHORITY",
+            "WRITE_SAFETY_GATE_ACTIVE",
+            "SINGLE_ACTIVE_TASK",
+            "TASK_CONTINUITY_MANDATORY",
+            "CAPABILITY_HONESTY",
+            "MEMORY_REQUIRES_PERSISTENT_STORAGE",
+        ],
+        "startup_requirement": {
+            "must_load_on_startup": True,
+            "load_via": "/system/khoi-dong",
+            "fallback_endpoint": "/system/global-governance",
+        },
+    }
+
+
+def _memory_pack() -> Dict[str, Any]:
+    return {
+        "status": "ok",
+        "self_state": _self_state(),
+        "global_memory": _global_memory(),
+        "global_governance": _global_governance(),
+        "global_protocols": _global_governance().get("protocols", []),
+        "active_task": _active_task(),
+        "next_actions": _next_actions(),
+    }
+
+
+def _governance_rules() -> Dict[str, Any]:
+    governance = _global_governance()
+    return {
+        "status": "ok",
+        "source": "system/GLOBAL_GOVERNANCE",
+        "constitution": governance["constitution"],
+        "index": governance["index"],
+        "mandatory_rules": governance["mandatory_rules"],
+        "startup_requirement": governance["startup_requirement"],
+    }
+
+
 def _payload() -> Dict[str, Any]:
     return {
         "status": "ok",
