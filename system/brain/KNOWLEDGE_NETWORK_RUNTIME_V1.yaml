@@ -1,0 +1,31 @@
+version: 1
+purpose: operational_digital_neocortex
+functions:
+  link_knowledge_nodes: true
+  query_relationships: true
+  discover_connections: true
+  detect_contradictions: true
+  support_cross_domain_reasoning: true
+node_types:
+  - concept
+  - project
+  - decision
+  - lesson
+  - procedure
+  - person
+  - mission
+relationships:
+  - supports
+  - contradicts
+  - depends_on
+  - derived_from
+  - influences
+  - improves
+runtime:
+  source_memory: google_drive/Knowledge
+  state_store: runtime/knowledge_network
+  output_to: decision_engine
+rules:
+  every_edge_requires_source: true
+  confidence_required: true
+  contradictions_must_be_preserved: true
