@@ -1,0 +1,17 @@
+version: 1
+status: initialized
+worker: drive_worker
+mode: incremental
+sync_targets:
+  - system/tasks/**
+  - system/*.md
+  - archive/**
+
+destination_root: TRUNG_HUYEN_AI_OS
+policies:
+  mobile_first: true
+  keep_repo_source: true
+  no_code_sync: true
+next:
+  - folder_provisioning
+  - scheduled_sync_runtime
