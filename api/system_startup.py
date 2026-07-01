@@ -193,6 +193,12 @@ def _payload() -> Dict[str, Any]:
         "global_memory": _global_memory(),
         "next_actions": _next_actions(),
         "active_task": _active_task(),
+        "global_governance": {
+            "constitution": "system/GLOBAL_GOVERNANCE/00_SYSTEM_CONSTITUTION.md",
+            "index": "system/GLOBAL_GOVERNANCE/INDEX.yaml",
+            "mandatory_on_startup": True,
+            "rule": "NO_CONSTITUTION_NO_WORK"
+        },
         "global_protocols": [
             {
                 "name": "THOS_PARALLEL_COLLABORATION_PROTOCOL_V1",
