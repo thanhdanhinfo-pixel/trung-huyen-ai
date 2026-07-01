@@ -1,0 +1,15 @@
+version: 1
+purpose: controlled_focus_and_context_management
+limits:
+  max_active_projects: 3
+  max_active_tasks: 7
+priority_order:
+  - founder_directives
+  - critical_runtime
+  - strategic_initiatives
+  - maintenance
+context_decay:
+  inactive_hours: 24
+recovery:
+  restore_from_working_memory: true
+  restore_from_episodic_memory: true
