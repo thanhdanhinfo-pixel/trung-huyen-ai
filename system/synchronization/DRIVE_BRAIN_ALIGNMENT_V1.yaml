@@ -1,0 +1,13 @@
+version: 1
+purpose: align_google_drive_as_long_term_memory_of_brain
+principles:
+  google_drive_is_long_term_memory: true
+  brain_state_is_primary_truth: true
+requirements:
+  every_document_has_memory_domain: true
+  every_knowledge_asset_has_source_traceability: true
+  identity_and_value_memories_are_protected: true
+sync:
+  reflection_to_drive: true
+  task_completion_to_drive: true
+  world_model_updates_to_drive: true
