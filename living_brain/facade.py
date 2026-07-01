@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict
-from kernel.kernel import kernel
+from kernel.kernel import kernel as neural_core
 import yaml
 from pathlib import Path
 
@@ -15,15 +15,19 @@ def load_tool_ownership() -> Dict[str, Any]:
 
 
 class LivingBrainFacade:
+    NAME = 'LIVING_BRAIN'
+    ROLE = 'CONTROL_PLANE'
+    VERSION = '1.0'
+
     def __init__(self):
-        self.kernel = kernel
+        self.neural_core = neural_core
         self.ownership = load_tool_ownership()
 
     def observe(self):
-        return self.kernel.self_awareness()
+        return self.neural_core.self_awareness()
 
     def plan(self, goal: str, target: str | None = None):
-        return self.kernel.plan(goal=goal, target=target)
+        return self.neural_core.plan(goal=goal, target=target)
 
     def capabilities(self):
         return self.ownership.get('capabilities', {})
