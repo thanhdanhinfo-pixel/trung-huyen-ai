@@ -1,0 +1,10 @@
+version: 1
+purpose: align_workers_as_execution_limbs_of_brain
+principles:
+  workers_execute_not_govern: true
+  workers_report_to_brain: true
+  workers_cannot_change_mission_values_or_identity: true
+requirements:
+  every_worker_has_parent_goal: true
+  every_worker_has_reporting_channel: true
+  every_worker_updates_memory_after_execution: true
