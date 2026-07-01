@@ -1,0 +1,17 @@
+version: 1
+purpose: define_how_the_entire_system_operates_under_brain_control
+operating_cycle:
+  - perceive
+  - understand
+  - prioritize
+  - decide
+  - delegate
+  - execute
+  - reflect
+  - learn
+  - evolve
+principles:
+  brain_driven_operations: true
+  mission_first: true
+  continuous_learning: true
+  long_term_sustainability: true
