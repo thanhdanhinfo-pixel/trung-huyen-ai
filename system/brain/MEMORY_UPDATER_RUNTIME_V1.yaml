@@ -1,0 +1,25 @@
+version: 1
+purpose: operational_memory_persistence
+inputs:
+  - current_task
+  - execution_results
+  - founder_feedback
+  - errors
+  - decisions
+pipeline:
+  - capture_working_memory
+  - classify_memory_type
+  - write_episodic_record
+  - extract_semantic_knowledge
+  - update_procedural_memory
+  - update_value_memory_when_founder_corrects
+storage_targets:
+  working: runtime
+  episodic: google_drive/Memory
+  semantic: google_drive/Knowledge
+  procedural: google_drive/Procedures
+  value: google_drive/Constitution
+rules:
+  preserve_raw_events: true
+  no_silent_value_update: true
+  every_learning_has_source: true
