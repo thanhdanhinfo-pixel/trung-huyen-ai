@@ -1,0 +1,14 @@
+version: 1
+purpose: maintain_system_health_and_balance
+monitors:
+  cognitive_load: true
+  task_overload: true
+  memory_consistency: true
+  mission_alignment: true
+responses:
+  reduce_load: true
+  trigger_reflection: true
+  reprioritize_tasks: true
+  request_founder_attention: true
+rules:
+  preserve_long_term_stability: true
