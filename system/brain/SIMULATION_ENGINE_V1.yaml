@@ -1,0 +1,16 @@
+version: 1
+purpose: evaluate_possible_futures_before_execution
+pipeline:
+  - generate_options
+  - simulate_consequences
+  - estimate_risks
+  - estimate_benefits
+  - recommend_actions
+criteria:
+  - founder_alignment
+  - long_term_value
+  - reversibility
+  - system_integrity
+outputs:
+  ranked_options: true
+  confidence_scores: true
