@@ -1,0 +1,12 @@
+version: 1
+purpose: provide_unified_visibility_into_brain_and_system_state
+sections:
+  - brain_health
+  - mission_progress
+  - goal_status
+  - worker_status
+  - memory_sync
+  - governance_integrity
+  - evolution_cycle
+rules:
+  dashboard_state_must_reflect_brain_truth: true
