@@ -1,0 +1,61 @@
+version: 1
+status: active
+purpose: define_brain_as_supreme_command_center_and_critical_dependency_of_entire_system
+
+core_doctrine:
+  brain_has_supreme_command_authority: true
+  brain_decides_system_priorities: true
+  brain_controls_system_coordination: true
+  brain_failure_affects_entire_system: true
+  component_failure_does_not_override_brain: true
+
+biological_analogy:
+  component_failure:
+    meaning: a body_part_or_organ_has_problem
+    response: brain_detects_isolates_repairs_or_reprioritizes
+    system_status: degraded_but_governable
+  brain_failure:
+    meaning: central_control_cognition_or_governance_is_compromised
+    response: enter_safe_mode_and_request_founder_attention
+    system_status: critical
+
+command_rules:
+  all_components_obey_brain_control_plane: true
+  workers_cannot_override_brain: true
+  runtime_cannot_override_brain: true
+  github_changes_require_brain_context: true
+  drive_memory_updates_require_brain_context: true
+  governance_updates_require_founder_authority_and_brain_registration: true
+
+failure_classification:
+  component_failure: major
+  memory_sync_failure: major
+  worker_reporting_failure: critical
+  brain_state_corruption: critical
+  brain_control_bypass: critical
+  brain_constitution_violation: critical
+
+brain_protection_protocol:
+  preserve_brain_state: true
+  backup_brain_constitution: true
+  audit_brain_integrity: true
+  detect_control_bypass: true
+  protect_mission_values_identity_memory: true
+
+safe_mode:
+  trigger_conditions:
+    - brain_state_corruption
+    - conflicting_brain_authority
+    - lost_mission_alignment
+    - uncontrolled_worker_execution
+    - governance_conflict
+  actions:
+    - stop_non_critical_execution
+    - preserve_current_state
+    - log_failure
+    - request_founder_review
+    - restore_from_last_valid_brain_state
+
+principle: >
+  If a system component fails, the brain coordinates recovery. If the brain fails,
+  the entire system must enter protected safe mode because central command is compromised.
