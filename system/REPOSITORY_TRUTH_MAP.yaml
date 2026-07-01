@@ -6,7 +6,19 @@ events:
   status: audited
   duplicate_basename_detected: false
   legacy_shims_required: []
-  next_action: scheduler_domain_audit
+  next_action: drive_domain_audit
+
+scheduler:
+  source_of_truth:
+    package: system/scheduler/
+    runtime: system/task_runtime.py
+  compatibility_shims:
+    - system/scheduler_runtime.py
+    - system/scheduler_system.py
+    - system/production_scheduler.py
+  status: audited
+  duplicate_basename_detected: true
+  next_action: drive_domain_audit
 
 knowledge:
   source_of_truth:
