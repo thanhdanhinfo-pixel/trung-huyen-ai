@@ -6,7 +6,19 @@ events:
   status: audited
   duplicate_basename_detected: false
   legacy_shims_required: []
-  next_action: api_domain_audit
+  next_action: legacy_compaction
+
+api:
+  source_of_truth:
+    drive: api/routes/drive.py
+    chat: api/routes/chat.py
+    actions: api/routes/actions.py
+    system_core: api/routes/system_core.py
+  legacy_candidates:
+    - api/routes/rag_runtime.py
+  status: audited
+  duplicate_basename_detected: true
+  next_action: legacy_compaction
 
 drive:
   source_of_truth:
