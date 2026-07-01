@@ -1,0 +1,17 @@
+status: IN_PROGRESS
+priority: P0
+rules:
+  - no_duplicate_names_across_layers
+  - brain_namespace_frozen
+source_namespaces:
+  brain:
+    role: DEPRECATED_KNOWLEDGE_LAYER
+    writable: false
+  living_brain:
+    role: OPERATIONAL_CONTROL_PLANE
+    writable: true
+next_steps:
+  - move facade to living_brain
+  - move bootstrap to living_brain
+  - move tool_ownership to living_brain
+  - rename brain to knowledge_brain after audit
