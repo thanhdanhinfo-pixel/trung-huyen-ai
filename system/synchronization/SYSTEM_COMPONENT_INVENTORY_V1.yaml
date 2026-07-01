@@ -1,0 +1,14 @@
+version: 1
+purpose: inventory_all_system_components_for_brain_alignment
+components:
+  - brain
+  - github
+  - google_drive
+  - runtime
+  - workers
+  - governance
+  - knowledge_graph
+  - memory_services
+rules:
+  every_component_requires_brain_mapping: true
+  no_unregistered_component_allowed: true
