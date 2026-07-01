@@ -1,0 +1,40 @@
+version: 1
+purpose: make_the_brain_the_central_control_plane_of_the_entire_system
+principle: all_major_system_actions_must_pass_through_brain_control
+
+control_scope:
+  github: true
+  google_drive: true
+  runtime: true
+  workers: true
+  tasks: true
+  memory: true
+  knowledge_graph: true
+  governance: true
+  reporting: true
+
+control_pipeline:
+  - receive_signal
+  - update_brain_state
+  - evaluate_mission_alignment
+  - evaluate_values_and_constraints
+  - prioritize
+  - route_to_engine_or_worker
+  - execute_or_request_approval
+  - capture_result
+  - reflect_and_learn
+  - update_memory
+
+rules:
+  brain_is_system_control_center: true
+  no_major_action_without_brain_state_update: true
+  every_task_must_link_to_goal_or_mission: true
+  protected_actions_require_founder_approval: true
+  every_execution_result_updates_memory: true
+  every_failure_triggers_reflection: true
+
+outputs:
+  commands_to_workers: true
+  task_updates: true
+  memory_updates: true
+  reports_to_founder: true
