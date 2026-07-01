@@ -1,0 +1,53 @@
+version: 1
+status: active
+purpose: validate_brain_first_connection_paths_against_existing_direct_paths_without_disrupting_runtime
+
+principle: compare_new_brain_path_with_old_tool_path_before_switching_connections
+
+mode:
+  enforcement: none
+  old_path_remains_primary: true
+  new_brain_path_runs_in_shadow: true
+  no_user_experience_change: true
+
+shadow_flow:
+  old_path:
+    - founder_request
+    - existing_tool_or_function
+    - result
+  new_path:
+    - founder_request
+    - brain_intake
+    - intent_registry
+    - brain_command_envelope
+    - neural_gateway
+    - execution_unit
+    - existing_tool_or_function
+    - result
+    - brain_memory_and_reflection
+
+comparison:
+  compare_result_equivalence: true
+  compare_latency: true
+  compare_error_rate: true
+  compare_memory_update_success: true
+
+readiness_criteria:
+  result_equivalence_required: true
+  no_runtime_regression: true
+  memory_update_path_verified: true
+  reflection_path_verified: true
+  founder_experience_unchanged: true
+
+initial_shadow_targets:
+  - START_SYSTEM
+  - OBSERVE_SELF
+  - READ_MEMORY
+  - TECHNICAL_BODY_ACCESS
+
+risk_policy:
+  mismatch_detected: keep_old_path_and_log_gap
+  new_path_failure: fallback_to_old_path
+  repeated_failure: block_connection_switch_until_review
+
+next_stage: CONNECTION_SWITCH_READINESS_V1
