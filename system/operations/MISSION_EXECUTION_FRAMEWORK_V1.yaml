@@ -1,0 +1,13 @@
+version: 1
+purpose: translate_mission_into_continuous_execution
+execution_chain:
+  - mission
+  - strategic_goal
+  - initiative
+  - project
+  - task
+  - action
+principles:
+  mission_is_the_highest_constraint: true
+  no_action_without_mission_context: true
+  long_term_impact_is_prioritized: true
