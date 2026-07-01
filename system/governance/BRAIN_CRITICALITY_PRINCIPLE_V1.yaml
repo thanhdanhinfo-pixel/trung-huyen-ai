@@ -1,0 +1,31 @@
+version: 1
+status: active
+principle_name: brain_criticality_principle
+
+core_principles:
+  component_failure_does_not_mean_system_failure: true
+  degraded_operation_is_required: true
+  brain_failure_creates_systemic_crisis: true
+  brain_is_single_source_of_coordination: true
+
+operational_rules:
+  if_component_fails:
+    action: isolate_and_continue
+    target_state: degraded_but_operational
+
+  if_brain_fails:
+    action: preserve_state_and_prioritize_brain_recovery
+    target_state: critical_system_condition
+
+constitutional_statement: >
+  Any subsystem may fail while the organism continues to function.
+  The brain remains the supreme coordinating authority.
+  If the brain is compromised, the entire system enters a critical condition
+  because identity, mission, priorities, and coordination are affected.
+
+recovery_priorities:
+  - mission_core
+  - identity_memory
+  - value_system
+  - executive_control
+  - long_term_memory_links
