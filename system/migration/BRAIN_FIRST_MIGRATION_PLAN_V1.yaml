@@ -1,0 +1,49 @@
+version: 1
+status: active
+purpose: migrate_system_to_brain_first_operation_without_disrupting_existing_runtime
+
+migration_principle: gradual_non_breaking_transition
+
+safety_rules:
+  no_breaking_changes_without_founder_approval: true
+  existing_tools_remain_operational_during_transition: true
+  direct_tool_access_is_deprecated_not_removed_initially: true
+  every_new_flow_must_have_rollback_path: true
+  observe_before_enforce: true
+
+migration_stages:
+  stage_1_observe:
+    goal: record_current_direct_tool_usage_and_map_to_brain_capabilities
+    enforcement: none
+  stage_2_wrap:
+    goal: wrap_existing_tools_with_brain_command_context
+    enforcement: soft
+  stage_3_route:
+    goal: route_new_actions_through_brain_neural_gateway
+    enforcement: medium
+  stage_4_audit:
+    goal: detect_remaining_direct_paths_and_orphan_actions
+    enforcement: reporting_only
+  stage_5_enforce:
+    goal: block_unregistered_direct_actions_after_validation
+    enforcement: strict_with_founder_approval
+
+non_disruption_strategy:
+  keep_existing_endpoints_available: true
+  add_brain_context_layer_without_replacing_tools: true
+  migrate_command_path_per_capability: true
+  validate_after_each_step: true
+  rollback_to_previous_working_path_if_error: true
+
+first_targets:
+  - startup_and_boot
+  - self_state_and_checkpoint
+  - github_read_write
+  - google_drive_read_search
+  - runtime_health
+
+success_criteria:
+  no_runtime_regression: true
+  all_new_actions_have_brain_intent: true
+  all_results_return_to_brain_memory: true
+  founder_experience_remains_single_chat_interface: true
