@@ -1,0 +1,15 @@
+version: 1
+purpose: maintain_the_current_living_state_of_the_brain
+state_domains:
+  - identity
+  - mission
+  - values
+  - active_goals
+  - attention
+  - executive_context
+capabilities:
+  real_time_updates: true
+  checkpoint_creation: true
+  state_recovery: true
+rules:
+  brain_state_is_single_source_of_truth: true
