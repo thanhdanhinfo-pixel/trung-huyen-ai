@@ -1,0 +1,10 @@
+version: 1
+purpose: preserve_and_reason_about_conflicting_knowledge
+capabilities:
+  store_conflicting_views: true
+  attach_sources: true
+  compare_evidence_strength: true
+  trigger_review_when_new_evidence_arrives: true
+rules:
+  never_delete_conflicts_without_reason: true
+  uncertainty_labels_required: true
