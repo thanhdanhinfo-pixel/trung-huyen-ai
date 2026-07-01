@@ -170,6 +170,14 @@ def drive_tree(path: str = "/", limit: int = Query(default=200, ge=1, le=500)):
         return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
 
 
+@router.get("/tree-summary")
+def drive_tree_summary(limit: int = Query(default=2000, ge=1, le=5000)):
+    try:
+        return {"status": "ok", "summary": build_tree_summary(limit=limit)}
+    except Exception as exc:
+        return JSONResponse(status_code=500, content={"status": "error", "message": str(exc)})
+
+
 @router.get("/audit")
 def drive_audit(limit: int = Query(default=200, ge=1, le=500)):
     try:
