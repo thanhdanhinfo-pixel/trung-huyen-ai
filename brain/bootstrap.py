@@ -1,21 +1,29 @@
 from __future__ import annotations
 
+from pathlib import Path
+import yaml
 from brain.facade import living_brain
 
-BOOT_SEQUENCE = [
-    'load_constitution',
-    'load_governance',
-    'load_tool_ownership',
-    'initialize_living_brain',
-    'bind_capabilities',
-    'enable_brain_routing',
-]
 
-
-def bootstrap_brain():
-    return {
-        'brain_ready': True,
-        'brain_owner': 'LIVING_BRAIN',
-        'capabilities': living_brain.capabilities(),
-        'boot_sequence': BOOT_SEQUENCE,
+def bootstrap_brain() -> dict:
+    status = {
+        'constitution_loaded': False,
+        'tool_ownership_loaded': False,
+        'brain_initialized': False,
+        'brain_routing_enabled': False,
     }
+
+    constitution = Path('system/GLOBAL_GOVERNANCE/00_SYSTEM_CONSTITUTION.md')
+    amendment = Path('system/GLOBAL_GOVERNANCE/00_SYSTEM_CONSTITUTION_APPEND_BRAIN.md')
+    ownership = Path('brain/tool_ownership.yaml')
+
+    if constitution.exists() and amendment.exists():
+        status['constitution_loaded'] = True
+
+    if ownership.exists():
+        yaml.safe_load(ownership.read_text(encoding='utf-8'))
+        status['tool_ownership_loaded'] = True
+
+    status['brain_initialized'] = True
+    status['brain_routing_enabled'] = True
+    return status
