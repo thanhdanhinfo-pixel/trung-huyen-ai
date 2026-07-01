@@ -1,0 +1,14 @@
+version: 1
+mode: drive_first
+sync_targets:
+  - system/REPOSITORY_COMPACTION_REPORT_V1.md
+  - system/drive/GOOGLE_DRIVE_MIGRATION_REPORT_V1.md
+  - system/tasks/**
+
+policy:
+  mobile_readability: true
+  keep_code_in_repo: true
+  sync_non_code_to_drive: true
+
+future:
+  automatic_drive_sync_worker: planned
