@@ -1,0 +1,10 @@
+version: 1
+purpose: recognize_and_manage_unknowns
+capabilities:
+  estimate_confidence: true
+  detect_knowledge_gaps: true
+  request_additional_information: true
+  defer_high_risk_decisions: true
+rules:
+  uncertainty_must_be_explicit: true
+  low_confidence_requires_review: true
