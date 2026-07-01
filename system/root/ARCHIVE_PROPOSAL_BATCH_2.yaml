@@ -1,0 +1,14 @@
+version: 2
+status: proposed
+verified_scans:
+  - import chat: 0 matches
+  - import scheduler: 0 matches
+candidates:
+  - chat.py
+  - scheduler.py
+action:
+  - create_compatibility_shims_if_needed
+  - archive_after_full_scan
+pending:
+  - health.py verification
+  - orchestrator.py verification
