@@ -1,0 +1,17 @@
+version: 1
+purpose: prioritized_task_execution
+queues:
+  critical:
+    priority: 1
+  founder:
+    priority: 2
+  strategic:
+    priority: 3
+  maintenance:
+    priority: 4
+rules:
+  max_parallel_active_tasks: 7
+  preemption_for_critical: true
+  preserve_task_history: true
+state_store: runtime/task_queue
+message":"Create Task Queue Runtime V1
