@@ -496,6 +496,161 @@ def action_github_upsert_file(payload: Dict[str, Any], context: Any = None) -> D
 
 
 @register_action(
+    "drive_tree",
+    description="List Google Drive tree within Founder configured Drive root with depth and limit.",
+    namespace="drive",
+    required_level=1,
+    scope="FOUNDER_DRIVE_ROOT",
+    audit_required=True,
+)
+def action_drive_tree(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from drive import GOOGLE_FOLDER, list_recursive
+
+    folder_id = payload.get("folder_id") or None
+    depth = max(1, min(int(payload.get("depth", 2)), 6))
+    limit = min(int(payload.get("limit", 300)), 1000)
+    items = list_recursive(parent_id=folder_id, limit=limit)
+    scoped = []
+    for item in items:
+        path = item.get("path", item.get("name", ""))
+        if not path:
+            continue
+        item_depth = len([part for part in path.split("/") if part])
+        if item_depth <= depth:
+            scoped.append({
+                "id": item.get("id"),
+                "name": item.get("name"),
+                "path": path,
+                "mimeType": item.get("mimeType"),
+                "is_folder": item.get("mimeType") == GOOGLE_FOLDER,
+                "modifiedTime": item.get("modifiedTime"),
+                "webViewLink": item.get("webViewLink"),
+            })
+        if len(scoped) >= limit:
+            break
+    return {
+        "status": "ok",
+        "folder_id": folder_id,
+        "depth": depth,
+        "limit": limit,
+        "count": len(scoped),
+        "items": scoped,
+    }
+
+
+@register_action(
+    "drive_index",
+    description="Index Google Drive files and folders within Founder configured Drive root.",
+    namespace="drive",
+    required_level=1,
+    scope="FOUNDER_DRIVE_ROOT",
+    audit_required=True,
+)
+def action_drive_index(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from drive import GOOGLE_FOLDER, list_files_recursive
+
+    folder_id = payload.get("folder_id") or None
+    limit = min(int(payload.get("limit", 500)), 2000)
+    files = list_files_recursive(folder_id=folder_id, limit=limit)
+    folders = [f for f in files if f.get("mimeType") == GOOGLE_FOLDER]
+    documents = [f for f in files if f.get("mimeType") != GOOGLE_FOLDER]
+    by_mime: Dict[str, int] = {}
+    for item in files:
+        mime = item.get("mimeType", "unknown")
+        by_mime[mime] = by_mime.get(mime, 0) + 1
+    return {
+        "status": "ok",
+        "folder_id": folder_id,
+        "limit": limit,
+        "total_count": len(files),
+        "folder_count": len(folders),
+        "document_count": len(documents),
+        "by_mime": by_mime,
+        "folders": folders,
+        "documents": documents,
+    }
+
+
+@register_action(
+    "create_folder",
+    description="Create Google Drive folder inside Founder configured Drive root.",
+    namespace="drive",
+    required_level=3,
+    scope="FOUNDER_DRIVE_ROOT",
+    audit_required=True,
+)
+def action_create_folder(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from drive import create_folder
+
+    name = payload.get("name", "")
+    parent_id = payload.get("parent_id") or None
+    if not name:
+        return {"status": "error", "message": "name is required"}
+    folder = create_folder(name=name, parent_id=parent_id)
+    return {"status": "ok", "folder": folder}
+
+
+@register_action(
+    "create_document",
+    description="Create Google Doc inside Founder configured Drive root.",
+    namespace="drive",
+    required_level=3,
+    scope="FOUNDER_DRIVE_ROOT",
+    write_safe=True,
+    audit_required=True,
+)
+def action_create_document(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from drive import create_google_doc
+
+    title = payload.get("title") or payload.get("name") or ""
+    content = payload.get("content", "")
+    parent_id = payload.get("parent_id") or None
+    if not title:
+        return {"status": "error", "message": "title is required"}
+    doc = create_google_doc(name=title, content=content, parent_id=parent_id)
+    return {"status": "ok", "document": doc}
+
+
+@register_action(
+    "append_document",
+    description="Append content to an existing Google Doc.",
+    namespace="drive",
+    required_level=3,
+    scope="FOUNDER_DRIVE_ROOT",
+    write_safe=True,
+    audit_required=True,
+)
+def action_append_document(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from drive import append_google_doc
+
+    file_id = payload.get("file_id", "")
+    content = payload.get("content", "")
+    if not file_id or not content:
+        return {"status": "error", "message": "file_id and content are required"}
+    result = append_google_doc(file_id=file_id, content=content)
+    return {"status": "ok", "result": result}
+
+
+@register_action(
+    "move_drive_file",
+    description="Move a Google Drive file into another folder within Founder configured Drive root.",
+    namespace="drive",
+    required_level=3,
+    scope="FOUNDER_DRIVE_ROOT",
+    audit_required=True,
+)
+def action_move_drive_file(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from drive import move_file
+
+    file_id = payload.get("file_id", "")
+    new_parent_id = payload.get("new_parent_id", "")
+    if not file_id or not new_parent_id:
+        return {"status": "error", "message": "file_id and new_parent_id are required"}
+    result = move_file(file_id=file_id, new_parent_id=new_parent_id)
+    return {"status": "ok", "result": result}
+
+
+@register_action(
     "developer.execute",
     description="Submit a developer workflow action through the unified action registry.",
     namespace="developer",
