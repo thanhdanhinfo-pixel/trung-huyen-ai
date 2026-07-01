@@ -1,0 +1,12 @@
+version: 1
+purpose: register_every_component_with_the_brain
+required_fields:
+  - component_id
+  - brain_function
+  - parent_goal
+  - mission_alignment
+  - reporting_path
+  - memory_update_path
+rules:
+  registration_required_before_operation: true
+  brain_approval_required_for_major_components: true
