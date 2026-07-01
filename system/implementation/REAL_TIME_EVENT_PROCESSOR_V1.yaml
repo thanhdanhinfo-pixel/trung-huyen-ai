@@ -1,0 +1,19 @@
+version: 1
+purpose: process_all_system_events_in_real_time_under_brain_supervision
+event_pipeline:
+  - ingest
+  - classify
+  - prioritize
+  - route
+  - execute
+  - reflect
+  - persist
+sources:
+  - founder
+  - runtime
+  - workers
+  - github
+  - google_drive
+rules:
+  brain_context_required: true
+  event_history_must_be_preserved: true
