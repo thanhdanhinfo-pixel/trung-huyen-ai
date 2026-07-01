@@ -1,0 +1,19 @@
+version: 1
+purpose: route_all_system_events_through_brain_control_plane
+event_flow:
+  - source
+  - brain_intake
+  - priority_evaluation
+  - routing
+  - execution
+  - reflection
+  - memory_update
+sources:
+  - founder
+  - workers
+  - github
+  - google_drive
+  - runtime
+rules:
+  all_major_events_require_brain_processing: true
+  event_history_persisted: true
