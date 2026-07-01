@@ -1,0 +1,17 @@
+version: 1
+purpose: operationalize_digital_brain
+components:
+  task_queue:
+    enabled: true
+  memory_updater:
+    enabled: true
+  reflection_worker:
+    enabled: true
+  learning_worker:
+    enabled: true
+  coordinator:
+    enabled: true
+integration:
+  github: code_truth
+  google_drive: long_term_memory
+  runtime: working_memory
