@@ -1,0 +1,14 @@
+version: 1
+purpose: maintain_all_active_goals_as_living_entities
+hierarchy:
+  - mission
+  - strategic_goals
+  - initiatives
+  - projects
+  - tasks
+capabilities:
+  status_tracking: true
+  dependency_tracking: true
+  automatic_reprioritization: true
+rules:
+  goals_must_align_with_mission: true
