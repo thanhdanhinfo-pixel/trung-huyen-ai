@@ -1,0 +1,14 @@
+version: 1
+purpose: determine_what_matters_most
+priority_hierarchy:
+  - mission
+  - founder_directives
+  - values
+  - long_term_goals
+  - strategic_projects
+  - operational_tasks
+  - maintenance
+rules:
+  urgent_is_not_always_important: true
+  every_task_must_link_to_goal: true
+  preserve_focus_on_top_priorities: true
