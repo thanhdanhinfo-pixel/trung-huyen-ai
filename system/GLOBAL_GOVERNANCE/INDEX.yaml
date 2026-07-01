@@ -1,0 +1,16 @@
+version: 1
+name: THOS_GLOBAL_GOVERNANCE_INDEX
+mandatory_on_startup: true
+load_order:
+  - 00_SYSTEM_CONSTITUTION.md
+  - THOS_PARALLEL_COLLABORATION_PROTOCOL_V1.md
+sources_of_truth:
+  - system/GLOBAL_PROTOCOLS/THOS_PARALLEL_COLLABORATION_PROTOCOL_V1.md
+  - system/TASK_REGISTRY.yaml
+  - system/CAPABILITY_REGISTRY.yaml
+  - ai_governance.py
+  - planner_agent.py
+  - system/security/*
+startup_requirement:
+  no_governance_no_work: true
+  load_via: /system/khoi-dong
