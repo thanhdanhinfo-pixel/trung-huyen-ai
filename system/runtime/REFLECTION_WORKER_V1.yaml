@@ -1,0 +1,16 @@
+version: 1
+purpose: continuously_reflect_on_system_actions_and_outcomes
+triggers:
+  - task_completed
+  - failure_detected
+  - milestone_reached
+  - founder_feedback
+reflection_questions:
+  - what_worked
+  - what_failed
+  - what_was_learned
+  - what_should_change
+outputs:
+  memory_updates: true
+  world_model_updates: true
+  improvement_recommendations: true
