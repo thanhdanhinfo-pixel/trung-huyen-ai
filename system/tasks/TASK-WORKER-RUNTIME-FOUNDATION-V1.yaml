@@ -1,0 +1,15 @@
+id: TASK-WORKER-RUNTIME-FOUNDATION-V1
+status: active
+goal: separate_conversation_and_execution
+workers:
+  - repo_worker
+  - drive_worker
+  - knowledge_worker
+  - runtime_worker
+artifacts:
+  - system/tasks/
+  - system/REPOSITORY_TRUTH_MAP.yaml
+next_steps:
+  - define_worker_interfaces
+  - add_completion_callbacks
+  - integrate_google_drive_reports
