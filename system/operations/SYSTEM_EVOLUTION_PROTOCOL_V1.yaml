@@ -1,0 +1,13 @@
+version: 1
+purpose: govern_safe_and_continuous_system_evolution
+principles:
+  preserve_identity: true
+  preserve_mission: true
+  preserve_values: true
+  evolve_capabilities: true
+triggers:
+  - new_knowledge
+  - founder_directive
+  - environmental_change
+rules:
+  major_evolution_requires_review: true
