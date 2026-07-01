@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict
-from brain import brain
+from kernel.kernel import kernel
 import yaml
 from pathlib import Path
 
@@ -16,7 +16,7 @@ def load_tool_ownership() -> Dict[str, Any]:
 
 class LivingBrainFacade:
     def __init__(self):
-        self.kernel = brain
+        self.kernel = kernel
         self.ownership = load_tool_ownership()
 
     def observe(self):
