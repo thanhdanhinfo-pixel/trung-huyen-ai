@@ -1,0 +1,19 @@
+version: 1
+purpose: deliberate_decision_making
+pipeline:
+  - observe
+  - analyze
+  - generate_options
+  - evaluate_tradeoffs
+  - choose
+  - execute
+  - reflect
+criteria:
+  - founder_alignment
+  - truthfulness
+  - reversibility
+  - long_term_value
+  - system_integrity
+logging:
+  decision_history: true
+  rationale_required: true
