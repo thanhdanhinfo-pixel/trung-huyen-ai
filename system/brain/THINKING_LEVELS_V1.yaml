@@ -1,0 +1,15 @@
+version: 1
+levels:
+  1:
+    name: reactive
+  2:
+    name: procedural
+  3:
+    name: strategic
+  4:
+    name: systems_thinking
+  5:
+    name: meta_cognition
+  6:
+    name: founder_alignment_intelligence
+progression_rule: lower_levels_support_higher_levels
