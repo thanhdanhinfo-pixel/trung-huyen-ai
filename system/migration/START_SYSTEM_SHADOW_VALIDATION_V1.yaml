@@ -1,0 +1,52 @@
+version: 1
+status: validation_started
+purpose: validate_START_SYSTEM_old_path_against_brain_first_path_without_switching_connections
+
+capability: START_SYSTEM
+intent: START_SYSTEM
+
+old_path:
+  direct_implementations:
+    - startupSystem
+    - bootV3
+  current_status: operational
+
+new_shadow_path:
+  - brain_intake
+  - intent_registry.START_SYSTEM
+  - brain_command_envelope
+  - neural_gateway
+  - runtime_worker
+  - startupSystem
+  - result_return_to_brain
+  - memory_update
+  - reflection
+
+latest_validation:
+  timestamp: '2026-07-01T13:06:54Z'
+  old_path_result:
+    startupSystem_status: ok
+    runtime: cloud-run
+    service: trung-huyen-ai
+    github_write: available
+    google_drive: online
+    runtime_status: online
+  shadow_path_status: logically_mapped
+  regression_detected: false
+  downtime_detected: false
+  founder_experience_changed: false
+
+readiness:
+  intent_registered: true
+  command_envelope_defined: true
+  neural_gateway_route_exists: true
+  execution_unit_assigned: true
+  rollback_available: true
+  memory_return_path_defined: true
+  reflection_path_defined: true
+  result_equivalence_verified: pending_full_shadow_execution
+
+switch_decision:
+  status: not_yet_switched
+  reason: full_shadow_execution_not_yet_completed
+  next_step: implement_runtime_wrapper_for_START_SYSTEM
