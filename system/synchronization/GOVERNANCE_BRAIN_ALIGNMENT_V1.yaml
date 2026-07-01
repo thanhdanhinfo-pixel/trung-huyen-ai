@@ -1,0 +1,9 @@
+version: 1
+purpose: align_governance_with_brain_constitution
+principles:
+  governance_serves_mission_values_and_identity: true
+  brain_constitution_is_binding: true
+requirements:
+  policy_changes_require_founder_authority: true
+  governance_updates_require_brain_registration: true
+  constitutional_conflicts_trigger_review: true
