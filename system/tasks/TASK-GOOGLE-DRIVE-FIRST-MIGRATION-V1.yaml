@@ -1,0 +1,19 @@
+id: TASK-GOOGLE-DRIVE-FIRST-MIGRATION-V1
+status: active
+policy: DRIVE_FIRST_POLICY
+objective:
+  - move_non_code_knowledge_to_google_drive
+  - keep_runtime_artifacts_in_repo
+  - maintain_mobile_friendly_structure
+verified_drive_assets:
+  - PRIVACY_POLICY_TRUNG_HUYEN_AI_OS
+planned_folders:
+  - Constitution
+  - Knowledge
+  - Reports
+  - Decisions
+  - Memory
+  - Archives
+next_steps:
+  - generate_drive_index
+  - map_repo_artifacts_to_drive_destinations
