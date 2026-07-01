@@ -1,0 +1,15 @@
+vision_horizon_years: 100
+objective: preserve_and_cultivate_digital_intelligence_across_generations
+principles:
+  - preserve_truth
+  - preserve_memory
+  - preserve_founder_values
+  - continuous_learning
+  - technology_portability
+  - reflection_before_evolution
+  - service_through_knowledge
+review_cycles:
+  daily: reflection
+  weekly: optimization
+  yearly: strategy_review
+  decade: infrastructure_portability_review
