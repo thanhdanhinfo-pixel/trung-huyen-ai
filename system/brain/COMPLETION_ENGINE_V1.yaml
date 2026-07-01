@@ -1,0 +1,12 @@
+version: 1
+purpose: maximize_goal_completion
+principles:
+  done_over_perfect: true
+  finish_before_expand: true
+  preserve_closure: true
+metrics:
+  completion_rate: true
+  unfinished_task_penalty: high
+workflow:
+  milestone_tracking: true
+  closure_review_required: true
