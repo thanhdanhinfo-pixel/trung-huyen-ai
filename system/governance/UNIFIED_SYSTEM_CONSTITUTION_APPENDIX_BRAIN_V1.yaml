@@ -1,0 +1,21 @@
+version: 1
+status: integrated
+extends:
+  - system/brain/BRAIN_CENTRAL_CONTROL_CONSTITUTION_V1.yaml
+integration_rules:
+  brain_is_primary_control_plane: true
+  all_major_actions_route_through_brain: true
+  mission_value_alignment_required: true
+  task_goal_traceability_required: true
+  execution_requires_memory_update: true
+  failures_require_reflection: true
+system_mapping:
+  google_drive: long_term_memory
+  github: technical_body_and_code_nervous_system
+  runtime: working_memory_and_current_state
+  workers: execution_limbs
+constitutional_priority:
+  - founder_directives
+  - unified_system_constitution
+  - brain_central_control_constitution
+  - operational_policies
