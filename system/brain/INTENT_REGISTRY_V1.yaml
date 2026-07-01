@@ -1,0 +1,60 @@
+version: 1
+status: active
+purpose: map_brain_intents_to_capabilities_execution_units_and_current_implementations
+
+principle: brain_thinks_in_intents_not_tools
+
+intents:
+  START_SYSTEM:
+    capability: SYSTEM_STARTUP
+    execution_unit: runtime_worker
+    current_implementations:
+      - startupSystem
+      - bootV3
+    memory_update: true
+    reflection_required: true
+
+  OBSERVE_SELF:
+    capability: SELF_OBSERVATION
+    execution_unit: self_observation_worker
+    current_implementations:
+      - getSelfState
+      - getSessionCheckpoint
+      - getToolHealth
+    memory_update: true
+    reflection_required: false
+
+  READ_MEMORY:
+    capability: KNOWLEDGE_RETRIEVAL
+    execution_unit: memory_worker
+    current_implementations:
+      - getGlobalMemory
+      - searchDrive
+      - readDrivePathV2
+      - searchRag
+    memory_update: conditional
+    reflection_required: false
+
+  TECHNICAL_BODY_ACCESS:
+    capability: REPOSITORY_INSPECTION
+    execution_unit: code_worker
+    current_implementations:
+      - readFile
+      - listDirectory
+      - getImportScan
+    memory_update: conditional
+    reflection_required: false
+
+  EXECUTE_EXTERNAL_ACTION:
+    capability: EXTERNAL_TOOL_EXECUTION
+    execution_unit: external_action_worker
+    current_implementations:
+      - callMcpTool
+    memory_update: true
+    reflection_required: true
+
+rules:
+  every_intent_requires_capability: true
+  every_intent_requires_execution_unit: true
+  every_execution_result_returns_to_brain: true
+  direct_tool_names_are_implementation_details: true
