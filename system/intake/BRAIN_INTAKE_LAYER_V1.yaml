@@ -1,0 +1,40 @@
+version: 1
+status: active
+purpose: make_living_brain_the_first_receiver_of_all_founder_messages_gpt_messages_api_events_and_system_signals
+
+core_principle: >
+  Every incoming signal must enter the Brain Intake Layer first. Specialized GPTs, workers,
+  tools, functions and infrastructure are not entrypoints; they receive assignments only after
+  the Brain has interpreted intent and created context.
+
+inbound_sources:
+  founder_chat: true
+  specialized_gpts: true
+  api_events: true
+  runtime_events: true
+  github_events: true
+  google_drive_events: true
+  worker_reports: true
+
+intake_pipeline:
+  - receive_signal
+  - normalize_signal
+  - identify_source
+  - detect_intent
+  - attach_brain_context
+  - check_mission_values_goals
+  - update_live_brain_state
+  - route_to_intent_registry
+
+rules:
+  brain_intake_is_first_entrypoint: true
+  no_execution_before_intent_detection: true
+  no_worker_assignment_without_brain_context: true
+  every_signal_gets_trace_id: true
+  every_signal_can_update_memory: true
+
+outputs:
+  standardized_brain_event: true
+  intent_candidate: true
+  context_packet: true
+  routing_request: true
