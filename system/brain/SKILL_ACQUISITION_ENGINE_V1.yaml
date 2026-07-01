@@ -1,0 +1,14 @@
+version: 1
+purpose: transform_knowledge_into_capability
+pipeline:
+  - learn
+  - practice
+  - feedback
+  - repetition
+  - automation
+metrics:
+  proficiency_score: true
+  practice_frequency: true
+  retention_score: true
+rules:
+  skills_require_execution: true
