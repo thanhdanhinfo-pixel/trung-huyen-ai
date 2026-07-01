@@ -1,0 +1,37 @@
+import json from pathlib import Path ROOT = 
+Path(__file__).resolve().parents[2] SERVER_URL = 
+"https://trung-huyen-ai-779121307308.asia-southeast1.run.app" 
+STARTUP_PATHS = {
+    "/system/khoi-dong": { "get": { "operationId": "startupSystem", 
+            "summary": "Khởi động TRUNG_HUYEN_AI_OS", "responses": 
+            {"200": {"description": "Startup state"}}
+        }
+    },
+    "/system/boot-v3": { "get": { "operationId": "bootV3", "summary": 
+            "Compatibility boot endpoint", "responses": {"200": 
+            {"description": "Boot V3 startup state"}}
+        }
+    }
+}
+SECURITY = [{"ApiKeyAuth": []}] SECURITY_SCHEMES = { "ApiKeyAuth": { 
+        "type": "apiKey", "in": "header", "name": "x-api-key"
+    }
+}
+FILES = [ "openapi-mcp-v3.json", "openapi-brain-v1.json", 
+    "openapi-academy-v1.json", "openapi-worker-v1.json",
+] for name in FILES: path = ROOT / name if not path.exists(): 
+        print(f"SKIP missing {name}") continue
+    data = json.loads(path.read_text(encoding="utf-8")) data["openapi"] 
+    = "3.1.0" data["servers"] = [{"url": SERVER_URL}] data["security"] = 
+    SECURITY data.setdefault("components", {}) 
+    data["components"].setdefault("schemas", {}) 
+    data["components"]["securitySchemes"] = SECURITY_SCHEMES 
+    data.setdefault("paths", {}) for route, spec in 
+    STARTUP_PATHS.items():
+        data["paths"][route] = spec path.write_text( json.dumps(data, 
+        ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    print(f"normalized {name}")
+
+python tools/openapi/normalize_startup_schema.py
+
