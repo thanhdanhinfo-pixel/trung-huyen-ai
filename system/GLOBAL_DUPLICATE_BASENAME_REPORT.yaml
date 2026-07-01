@@ -1,0 +1,51 @@
+status: generated_from_refactor_plan
+source: /system/refactor-plan
+policy: proposal_only_no_move_delete
+
+compatibility_shim_candidates:
+  - path: chat.py
+    target_hint: api/chat.py
+    action: verify_imports_then_shim_or_archive
+  - path: health.py
+    target_hint: api/health.py
+    action: verify_imports_then_shim_or_archive
+  - path: orchestrator.py
+    target_hint: agent_orchestrator.py
+    action: verify_imports_then_shim_or_archive
+  - path: scheduler.py
+    target_hint: services/production_scheduler.py
+    action: verify_imports_then_shim_or_archive
+
+review_orphan_candidates:
+  - __init__.py
+  - admin.py
+  - ai_ceo.py
+  - ai_governance.py
+  - answer_validator.py
+  - api/chat.py
+  - audit_log.py
+  - citation_engine.py
+  - context_builder.py
+  - context_ranker.py
+  - conversation_memory.py
+  - decision_engine.py
+  - embedding_cache.py
+  - exceptions.py
+  - feedback_engine.py
+  - goal_manager.py
+  - knowledge_evolution.py
+  - learning_engine.py
+  - logger.py
+  - master_planner.py
+  - metrics.py
+  - nightly_sync.py
+  - pdf_reader.py
+
+blocked_actions:
+  - delete_files
+  - mass_move_root_modules
+  - modify_protected_files_without_explicit_approval
+
+next:
+  - verify_root_shim_imports
+  - archive_unused_root_candidates_after_import_scan
