@@ -1,0 +1,11 @@
+version: 1
+purpose: define_the_primary_interface_between_founder_and_brain
+capabilities:
+  mission_updates: true
+  strategic_directives: true
+  protected_action_approval: true
+  brain_status_queries: true
+  recovery_authorization: true
+principles:
+  founder_has_final_authority: true
+  brain_executes_within_constitution: true
