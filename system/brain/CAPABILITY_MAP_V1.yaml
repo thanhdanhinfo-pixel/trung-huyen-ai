@@ -1,0 +1,41 @@
+version: 1
+status: migration_stage_1_observe
+purpose: map_existing_connections_to_brain_capabilities_without_breaking_runtime
+
+capabilities:
+  START_SYSTEM:
+    current_implementations:
+      - startupSystem
+      - bootV3
+    target_worker: runtime_worker
+    status: observed
+
+  OBSERVE_SELF:
+    current_implementations:
+      - getSelfState
+      - getSessionCheckpoint
+      - getToolHealth
+    target_worker: self_observation_worker
+    status: observed
+
+  READ_MEMORY:
+    current_implementations:
+      - getGlobalMemory
+      - searchDrive
+      - readDrivePathV2
+      - searchRag
+    target_worker: memory_worker
+    status: observed
+
+  TECHNICAL_BODY_ACCESS:
+    current_implementations:
+      - readFile
+      - listDirectory
+      - getImportScan
+    target_worker: code_worker
+    status: observed
+
+migration_rule:
+  keep_existing_connections_alive: true
+  add_brain_context_before_execution: true
+  no_breaking_changes: true
