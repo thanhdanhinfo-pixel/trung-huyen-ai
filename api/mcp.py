@@ -944,10 +944,10 @@ def search_code_action(query: str = ""):
 def drive_tree(limit: int = 500):
     from drive import list_recursive
 
-    files = list_recursive()
     safe_limit = max(1, min(limit, 2000))
-    truncated = len(files) > safe_limit
-    result = files[:safe_limit]
+    files = list_recursive(limit=safe_limit)
+    truncated = len(files) >= safe_limit
+    result = files
 
     return {
         "status": "ok",
