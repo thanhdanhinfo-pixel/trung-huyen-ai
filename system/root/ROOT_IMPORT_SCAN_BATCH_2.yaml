@@ -1,0 +1,14 @@
+version: 1
+status: active
+scope:
+  - chat.py
+  - health.py
+  - orchestrator.py
+  - scheduler.py
+verification:
+  required_before_archive: true
+results:
+  pending: true
+next:
+  - archive_batch_2_proposal
+  - compatibility_shim_generation
