@@ -1,0 +1,14 @@
+batch: 1
+status: proposed
+approved_by_founder: true
+archive_ready:
+  - system/rules/engine_v2.py
+  - system/scheduler_runtime.py
+  - system/governance_audit.py
+blocked:
+  - api/routes/rag_runtime.py
+reason:
+  system/rules/engine_v2.py: no_imports_detected
+  system/scheduler_runtime.py: no_imports_detected
+  system/governance_audit.py: no_imports_detected
+next_step: move_to_archive_after_final_verification
