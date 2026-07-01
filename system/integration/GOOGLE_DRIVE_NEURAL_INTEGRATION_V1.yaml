@@ -1,0 +1,12 @@
+version: 1
+purpose: integrate_google_drive_as_the_long_term_memory_of_the_living_brain
+integration_role: long_term_memory_system
+requirements:
+  all_documents_are_indexed_by_memory_runtime: true
+  identity_and_value_documents_are_protected: true
+  every_document_has_source_and_context: true
+sync_paths:
+  brain_to_drive: memory_consolidation
+  drive_to_brain: memory_retrieval
+rules:
+  brain_state_remains_primary_truth: true
