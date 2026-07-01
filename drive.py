@@ -163,9 +163,14 @@ def list_files_recursive(folder_id: Optional[str] = None, limit: int = 300) -> L
     return results
 
 
-def list_recursive(parent_id: Optional[str] = None, current_path: str = "") -> List[Dict[str, Any]]:
+def list_recursive(parent_id: Optional[str] = None, current_path: str = "", limit: Optional[int] = None, _counter: Optional[List[int]] = None) -> List[Dict[str, Any]]:
     service = get_drive_service()
     parent_id = _root_folder_id(parent_id)
+    counter = _counter or [0]
+
+    if limit is not None and counter[0] >= limit:
+        return []
+
     query = f"'{parent_id}' in parents and trashed=false"
     result = service.files().list(
         q=query,
@@ -176,11 +181,17 @@ def list_recursive(parent_id: Optional[str] = None, current_path: str = "") -> L
 
     items: List[Dict[str, Any]] = []
     for item in result.get("files", []):
+        if limit is not None and counter[0] >= limit:
+            break
+
         path = f"{current_path}/{item['name']}".strip("/")
         item["path"] = path
         items.append(item)
+        counter[0] += 1
+
         if item["mimeType"] == GOOGLE_FOLDER:
-            items.extend(list_recursive(item["id"], path))
+            items.extend(list_recursive(item["id"], path, limit=limit, _counter=counter))
+
     return items
 
 
