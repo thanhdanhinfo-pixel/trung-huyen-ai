@@ -1,0 +1,9 @@
+events:
+  source_of_truth:
+    bus: system/events/bus.py
+    stream: system/events/stream.py
+    backend: system/events/backend.py
+  status: audited
+  duplicate_basename_detected: false
+  legacy_shims_required: []
+  next_action: rules_domain_audit
