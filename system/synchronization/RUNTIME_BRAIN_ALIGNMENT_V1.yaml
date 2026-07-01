@@ -1,0 +1,14 @@
+version: 1
+purpose: align_runtime_as_the_working_mind_of_the_brain
+principles:
+  runtime_is_working_memory_and_active_cognition: true
+  brain_state_is_authoritative: true
+  runtime_executes_current_intent_of_brain: true
+requirements:
+  active_context_synced_with_brain: true
+  runtime_events_flow_to_event_bus: true
+  runtime_decisions_require_brain_context: true
+  checkpoints_persist_to_cognitive_state_store: true
+rules:
+  no_orphan_runtime_processes: true
+  runtime_recovery_requires_brain_validation: true
