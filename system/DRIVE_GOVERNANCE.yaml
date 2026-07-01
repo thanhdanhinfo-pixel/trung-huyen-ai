@@ -1,0 +1,53 @@
+version: 1
+name: DRIVE_GOVERNANCE
+scope: Google Drive Work Operating Layer
+
+principles:
+  - Google Drive is Knowledge Truth, Memory Truth, and Work Truth.
+  - GitHub remains Code Truth.
+  - Long-term knowledge should be stored in Google Drive when possible.
+  - Runtime cache and logs may remain local.
+
+allow_auto:
+  - read
+  - search
+  - list
+  - summarize
+  - build_index
+  - build_tree_summary
+  - create_memory_pack
+  - create_report_draft
+
+require_founder_approval:
+  - create_file
+  - create_folder
+  - update_file
+  - append_file
+  - rename_file
+  - move_file
+  - grant_permission
+  - publish_document
+
+forbidden_by_default:
+  - delete_file
+  - delete_folder
+  - mass_move
+  - mass_update
+  - mass_delete
+  - change_ownership
+  - expose_public_link
+
+storage_policy:
+  code_truth: GitHub
+  knowledge_truth: Google Drive
+  memory_truth: Google Drive
+  work_truth: Google Drive
+  local_runtime:
+    - cache
+    - logs
+    - temporary_files
+
+approval_policy:
+  before_write: require_explicit_founder_intent
+  before_move_or_rename: require_explicit_founder_approval
+  before_delete: forbidden_until_policy_changed
