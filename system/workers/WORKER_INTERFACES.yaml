@@ -1,0 +1,19 @@
+repo_worker:
+  input: task_id, paths
+  output: report_path, commits
+  completion_callback: write_report
+
+drive_worker:
+  input: task_id, drive_path
+  output: tree_summary, migrated_items
+  completion_callback: update_drive_index
+
+knowledge_worker:
+  input: task_id, knowledge_scope
+  output: rag_updates, lessons
+  completion_callback: persist_knowledge
+
+runtime_worker:
+  input: task_id, workflow
+  output: execution_status, metrics
+  completion_callback: notify_founder
