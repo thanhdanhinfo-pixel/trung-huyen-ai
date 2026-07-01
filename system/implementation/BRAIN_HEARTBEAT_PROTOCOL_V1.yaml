@@ -1,0 +1,15 @@
+version: 1
+purpose: provide_continuous_liveness_signal_for_the_brain
+heartbeat:
+  interval_seconds: 60
+checks:
+  - identity_integrity
+  - mission_alignment
+  - memory_consistency
+  - event_bus_health
+  - goal_registry_health
+responses:
+  degraded_mode: true
+  founder_alert: true
+rules:
+  missing_heartbeats_trigger_investigation: true
