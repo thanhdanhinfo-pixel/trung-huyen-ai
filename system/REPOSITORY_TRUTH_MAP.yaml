@@ -6,7 +6,14 @@ events:
   status: audited
   duplicate_basename_detected: false
   legacy_shims_required: []
-  next_action: drive_domain_audit
+  next_action: api_domain_audit
+
+drive:
+  source_of_truth:
+    routes: api/routes/drive.py
+  status: audited
+  duplicate_basename_detected: false
+  next_action: api_domain_audit
 
 scheduler:
   source_of_truth:
