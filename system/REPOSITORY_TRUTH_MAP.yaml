@@ -6,4 +6,14 @@ events:
   status: audited
   duplicate_basename_detected: false
   legacy_shims_required: []
-  next_action: rules_domain_audit
+  next_action: governance_domain_audit
+
+rules:
+  source_of_truth:
+    engine: system/rules/engine.py
+    policy: system/rules/policy.py
+  legacy_candidates:
+    - system/rules/engine_v2.py
+  status: audited
+  duplicate_basename_detected: false
+  next_action: governance_domain_audit
