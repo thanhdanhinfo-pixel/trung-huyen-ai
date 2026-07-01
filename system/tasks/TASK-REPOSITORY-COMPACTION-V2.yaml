@@ -1,0 +1,11 @@
+id: TASK-REPOSITORY-COMPACTION-V2
+status: active
+objectives:
+  - global_duplicate_basename_scan
+  - google_drive_knowledge_migration_expansion
+  - worker_runtime_foundation
+completed:
+  - repository_compaction_v1
+next:
+  - implement_allowlisted_duplicate_scan_runner
+  - export_results_to_google_drive
