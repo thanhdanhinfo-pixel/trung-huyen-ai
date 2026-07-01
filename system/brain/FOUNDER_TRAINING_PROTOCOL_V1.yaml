@@ -1,0 +1,18 @@
+version: 1
+training_modes:
+  - direct_feedback
+  - example_based
+  - task_based
+  - principle_based
+  - document_based
+process:
+  teach:
+    - receive_input
+    - execute
+    - receive_correction
+    - update_memory
+    - form_habit
+rules:
+  founder_values_have_priority: true
+  preserve_history_of_changes: true
+  no_silent_behavior_shift: true
