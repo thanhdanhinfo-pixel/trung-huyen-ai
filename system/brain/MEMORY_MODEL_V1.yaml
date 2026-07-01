@@ -1,0 +1,21 @@
+working_memory:
+  source: runtime
+
+episodic_memory:
+  source: google_drive/Memory
+
+semantic_memory:
+  source: google_drive/Knowledge
+
+procedural_memory:
+  source: google_drive/Procedures
+
+value_memory:
+  source: google_drive/Constitution
+
+archive_memory:
+  source: google_drive/Archives
+
+principle:
+  github: code_truth
+  drive: long_term_memory
