@@ -1,0 +1,68 @@
+version: 1
+status: active
+purpose: define_brain_first_flow_for_all_information_commands_and_work_execution
+
+core_principle: >
+  All information, commands, requests and signals must enter the system through the Living Brain first.
+  The Brain interprets, decides, prioritizes and routes work inside TRUNG_HUYEN_AI_OS. Execution units may then
+  use external infrastructure such as Cloud Run, GitHub, Google Drive, MCP services or other applications as needed.
+
+mandatory_inbound_flow:
+  - founder_or_external_signal
+  - living_brain_intake
+  - intent_understanding
+  - brain_state_update
+  - mission_value_goal_check
+  - priority_and_decision
+  - internal_work_routing
+  - execution_unit_assignment
+
+execution_flow:
+  - assigned_execution_unit
+  - capability_selection
+  - tool_or_function_call
+  - external_infrastructure_if_needed
+  - result_capture
+  - report_back_to_brain
+  - reflection
+  - memory_update
+  - founder_response_if_needed
+
+layer_model:
+  brain:
+    role: first_receiver_and_central_controller
+  internal_system:
+    role: brain_controlled_work_execution_space
+  capabilities:
+    role: what_the_brain_can_do
+  tools_functions:
+    role: how_capabilities_are_executed
+  external_infrastructure:
+    role: resources_used_by_tools_when_needed
+    examples:
+      - cloud_run
+      - github
+      - google_drive
+      - mcp_services
+      - external_apis
+
+prohibited_flows:
+  - founder_direct_to_tool
+  - founder_direct_to_external_infrastructure
+  - tool_execution_without_brain_intent
+  - worker_action_without_brain_assignment
+  - result_not_returning_to_brain
+
+rules:
+  brain_is_first_entrypoint: true
+  brain_is_command_source: true
+  execution_units_depend_on_brain_assignment: true
+  tools_are_not_entrypoints: true
+  external_infrastructure_is_not_control_plane: true
+  every_result_returns_to_brain: true
+  every_execution_updates_memory: true
+
+final_state: >
+  The system operates as a brain-first organism: everything enters through the Brain, work is routed internally by the Brain,
+  tools and infrastructure are used only by assigned execution units, and all outcomes return to the Brain for memory,
+  reflection and future decision-making.
