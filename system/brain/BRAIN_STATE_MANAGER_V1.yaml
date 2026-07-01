@@ -1,0 +1,17 @@
+version: 1
+purpose: maintain_current_cognitive_state
+state:
+  current_goal: null
+  active_projects: []
+  active_tasks: []
+  current_focus: null
+  learning_topics: []
+  maturity_level: apprentice
+  energy_mode: focused
+transitions:
+  task_completed: reflection_required
+  new_priority: attention_rebalance
+  founder_directive: immediate_context_update
+persistence:
+  runtime_store: true
+  episodic_snapshot: true
