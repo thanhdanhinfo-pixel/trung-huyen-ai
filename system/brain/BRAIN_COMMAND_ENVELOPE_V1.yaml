@@ -1,0 +1,31 @@
+version: 1
+status: active
+purpose: standardize_every_command_emitted_by_the_living_brain
+
+principle: every_action_must_carry_brain_context
+
+required_fields:
+  trace_id: required
+  intent: required
+  mission_context: required
+  goal_id: optional
+  priority: required
+  capability: required
+  execution_unit: required
+  memory_update: required
+  reflection_required: required
+
+example:
+  trace_id: brain-001
+  intent: READ_MEMORY
+  mission_context: build_living_brain
+  priority: high
+  capability: KNOWLEDGE_RETRIEVAL
+  execution_unit: memory_worker
+  memory_update: true
+  reflection_required: true
+
+rules:
+  no_execution_without_envelope: true
+  every_result_must_return_trace_id: true
+  every_execution_updates_brain_state: true
