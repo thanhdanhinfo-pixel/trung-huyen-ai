@@ -193,10 +193,25 @@ def _payload() -> Dict[str, Any]:
         "global_memory": _global_memory(),
         "next_actions": _next_actions(),
         "active_task": _active_task(),
+        "global_protocols": [
+            {
+                "name": "THOS_PARALLEL_COLLABORATION_PROTOCOL_V1",
+                "path": "system/GLOBAL_PROTOCOLS/THOS_PARALLEL_COLLABORATION_PROTOCOL_V1.md",
+                "mandatory": True,
+                "load_on_startup": True,
+                "rules": [
+                    "PARALLEL_MODE=ON",
+                    "NO_OVERRIDE_WITHOUT_APPROVAL=TRUE",
+                    "RESPECT_OWNERSHIP_BOUNDARIES=TRUE",
+                    "SOURCE_OF_TRUTH=GITHUB_MAIN_AND_SYSTEM_MEMORY"
+                ]
+            }
+        ],
         "startup_sequence": [
             "load_self_state",
             "load_capability_registry",
             "load_global_memory",
+            "load_global_protocols",
             "load_task_registry",
             "restore_current_active_task"
         ],
