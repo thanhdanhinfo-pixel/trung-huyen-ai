@@ -1,4 +1,4 @@
-# Next Step
+# Next Step 
 
 1. Generate artifacts with tools/*.py
 2. Review root_hotspots.json
