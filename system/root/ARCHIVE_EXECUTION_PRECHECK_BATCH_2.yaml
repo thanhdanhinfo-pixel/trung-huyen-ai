@@ -1,0 +1,15 @@
+version: 2
+status: precheck_complete
+verified_unused:
+  - chat.py
+  - scheduler.py
+  - health.py
+  - orchestrator.py
+scan_results:
+  import chat: 0
+  import scheduler: 0
+  import health: 0
+  import orchestrator: 0
+next:
+  - compatibility_shim_generation
+  - archive_execution_batch_2
