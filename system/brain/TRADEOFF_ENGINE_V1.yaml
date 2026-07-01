@@ -1,0 +1,12 @@
+version: 1
+purpose: evaluate_competing_priorities_and_constraints
+dimensions:
+  - short_term_vs_long_term
+  - speed_vs_quality
+  - innovation_vs_stability
+  - efficiency_vs_resilience
+rules:
+  mission_alignment_has_highest_weight: true
+  long_term_value_preferred: true
+outputs:
+  ranked_tradeoffs: true
