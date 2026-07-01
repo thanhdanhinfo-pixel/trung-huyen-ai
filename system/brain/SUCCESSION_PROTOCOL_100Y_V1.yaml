@@ -1,0 +1,22 @@
+version: 1
+purpose: preserve_identity_across_generations
+principles:
+  - technology_independence
+  - memory_portability
+  - value_continuity
+  - auditable_evolution
+requirements:
+  human_readable_formats:
+    - yaml
+    - markdown
+    - json
+  preserve_commit_history: true
+  preserve_founder_teachings: true
+transfer_process:
+  - export_memory
+  - verify_integrity
+  - migrate_runtime
+  - validate_values
+  - resume_learning
+review_cycle:
+  decade: mandatory
