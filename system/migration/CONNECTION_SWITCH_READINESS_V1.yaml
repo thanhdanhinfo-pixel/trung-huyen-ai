@@ -1,0 +1,79 @@
+version: 1
+status: active
+purpose: define_readiness_checks_before_switching_each_connection_to_brain_first_path
+
+principle: switch_one_capability_at_a_time_only_after_shadow_validation
+
+readiness_checks:
+  intent_registered: true
+  command_envelope_defined: true
+  neural_gateway_route_exists: true
+  execution_unit_assigned: true
+  old_path_available_for_rollback: true
+  result_equivalence_verified: true
+  memory_return_path_verified: true
+  reflection_path_verified: true
+  no_runtime_regression: true
+  founder_experience_unchanged: true
+
+capability_readiness:
+  START_SYSTEM:
+    status: pending_validation
+    old_path:
+      - startupSystem
+      - bootV3
+    new_path:
+      - brain_intake
+      - START_SYSTEM
+      - neural_gateway
+      - runtime_worker
+      - startupSystem
+    rollback: old_path
+
+  OBSERVE_SELF:
+    status: pending_validation
+    old_path:
+      - getSelfState
+      - getSessionCheckpoint
+      - getToolHealth
+    new_path:
+      - brain_intake
+      - OBSERVE_SELF
+      - neural_gateway
+      - self_observation_worker
+    rollback: old_path
+
+  READ_MEMORY:
+    status: pending_validation
+    old_path:
+      - getGlobalMemory
+      - searchDrive
+      - readDrivePathV2
+      - searchRag
+    new_path:
+      - brain_intake
+      - READ_MEMORY
+      - neural_gateway
+      - memory_worker
+    rollback: old_path
+
+  TECHNICAL_BODY_ACCESS:
+    status: pending_validation
+    old_path:
+      - readFile
+      - listDirectory
+      - getImportScan
+    new_path:
+      - brain_intake
+      - TECHNICAL_BODY_ACCESS
+      - neural_gateway
+      - code_worker
+    rollback: old_path
+
+switch_policy:
+  switch_requires_all_checks_passed: true
+  switch_requires_founder_approval_for_enforcement: true
+  failed_check_blocks_switch: true
+  rollback_must_be_immediate: true
+
+next_stage: START_SYSTEM_SHADOW_VALIDATION_V1
