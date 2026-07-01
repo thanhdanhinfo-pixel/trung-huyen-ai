@@ -1,0 +1,13 @@
+version: 1
+purpose: continuously_monitor_brain_integrity_and_operational_health
+monitors:
+  mission_alignment: true
+  identity_integrity: true
+  memory_consistency: true
+  executive_control_status: true
+  synchronization_status: true
+alerts:
+  degraded_mode: true
+  critical_brain_condition: true
+rules:
+  brain_health_has_top_priority: true
