@@ -1,0 +1,111 @@
+version: 1
+status: active
+purpose: eliminate_parallel_founder_to_tool_and_founder_to_brain_models
+
+core_principle: >
+  Founder communicates only with the Brain. All tools, workers, runtime services,
+  GitHub, Google Drive and MCP actions are accessed only through the Brain Neural Gateway.
+
+problem_statement:
+  current_transition_state:
+    founder_to_brain: true
+    founder_to_tool_direct_calls: true
+    risk: dual_control_model
+  target_state:
+    founder_to_brain_only: true
+    brain_to_neural_gateway: true
+    neural_gateway_to_tools: true
+    result_returns_to_brain_memory_and_reflection: true
+
+architecture:
+  founder_interface:
+    role: human_input_channel
+    allowed_target: brain_only
+  brain:
+    role: central_interpreter_decision_maker_and_controller
+    responsibilities:
+      - intent_detection
+      - mission_alignment
+      - value_check
+      - priority_evaluation
+      - command_authorization
+      - memory_update
+      - reflection
+  neural_gateway:
+    role: single_execution_gateway_between_brain_and_tools
+    responsibilities:
+      - map_brain_intent_to_tool_action
+      - validate_permissions
+      - execute_tool_call
+      - capture_result
+      - send_result_back_to_brain
+      - prevent_direct_tool_bypass
+  tools_and_organs:
+    github: technical_body
+    google_drive: long_term_memory
+    runtime: working_mind
+    workers: execution_limbs
+    governance: constitutional_layer
+
+mandatory_flow:
+  - founder_message
+  - brain_intent_parsing
+  - brain_context_update
+  - mission_value_goal_check
+  - neural_gateway_route_selection
+  - tool_or_worker_execution
+  - result_capture
+  - brain_reflection
+  - memory_update
+  - founder_report
+
+prohibited_flows:
+  - founder_to_tool_direct
+  - founder_to_worker_direct
+  - tool_to_tool_without_brain_context
+  - runtime_process_without_brain_registration
+  - worker_execution_without_brain_assignment
+
+migration_steps:
+  phase_1:
+    name: logical_gateway_policy
+    actions:
+      - declare_no_direct_tool_access
+      - require_brain_context_for_every_tool_call
+      - log_intent_before_action
+  phase_2:
+    name: unified_intent_router
+    actions:
+      - create_intent_to_tool_registry
+      - wrap_existing_tools_behind_gateway
+      - standardize_tool_results_to_brain_events
+  phase_3:
+    name: enforcement_layer
+    actions:
+      - block_unregistered_actions
+      - require_goal_link_and_memory_path
+      - audit_all_tool_calls
+  phase_4:
+    name: physical_runtime_gateway
+    actions:
+      - implement_brain_gateway_service
+      - migrate_chat_commands_to_brain_api
+      - remove_direct_tool_invocation_from_operating_model
+
+required_components:
+  - BRAIN_NEURAL_GATEWAY_V1
+  - INTENT_TO_TOOL_REGISTRY_V1
+  - TOOL_CALL_GOVERNANCE_V1
+  - BRAIN_COMMAND_ENVELOPE_V1
+  - DIRECT_TOOL_ACCESS_DEPRECATION_POLICY_V1
+
+success_criteria:
+  founder_has_one_interface: true
+  every_tool_call_has_brain_intent: true
+  every_execution_updates_memory: true
+  every_worker_reports_to_brain: true
+  no_parallel_control_plane: true
+
+final_state: >
+  One Brain. One command path. One control plane. Tools are no longer directly addressed by Founder;
+  they are organs accessed through the Brain Neural Gateway.
