@@ -6,7 +6,17 @@ events:
   status: audited
   duplicate_basename_detected: false
   legacy_shims_required: []
-  next_action: import_scan_complete
+  next_action: archive_proposal_batch_1
+
+import_scan:
+  archive_ready:
+    - system/rules/engine_v2.py
+    - system/scheduler_runtime.py
+    - system/governance_audit.py
+  still_referenced:
+    - api/routes/rag_runtime.py
+  status: complete
+  next_action: archive_proposal_batch_1
 
 legacy_compaction:
   archive_ready:
