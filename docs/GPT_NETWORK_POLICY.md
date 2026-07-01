@@ -1,4 +1,4 @@
-# TRUNG_HUYEN_AI_OS — GPT NETWORK POLICY v1.0
+# TRUNG_HUYEN_AI_OS — GPT NETWORK POLICY v1.0 
 
 ## Architecture Principle
 
