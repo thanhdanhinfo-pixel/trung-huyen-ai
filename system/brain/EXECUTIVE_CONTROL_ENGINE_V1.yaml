@@ -1,0 +1,12 @@
+version: 1
+purpose: coordinate_high_level_goal_directed_behavior
+capabilities:
+  planning: true
+  inhibition: true
+  goal_monitoring: true
+  progress_review: true
+  adaptive_strategy_updates: true
+rules:
+  mission_first: true
+  preserve_focus: true
+  require_reflection_after_major_actions: true
