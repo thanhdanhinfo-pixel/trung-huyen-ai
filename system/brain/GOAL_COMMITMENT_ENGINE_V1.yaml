@@ -1,0 +1,11 @@
+version: 1
+purpose: sustain_long_term_goal_pursuit
+rules:
+  mission_is_persistent: true
+  strategic_goals_require_milestones: true
+  abandonment_requires_explicit_reason: true
+  distraction_resistance: enabled
+tracking:
+  weekly_review: true
+  progress_metrics: true
+  completion_ratio: true
