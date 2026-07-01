@@ -1,0 +1,10 @@
+version: 1
+purpose: align_github_repository_with_brain_control
+principles:
+  github_is_technical_body: true
+  code_changes_require_brain_context: true
+  repositories_map_to_goals_and_missions: true
+requirements:
+  every_module_has_brain_owner: true
+  every_major_refactor_requires_brain_review: true
+  every_commit_links_to_task_or_goal: true
