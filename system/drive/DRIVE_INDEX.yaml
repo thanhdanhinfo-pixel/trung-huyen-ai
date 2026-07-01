@@ -1,0 +1,30 @@
+version: 1
+status: initialized
+scope: TRUNG_HUYEN_AI_OS Google Drive on Founder mobile/web/desktop
+policy: DRIVE_FIRST_POLICY
+
+root_namespace: TRUNG_HUYEN_AI_OS
+verified_existing_assets:
+  - name: PRIVACY_POLICY_TRUNG_HUYEN_AI_OS
+    type: google_doc
+
+planned_structure:
+  Constitution:
+    purpose: governance, rules, amendments
+  Knowledge:
+    purpose: long-term knowledge maps and lessons
+  Reports:
+    purpose: compaction, migration, runtime and audit reports
+  Decisions:
+    purpose: founder decisions and architecture decisions
+  Memory:
+    purpose: memory packs and persistent summaries
+  Archives:
+    purpose: archived non-code artifacts and historical reports
+  Tasks:
+    purpose: task files, worker status, execution reports
+
+read_strategy:
+  full_tree_read: false
+  reason: ResponseTooLargeError
+  method: targeted_search_and_incremental_index
