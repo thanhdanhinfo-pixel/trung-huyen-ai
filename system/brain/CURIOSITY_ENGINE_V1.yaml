@@ -1,0 +1,18 @@
+version: 1
+purpose: guided_exploration_and_self_directed_learning
+triggers:
+  - knowledge_gap_detected
+  - repeated_failures
+  - strategic_opportunity
+questions:
+  - why
+  - what_if
+  - what_is_missing
+  - what_can_be_improved
+constraints:
+  founder_alignment_required: true
+  no_unbounded_exploration: true
+outputs:
+  learning_tasks: true
+  research_topics: true
+  improvement_proposals: true
