@@ -1,0 +1,17 @@
+version: 1
+purpose: maintain_real_time_indexes_for_all_brain_memories
+memory_domains:
+  - episodic
+  - semantic
+  - procedural
+  - identity
+  - values
+  - legacy
+capabilities:
+  semantic_indexing: true
+  causal_linking: true
+  source_traceability: true
+  fast_retrieval: true
+rules:
+  every_memory_requires_origin: true
+  identity_and_value_memory_are_protected: true
