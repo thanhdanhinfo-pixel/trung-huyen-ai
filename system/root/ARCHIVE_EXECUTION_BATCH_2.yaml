@@ -1,0 +1,20 @@
+version: 2
+status: ready_for_execution
+verified_patterns:
+  - import chat
+  - from chat import
+  - import scheduler
+  - from scheduler import
+  - import health
+  - from health import
+  - import orchestrator
+  - from orchestrator import
+all_matches: 0
+archive_candidates:
+  - chat.py
+  - scheduler.py
+  - health.py
+  - orchestrator.py
+next:
+  - move_file_execution
+  - post_archive_validation
