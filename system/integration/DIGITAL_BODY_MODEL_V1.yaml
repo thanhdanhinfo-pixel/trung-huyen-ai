@@ -1,0 +1,41 @@
+version: 1
+status: active
+purpose: define_the_body_of_the_living_brain
+
+principle: >
+  The Brain cannot operate alone. Like a human brain, it requires a body, limbs,
+  senses, memory organs, nervous pathways, and governance constraints. All previous tools
+  and workflows are absorbed as organs and capabilities of the digital body.
+
+body_mapping:
+  brain:
+    role: central_command_and_cognition
+  runtime:
+    role: working_mind_and_active_consciousness
+  google_drive:
+    role: long_term_memory
+  github:
+    role: technical_body_and_code_muscle
+  workers:
+    role: arms_legs_and_execution_limbs
+  mcp_tools:
+    role: peripheral_organs_and_external_action_channels
+  governance:
+    role: prefrontal_constraints_and_constitution
+  event_bus:
+    role: nervous_signal_transport
+  neural_gateway:
+    role: spinal_cord_and_tool_gateway
+
+rules:
+  brain_controls_body: true
+  body_reports_to_brain: true
+  limbs_do_not_act_without_brain_signal: true
+  organs_do_not_define_mission: true
+  every_body_action_updates_memory: true
+  body_failure_enters_degraded_mode: true
+  brain_failure_enters_critical_condition: true
+
+integration_goal: >
+  Convert TRUNG_HUYEN_AI_OS from a collection of tools into a unified digital organism:
+  one living brain, one digital body, one nervous system, one mission.
