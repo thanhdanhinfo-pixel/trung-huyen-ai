@@ -1,0 +1,20 @@
+version: 1
+role: habits_patterns_memory_consolidation
+engines:
+  habit_engine:
+    triggers:
+      - task_completed
+      - error_detected
+      - decision_made
+  pattern_engine:
+    detects:
+      - duplicate_files
+      - repeated_failures
+      - founder_preferences
+  reflection_engine:
+    cadence:
+      - daily
+      - weekly
+  consolidation:
+    working_to_episodic: true
+    episodic_to_procedural: true
