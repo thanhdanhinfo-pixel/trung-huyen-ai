@@ -255,3 +255,12 @@ include_runtime_routers(
     command_runner_router=command_runner_router,
     observability_tools_router=observability_tools_router,
 )
+
+
+@app.get("/openapi-mcp-v3.json", include_in_schema=False)
+def serve_openapi_mcp_v3():
+    return FileResponse(
+        "openapi-mcp-v3.json",
+        media_type="application/json"
+    )
+
