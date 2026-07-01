@@ -1,0 +1,62 @@
+version: 1
+status: active
+purpose: clarify_that_the_transition_is_connection_migration_not_system_replacement
+
+core_principle: >
+  The system is not being replaced and existing tools are not being removed. The migration is a connection migration:
+  existing capabilities, tools, workers, APIs and infrastructure remain operational, but their command path is gradually
+  rerouted so that all information and commands pass through the Living Brain first.
+
+not_this:
+  - shutdown_old_system
+  - replace_all_tools_at_once
+  - mass_refactor_runtime
+  - break_existing_workflows
+  - remove_direct_paths_before_validation
+
+this:
+  - migrate_connections_step_by_step
+  - keep_existing_capabilities_working
+  - add_brain_context_to_each_connection
+  - route_new_connections_through_brain_first
+  - audit_remaining_direct_connections
+  - enforce_brain_only_path_after_stability
+
+connection_migration_flow:
+  current:
+    founder_to_tool: allowed_transitionally
+    founder_to_brain: active
+  intermediate:
+    founder_to_brain_to_existing_tool: preferred
+    direct_tool_path: deprecated_but_available
+  target:
+    founder_to_brain_to_capability_to_tool_or_worker: required
+    direct_tool_path: disabled_after_approval
+
+migration_rules:
+  no_disruption: true
+  preserve_existing_runtime: true
+  migrate_connection_not_functionality: true
+  each_connection_requires_brain_intent: true
+  each_result_returns_to_brain: true
+  rollback_required_for_each_step: true
+
+priority_connections:
+  - startup_and_boot_connections
+  - self_state_and_checkpoint_connections
+  - memory_drive_connections
+  - github_code_connections
+  - runtime_health_connections
+  - worker_execution_connections
+  - mcp_external_action_connections
+
+success_criteria:
+  user_experience_unchanged: true
+  brain_context_present_on_all_new_paths: true
+  direct_paths_reduced_over_time: true
+  zero_runtime_regression: true
+  final_single_entrypoint: brain
+
+final_state: >
+  TRUNG_HUYEN_AI_OS keeps its existing capabilities but all command and information connections are rewired through
+  the Living Brain. This creates one unified control path without disrupting current operation.
