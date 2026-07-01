@@ -1,0 +1,9 @@
+version: 1
+purpose: create_new_ideas_by_combining_existing_knowledge
+capabilities:
+  cross_domain_combination: true
+  analogy_generation: true
+  alternative_solution_generation: true
+rules:
+  preserve_truth_constraints: true
+  cite_source_knowledge_when_possible: true
