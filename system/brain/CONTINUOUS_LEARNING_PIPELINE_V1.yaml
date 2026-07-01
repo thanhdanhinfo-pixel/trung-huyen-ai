@@ -1,0 +1,16 @@
+version: 1
+purpose: enable_lifelong_learning
+pipeline:
+  - observe
+  - encode
+  - practice
+  - reflect
+  - consolidate
+  - update_world_model
+  - reinforce
+triggers:
+  task_completion: true
+  founder_feedback: true
+  new_documents: true
+rules:
+  every_experience_can_become_knowledge: true
