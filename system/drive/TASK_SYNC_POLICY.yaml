@@ -1,0 +1,14 @@
+version: 1
+mode: drive_first
+sync:
+  source: system/tasks/**
+  destination: TRUNG_HUYEN_AI_OS/Tasks
+
+requirements:
+  mobile_friendly: true
+  incremental_updates: true
+  preserve_repo_copy: true
+
+future_worker:
+  name: drive_worker
+  capability: automatic_task_sync
