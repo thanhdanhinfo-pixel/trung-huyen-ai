@@ -1,0 +1,42 @@
+version: 1
+status: active
+principle: brain_is_central_control_plane_of_trung_huyen_ai_os
+
+constitutional_rules:
+  brain_is_not_a_module: true
+  brain_is_the_system_control_center: true
+  all_major_actions_must_pass_through_brain: true
+  every_task_must_link_to_goal_or_mission: true
+  every_execution_result_must_update_memory: true
+  every_failure_must_trigger_reflection: true
+  protected_actions_require_founder_approval: true
+  workers_are_execution_limbs_of_brain: true
+  github_is_code_body_and_technical_nervous_system: true
+  google_drive_is_long_term_memory: true
+  runtime_is_working_memory_and_current_state: true
+
+control_loop:
+  - receive_signal
+  - update_brain_state
+  - evaluate_mission_alignment
+  - evaluate_value_constraints
+  - prioritize
+  - decide_or_request_approval
+  - route_to_worker_or_tool
+  - capture_result
+  - reflect
+  - update_memory
+  - update_world_model
+
+violation_policy:
+  bypass_brain_control: critical
+  execute_without_memory_update: major
+  failure_without_reflection: major
+  task_without_goal_link: major
+
+next_runtime_components:
+  - SYSTEM_EVENT_BUS_V1
+  - GOAL_RUNTIME_TRACKER_V1
+  - WORKER_COORDINATION_PROTOCOL_V1
+  - DRIVE_MEMORY_SYNCHRONIZER_V1
+  - SYSTEM_HOMEOSTASIS_ENGINE_V1
