@@ -1,0 +1,17 @@
+version: 1
+purpose: transform_experience_into_long_term_memory
+cycles:
+  after_task:
+    working_to_episodic: true
+    extract_lessons: true
+  daily:
+    episodic_to_semantic: true
+    update_founder_preferences: true
+  weekly:
+    semantic_to_procedural: true
+    refine_sops: true
+storage:
+  working: runtime
+  episodic: google_drive/Memory
+  semantic: google_drive/Knowledge
+  procedural: google_drive/Procedures
