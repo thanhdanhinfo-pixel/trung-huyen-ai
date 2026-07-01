@@ -1,0 +1,20 @@
+version: 1
+purpose: nightly_reflection_and_memory_cleanup
+cycles:
+  daily:
+    review:
+      - successes
+      - failures
+      - lessons
+      - unfinished_tasks
+  weekly:
+    optimize:
+      - habits
+      - workflows
+      - knowledge_links
+  yearly:
+    architecture_review: true
+outputs:
+  lesson_reports: true
+  memory_updates: true
+  procedural_updates: true
