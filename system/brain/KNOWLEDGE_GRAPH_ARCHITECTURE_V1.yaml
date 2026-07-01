@@ -1,0 +1,20 @@
+version: 1
+purpose: semantic_linking_and_cross_domain_reasoning
+node_types:
+  - concepts
+  - people
+  - projects
+  - decisions
+  - procedures
+  - lessons
+relationships:
+  - depends_on
+  - derived_from
+  - influences
+  - contradicts
+  - supports
+storage:
+  semantic_memory: google_drive/Knowledge
+  procedural_memory: google_drive/Procedures
+future:
+  graph_query_engine: planned
