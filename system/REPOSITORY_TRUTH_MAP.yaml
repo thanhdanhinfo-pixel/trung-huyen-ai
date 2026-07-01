@@ -6,7 +6,24 @@ events:
   status: audited
   duplicate_basename_detected: false
   legacy_shims_required: []
-  next_action: governance_domain_audit
+  next_action: knowledge_domain_audit
+
+governance:
+  source_of_truth:
+    governance: system/governance_pkg/governance.py
+    audit: system/governance_pkg/audit.py
+    autonomy: system/governance_pkg/autonomy.py
+    founder: system/governance_pkg/founder.py
+    constitution_runtime: system/governance_pkg/constitution_runtime.py
+  compatibility_shims:
+    - system/governance.py
+    - system/governance_audit.py
+    - system/autonomous_governance.py
+    - system/founder_control.py
+    - system/constitution.py
+  status: audited
+  duplicate_basename_detected: true
+  next_action: knowledge_domain_audit
 
 rules:
   source_of_truth:
