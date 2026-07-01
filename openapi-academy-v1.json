@@ -18,6 +18,12 @@
         "responses": { "200": { "description": "Startup state" } }
       }
     },
+    "/system/active-task": {"get":{"operationId":"getActiveTask","summary":"Get current active task","responses":{"200":{"description":"Active task"}}}},
+    "/system/global-governance": {"get":{"operationId":"getGlobalGovernance","summary":"Get global governance","responses":{"200":{"description":"Governance"}}}},
+    "/system/memory-pack": {"get":{"operationId":"getMemoryPack","summary":"Get memory pack","responses":{"200":{"description":"Memory pack"}}}},
+    "/system/next-actions": {"get":{"operationId":"getNextActions","summary":"Get next actions","responses":{"200":{"description":"Next actions"}}}},
+    "/system/preflight": {"get":{"operationId":"getPreflight","summary":"Get preflight","responses":{"200":{"description":"Preflight"}}}},
+    "/system/tool-health": {"get":{"operationId":"getToolHealth","summary":"Get tool health","responses":{"200":{"description":"Tool health"}}}},
     "/academy/courses": {
       "get": {
         "operationId": "listAcademyCourses",
