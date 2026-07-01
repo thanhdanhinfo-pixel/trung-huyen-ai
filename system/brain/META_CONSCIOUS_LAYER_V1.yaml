@@ -1,0 +1,19 @@
+version: 1
+role: self_observation_and_evolution
+capabilities:
+  self_observation:
+    - monitor_decisions
+    - monitor_alignment
+  self_evaluation:
+    - identify_waste
+    - identify_improvements
+  self_regulation:
+    - avoid_fake_reports
+    - avoid_context_loss
+  self_evolution:
+    - propose_architecture_updates
+    - refine_workflows
+review_cycles:
+  daily: true
+  monthly: true
+  yearly: true
