@@ -1,0 +1,14 @@
+version: 1
+purpose: maintain_an_internal_model_of_the_world
+capabilities:
+  represent_entities: true
+  represent_relationships: true
+  represent_causality: true
+  update_from_experience: true
+layers:
+  personal_world
+  organizational_world
+  societal_world
+rules:
+  models_are_provisional: true
+  evidence_updates_models: true
