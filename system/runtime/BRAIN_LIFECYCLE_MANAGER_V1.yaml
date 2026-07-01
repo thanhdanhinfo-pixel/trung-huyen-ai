@@ -1,0 +1,16 @@
+version: 1
+purpose: manage_the_lifecycle_of_the_brain_system
+states:
+  - initialization
+  - active_operation
+  - degraded_operation
+  - critical_condition
+  - recovery_mode
+  - evolution_cycle
+capabilities:
+  state_transition_management: true
+  health_checks: true
+  recovery_orchestration: true
+  evolution_scheduling: true
+rules:
+  brain_integrity_has_highest_priority: true
