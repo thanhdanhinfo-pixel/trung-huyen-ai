@@ -1,0 +1,14 @@
+version: 1
+purpose: determine_what_deserves_attention
+inputs:
+  - urgency
+  - mission_alignment
+  - founder_priority
+  - long_term_impact
+  - novelty
+outputs:
+  ranked_attention_queue: true
+rules:
+  mission_over_noise: true
+  preserve_deep_work: true
+  reevaluate_periodically: true
