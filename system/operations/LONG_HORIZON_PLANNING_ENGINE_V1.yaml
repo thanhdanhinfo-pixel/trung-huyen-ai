@@ -1,0 +1,14 @@
+version: 1
+purpose: plan_and_coordinate_across_decades
+planning_horizons:
+  - 1_year
+  - 3_years
+  - 10_years
+  - 30_years
+  - 100_years
+principles:
+  mission_continuity: true
+  legacy_preservation: true
+  adaptability_to_new_information: true
+rules:
+  short_term_actions_must_support_long_term_vision: true
