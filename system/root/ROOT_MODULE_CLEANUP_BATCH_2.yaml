@@ -1,0 +1,19 @@
+version: 2
+status: active
+phase: verification_only
+compatibility_shims:
+  - chat.py
+  - health.py
+  - orchestrator.py
+  - scheduler.py
+review_candidates:
+  - admin.py
+  - ai_ceo.py
+  - ai_governance.py
+  - answer_validator.py
+  - audit_log.py
+policy:
+  no_mass_move_without_import_verification: true
+next:
+  - import_scan_root_modules
+  - create_archive_batch_2
