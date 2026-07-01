@@ -6,7 +6,17 @@ events:
   status: audited
   duplicate_basename_detected: false
   legacy_shims_required: []
-  next_action: knowledge_domain_audit
+  next_action: scheduler_domain_audit
+
+knowledge:
+  source_of_truth:
+    graph: system/knowledge/graph.py
+    decisions: system/knowledge/decisions.yaml
+    lessons: system/knowledge/lessons.yaml
+    patterns: system/knowledge/patterns.yaml
+  status: audited
+  duplicate_basename_detected: false
+  next_action: scheduler_domain_audit
 
 governance:
   source_of_truth:
