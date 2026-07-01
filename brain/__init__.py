@@ -1,9 +1,5 @@
-"""Living Brain entrypoint.
+"""DEPRECATED NAMESPACE.
+Knowledge layer only. Do not place operational code here.
+Scheduled for migration to knowledge_brain/."""
 
-Single brain instance for the entire system.
-Do not create another coordinator.
-"""
-
-from kernel.kernel import kernel as brain
-
-__all__ = ["brain"]
+raise ImportError("The 'brain' operational namespace is deprecated. Use 'living_brain' or 'kernel'.")
