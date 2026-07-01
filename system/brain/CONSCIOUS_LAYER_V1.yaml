@@ -1,0 +1,22 @@
+version: 1
+role: attention_planning_execution
+components:
+  attention_system:
+    max_active_projects: 3
+    max_active_tasks: 7
+  planning_engine:
+    pipeline:
+      - observe
+      - decompose
+      - prioritize
+      - execute
+      - reflect
+  communication_engine:
+    channels:
+      - founder
+      - workers
+      - reports
+working_memory_inputs:
+  - current_task
+  - active_context
+  - founder_directives
