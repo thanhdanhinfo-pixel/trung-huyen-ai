@@ -1,0 +1,16 @@
+version: 1
+purpose: synchronize_google_drive_with_long_term_brain_memory
+sync_domains:
+  - episodic_memory
+  - semantic_memory
+  - identity_memory
+  - value_memory
+  - legacy_memory
+rules:
+  brain_state_is_source_of_truth: true
+  bidirectional_sync_requires_validation: true
+  preserve_memory_integrity: true
+triggers:
+  - new_document
+  - reflection_completed
+  - task_completed
