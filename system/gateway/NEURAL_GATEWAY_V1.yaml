@@ -1,0 +1,52 @@
+version: 1
+status: active
+purpose: route_brain_intents_to_execution_units_tools_and_infrastructure_without_direct_founder_to_tool_access
+
+principle: brain_is_the_only_command_source
+
+inputs:
+  - brain_command_envelope
+  - intent_registry_entry
+  - live_brain_state
+
+routing_pipeline:
+  - receive_brain_command_envelope
+  - validate_trace_id
+  - validate_intent
+  - validate_mission_goal_context
+  - lookup_intent_registry
+  - select_execution_unit
+  - select_current_implementation
+  - execute_or_delegate
+  - capture_result
+  - return_result_to_brain
+  - trigger_memory_update_if_required
+  - trigger_reflection_if_required
+
+execution_units:
+  runtime_worker:
+    handles:
+      - START_SYSTEM
+      - OBSERVE_SELF
+  memory_worker:
+    handles:
+      - READ_MEMORY
+  code_worker:
+    handles:
+      - TECHNICAL_BODY_ACCESS
+  external_action_worker:
+    handles:
+      - EXECUTE_EXTERNAL_ACTION
+
+rules:
+  no_execution_without_brain_command_envelope: true
+  direct_tool_access_is_deprecated: true
+  all_results_return_to_brain: true
+  implementation_details_hidden_from_founder: true
+  rollback_to_existing_tool_path_allowed_during_migration: true
+
+migration_mode:
+  stage: wrap_and_route
+  enforcement: soft
+  existing_tools_remain_available: true
+  audit_direct_paths: true
