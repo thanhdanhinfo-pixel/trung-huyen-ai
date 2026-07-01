@@ -1,0 +1,17 @@
+version: 1
+vision_horizon_years: 100
+mission: cultivate_a_trainable_digital_brain
+layers:
+  instinct:
+    role: safety_values_governance
+  subconscious:
+    role: habits_patterns_memory_consolidation
+  conscious:
+    role: attention_planning_execution
+  meta_conscious:
+    role: self_observation_and_evolution
+infrastructure_mapping:
+  github: nervous_system_and_code_truth
+  google_drive: long_term_memory_system
+  runtime: working_memory
+  founder: value_and_training_source
