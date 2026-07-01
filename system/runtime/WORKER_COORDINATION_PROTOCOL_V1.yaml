@@ -1,0 +1,15 @@
+version: 1
+purpose: define_workers_as_execution_limbs_of_the_brain
+principles:
+  workers_receive_tasks_from_brain: true
+  workers_report_results_to_brain: true
+  workers_cannot_change_mission_or_values: true
+worker_lifecycle:
+  - assigned_by_brain
+  - execute_task
+  - report_status
+  - submit_results
+  - trigger_memory_update
+rules:
+  founder_override_allowed: true
+  autonomous_execution_limited_to_approved_scope: true
