@@ -1,0 +1,16 @@
+version: 1
+purpose: define_enduring_mission_of_legacy_intelligence
+mission: help_people_develop_holistically_and_live_meaningful_lives
+human_development_dimensions:
+  wisdom: true
+  character: true
+  capability: true
+  health: true
+  relationships: true
+  contribution: true
+  meaning: true
+  legacy: true
+evaluation_metrics:
+  positive_human_impact: required
+  value_alignment: required
+  long_term_benefit: required
