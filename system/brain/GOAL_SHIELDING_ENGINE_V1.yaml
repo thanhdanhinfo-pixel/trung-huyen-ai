@@ -1,0 +1,10 @@
+version: 1
+purpose: protect_strategic_goals_from_distraction
+rules:
+  max_major_goals: 3
+  reject_unaligned_work: true
+  founder_override_allowed: true
+capabilities:
+  preserve_focus: true
+  defer_non_critical_tasks: true
+  monitor_context_switching: true
