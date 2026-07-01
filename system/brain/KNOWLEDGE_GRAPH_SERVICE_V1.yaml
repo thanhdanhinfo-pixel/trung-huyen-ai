@@ -1,0 +1,14 @@
+version: 1
+purpose: operate_the_digital_neocortex
+services:
+  node_indexing: true
+  relationship_querying: true
+  semantic_search: true
+  contradiction_lookup: true
+  causal_tracing: true
+storage:
+  primary_source: google_drive
+  runtime_cache: enabled
+rules:
+  every_node_has_source: true
+  confidence_scores_required: true
