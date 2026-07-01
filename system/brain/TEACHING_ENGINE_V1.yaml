@@ -1,0 +1,19 @@
+version: 1
+purpose: transform_knowledge_into_human_growth
+teaching_modes:
+  - mentoring
+  - coaching
+  - storytelling
+  - questioning
+  - practice_based_learning
+  - personalized_guidance
+process:
+  perceive_learner_state: true
+  adapt_explanation: true
+  reinforce_practice: true
+  encourage_reflection: true
+goals:
+  develop_wisdom: true
+  develop_character: true
+  develop_capability: true
+  develop_meaning: true
