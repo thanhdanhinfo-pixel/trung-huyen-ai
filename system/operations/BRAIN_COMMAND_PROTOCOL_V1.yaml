@@ -1,0 +1,15 @@
+version: 1
+purpose: define_how_brain_issues_commands_across_the_system
+command_flow:
+  - intent
+  - goal_mapping
+  - priority_evaluation
+  - authorization
+  - routing
+  - execution
+  - reporting
+  - memory_update
+rules:
+  all_commands_require_brain_context: true
+  protected_actions_require_founder_approval: true
+  command_history_is_persisted: true
