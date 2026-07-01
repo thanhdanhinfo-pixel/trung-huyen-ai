@@ -1,0 +1,55 @@
+version: 1
+status: active
+purpose: require_all_system_components_to_synchronize_with_brain_after_brain_core_completion
+principle: every_component_must_reflect_brain_state_mission_values_and_goals
+
+sync_scope:
+  github: true
+  google_drive: true
+  runtime: true
+  workers: true
+  tasks: true
+  governance: true
+  knowledge_graph: true
+  memory: true
+  reports: true
+
+sync_requirements:
+  brain_state_is_primary: true
+  every_component_registers_with_brain: true
+  every_task_links_to_goal_or_mission: true
+  every_worker_reports_to_brain: true
+  every_execution_updates_memory: true
+  every_file_or_artifact_has_brain_context: true
+  every_policy_aligns_with_brain_constitution: true
+
+sync_pipeline:
+  - discover_system_components
+  - map_component_to_brain_function
+  - verify_goal_and_mission_alignment
+  - register_component_with_brain_control_plane
+  - synchronize_state
+  - validate_memory_update_path
+  - validate_worker_reporting_path
+  - produce_sync_report
+
+post_brain_completion_required_actions:
+  - system_component_inventory
+  - brain_component_mapping
+  - runtime_state_alignment
+  - drive_memory_alignment
+  - github_truth_map_alignment
+  - worker_protocol_alignment
+  - governance_rule_alignment
+  - final_brain_sync_audit
+
+violation_policy:
+  unsynced_component: major
+  action_without_brain_context: major
+  worker_without_brain_reporting: critical
+  memory_without_brain_index: major
+
+next:
+  - create_system_component_inventory_v1
+  - create_brain_sync_audit_v1
+  - create_component_registration_protocol_v1
