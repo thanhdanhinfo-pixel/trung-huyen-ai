@@ -1,0 +1,10 @@
+batch: 1
+status: executed
+execution_mode: soft_archive
+moved: []
+pending_manual_move:
+  - system/rules/engine_v2.py
+  - system/scheduler_runtime.py
+  - system/governance_audit.py
+reason: awaiting final filesystem move capability verification
+verified_unused: true
