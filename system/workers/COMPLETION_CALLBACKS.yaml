@@ -1,0 +1,11 @@
+write_report:
+  target: system/reports/
+
+update_drive_index:
+  target: google_drive:index
+
+persist_knowledge:
+  target: knowledge_store
+
+notify_founder:
+  target: notification_layer
