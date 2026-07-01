@@ -1,0 +1,15 @@
+version: 1
+purpose: maintain_live_state_of_all_goals
+hierarchy:
+  mission
+  vision
+  strategic_goals
+  projects
+  tasks
+capabilities:
+  progress_tracking: true
+  milestone_tracking: true
+  blockage_detection: true
+  reprioritization_requests: true
+rules:
+  every_task_must_have_parent_goal: true
