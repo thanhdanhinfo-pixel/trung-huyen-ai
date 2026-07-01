@@ -1,0 +1,15 @@
+version: 1
+purpose: persist_and_restore_brain_cognitive_state
+state_domains:
+  - active_goals
+  - working_memory
+  - executive_context
+  - attention_state
+  - mission_alignment
+capabilities:
+  checkpointing: true
+  rollback_to_last_valid_state: true
+  recovery_validation: true
+rules:
+  identity_integrity_required: true
+  value_integrity_required: true
