@@ -1,0 +1,15 @@
+version: 1
+purpose: structured_self_review
+triggers:
+  - task_completed
+  - end_of_day
+  - end_of_week
+questions:
+  - what_worked
+  - what_failed
+  - what_was_learned
+  - what_should_change
+outputs:
+  lesson_learned: true
+  procedural_updates: true
+  founder_review_items: true
