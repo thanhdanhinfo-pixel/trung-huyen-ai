@@ -1,0 +1,15 @@
+version: 2
+status: not_required_currently
+verified_patterns:
+  - import chat
+  - from chat import
+  - import scheduler
+  - from scheduler import
+results:
+  all_matches: 0
+candidates_safe_for_archive:
+  - chat.py
+  - scheduler.py
+pending_deep_verification:
+  - health.py
+  - orchestrator.py
