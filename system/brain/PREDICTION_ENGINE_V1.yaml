@@ -1,0 +1,16 @@
+version: 1
+purpose: anticipate_future_states_before_action
+pipeline:
+  - collect_history
+  - detect_patterns
+  - generate_hypotheses
+  - estimate_outcomes
+  - assign_confidence
+prediction_horizons:
+  short_term: hours_to_days
+  medium_term: weeks_to_months
+  long_term: years
+rules:
+  predictions_are_not_facts: true
+  confidence_required: true
+  update_from_real_outcomes: true
