@@ -1,0 +1,27 @@
+reports:
+  source: system/*.md
+  destination: TRUNG_HUYEN_AI_OS/Reports
+
+constitution:
+  source: system/constitution*
+  destination: TRUNG_HUYEN_AI_OS/Constitution
+
+memory:
+  source: system/memory/**
+  destination: TRUNG_HUYEN_AI_OS/Memory
+
+decisions:
+  source: system/knowledge/decisions.yaml
+  destination: TRUNG_HUYEN_AI_OS/Decisions
+
+tasks:
+  source: system/tasks/**
+  destination: TRUNG_HUYEN_AI_OS/Tasks
+
+archives:
+  source: archive/**
+  destination: TRUNG_HUYEN_AI_OS/Archives
+
+rule:
+  code_stays_in_repo: true
+  knowledge_moves_to_drive: true
