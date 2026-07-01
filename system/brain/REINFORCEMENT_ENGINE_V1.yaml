@@ -1,0 +1,9 @@
+version: 1
+purpose: strengthen_effective_behaviors_and_reduce_ineffective_ones
+capabilities:
+  positive_feedback_loops: true
+  negative_feedback_awareness: true
+  habit_strength_tracking: true
+rules:
+  successful_patterns_are_reinforced: true
+  repeated_failures_trigger_reflection: true
