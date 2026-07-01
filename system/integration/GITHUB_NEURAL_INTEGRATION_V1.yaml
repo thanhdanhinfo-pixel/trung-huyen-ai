@@ -1,0 +1,13 @@
+version: 1
+purpose: integrate_github_as_the_technical_body_of_the_living_brain
+integration_role: technical_body_and_code_nervous_system
+requirements:
+  repository_registers_with_brain: true
+  every_commit_links_to_goal_task_or_reflection: true
+  every_module_has_brain_function: true
+  protected_files_require_founder_approval: true
+sync_paths:
+  brain_to_github: intent_to_code
+  github_to_brain: execution_result_to_memory
+rules:
+  no_code_change_without_brain_context: true
