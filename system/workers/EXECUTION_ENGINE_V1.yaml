@@ -1,0 +1,21 @@
+version: 1
+mode: deep_execution
+batch_size:
+  min: 3
+  max: 10
+
+workers:
+  - repo_worker
+  - drive_worker
+  - knowledge_worker
+  - runtime_worker
+
+stop_conditions:
+  - protected_action_required
+  - verified_tool_failure
+  - task_completed
+
+report_policy:
+  report_after_batch: true
+  include_commits: true
+  include_artifacts: true
