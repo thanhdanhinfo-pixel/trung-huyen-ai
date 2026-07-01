@@ -579,3 +579,37 @@ def build_tree_summary(limit: int = 2000) -> Dict[str, Any]:
             "purpose": "overview_without_context_overload",
         },
     }
+
+
+# =====================================
+# KNOWLEDGE MAP / TREE SUMMARY
+# =====================================
+
+def build_tree_summary(limit: int = 2000) -> Dict[str, Any]:
+    """Build a compact top-level summary of Google Drive without reading file contents."""
+    from collections import Counter
+
+    items = list_recursive(limit=limit)
+    domains = Counter()
+    mime_types = Counter()
+
+    for item in items:
+        path = item.get("path") or item.get("name") or "ROOT"
+        root = path.split("/")[0] if path else "ROOT"
+        domains[root] += 1
+        mime_types[item.get("mimeType", "unknown")] += 1
+
+    return {
+        "status": "ok",
+        "mode": "tree_summary",
+        "total_entries": len(items),
+        "domains": [
+            {"name": name, "entries": count}
+            for name, count in sorted(domains.items(), key=lambda x: x[1], reverse=True)
+        ],
+        "mime_types": dict(mime_types),
+        "policy": {
+            "read_contents": False,
+            "purpose": "overview_without_context_overload",
+        },
+    }
