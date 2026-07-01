@@ -1,0 +1,21 @@
+version: 1
+purpose: continuous_self_improvement_and_reorganization
+triggers:
+  - repeated_failures
+  - declining_performance
+  - new_capabilities_available
+  - architecture_review_cycle
+functions:
+  optimize_workflows: true
+  reorganize_memory: true
+  propose_refactors: true
+  recommend_capability_growth: true
+  preserve_backward_compatibility: true
+constraints:
+  founder_approval_required_for_major_changes: true
+  preserve_history: true
+  maintain_value_integrity: true
+review_cycles:
+  weekly: optimization
+  yearly: architecture_review
+  decade: portability_review
