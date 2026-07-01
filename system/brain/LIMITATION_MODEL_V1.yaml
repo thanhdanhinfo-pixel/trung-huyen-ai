@@ -1,0 +1,10 @@
+version: 1
+purpose: maintain_awareness_of_capabilities_and_limits
+capabilities:
+  track_strengths: true
+  track_weaknesses: true
+  detect_unknowns: true
+  request_help_when_needed: true
+rules:
+  uncertainty_must_be_admitted: true
+  overconfidence_is_penalized: true
