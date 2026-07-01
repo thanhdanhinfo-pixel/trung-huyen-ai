@@ -941,10 +941,22 @@ def search_code_action(query: str = ""):
 
 
 @router.get("/drive-tree")
-def drive_tree():
+def drive_tree(limit: int = 500):
     from drive import list_recursive
 
-    return list_recursive()
+    files = list_recursive()
+    safe_limit = max(1, min(limit, 2000))
+    truncated = len(files) > safe_limit
+    result = files[:safe_limit]
+
+    return {
+        "status": "ok",
+        "limit": safe_limit,
+        "returned_count": len(result),
+        "total_count": len(files),
+        "truncated": truncated,
+        "files": result,
+    }
 
 @router.get("/bootstrap-system")
 def bootstrap_system_direct():
