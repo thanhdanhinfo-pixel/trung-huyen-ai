@@ -1,0 +1,19 @@
+version: 1
+purpose: coordinate_all_cognitive_subsystems
+orchestration_order:
+  - perception
+  - attention
+  - memory
+  - knowledge_network
+  - prediction
+  - decision
+  - execution
+  - reflection
+  - learning
+capabilities:
+  cognitive_state_persistence: true
+  cross_engine_coordination: true
+  failure_recovery: true
+rules:
+  mission_alignment_required: true
+  value_integrity_required: true
