@@ -1,11 +1,13 @@
 """Living Brain control-plane entrypoint.
 
-This package is the only operational Brain namespace.
-- living_brain = control plane / coordination authority
+This package is the only operational control plane.
+- living_brain = coordination authority
 - kernel = neural core implementation
-- brain/ = knowledge layer only
+- brain/ = deprecated knowledge namespace pending rename
 """
 
-from kernel.kernel import kernel as brain
+from kernel.kernel import kernel as neural_core
 
-__all__ = ["brain"]
+brain = neural_core
+
+__all__ = ["brain", "neural_core"]
