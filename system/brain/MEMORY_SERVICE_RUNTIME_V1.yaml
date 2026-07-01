@@ -1,0 +1,14 @@
+version: 1
+purpose: operate_working_and_long_term_memory
+services:
+  working_memory_store: true
+  episodic_memory_store: true
+  semantic_memory_store: true
+  procedural_memory_store: true
+  consolidation_jobs: true
+integration:
+  google_drive_sync: enabled
+  runtime_cache: enabled
+rules:
+  preserve_identity_memory: true
+  preserve_value_memory: true
