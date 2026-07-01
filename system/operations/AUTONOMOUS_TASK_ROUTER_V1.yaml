@@ -1,0 +1,11 @@
+version: 1
+purpose: route_tasks_to_the_correct_workers_under_brain_supervision
+routing_inputs:
+  - mission_priority
+  - goal_alignment
+  - worker_capability
+  - current_load
+rules:
+  brain_retains_final_authority: true
+  protected_tasks_require_founder_approval: true
+  every_assignment_updates_memory: true
