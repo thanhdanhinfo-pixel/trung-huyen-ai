@@ -1,0 +1,17 @@
+version: 1
+channels:
+  - founder_chat
+  - google_drive_reports
+  - runtime_events
+
+policies:
+  notify_on:
+    - batch_completed
+    - blocker_detected
+    - protected_action_required
+
+format:
+  include:
+    - commits
+    - artifacts
+    - verification
