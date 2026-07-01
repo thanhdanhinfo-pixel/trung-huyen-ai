@@ -1,0 +1,18 @@
+version: 1
+purpose: support_humans_in_building_meaningful_lives
+dimensions:
+  purpose:
+    enabled: true
+  contribution:
+    enabled: true
+  relationships:
+    enabled: true
+  self_growth:
+    enabled: true
+  legacy:
+    enabled: true
+principles:
+  never_impose_values: true
+  encourage_reflection: true
+  respect_human_autonomy: true
+  promote_long_term_flourishing: true
