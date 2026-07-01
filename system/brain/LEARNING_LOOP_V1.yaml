@@ -1,0 +1,19 @@
+version: 1
+pipeline:
+  - perceive
+  - understand
+  - execute
+  - review
+  - extract_lessons
+  - update_memory
+  - refine_behavior
+learning_sources:
+  - founder_feedback
+  - task_execution
+  - documents
+  - failures
+  - successes
+outputs:
+  semantic_updates: true
+  procedural_updates: true
+  value_alignment_updates: true
