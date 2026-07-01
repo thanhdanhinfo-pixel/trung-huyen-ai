@@ -18,6 +18,48 @@
         "responses": { "200": { "description": "Startup state" } }
       }
     },
+    "/system/active-task": {
+      "get": {
+        "operationId": "getActiveTask",
+        "summary": "Get current active task and continuity policy",
+        "responses": { "200": { "description": "Active task state" } }
+      }
+    },
+    "/system/global-governance": {
+      "get": {
+        "operationId": "getGlobalGovernance",
+        "summary": "Get global governance constitution and mandatory rules",
+        "responses": { "200": { "description": "Global governance" } }
+      }
+    },
+    "/system/memory-pack": {
+      "get": {
+        "operationId": "getMemoryPack",
+        "summary": "Get unified memory pack for startup context",
+        "responses": { "200": { "description": "Memory pack" } }
+      }
+    },
+    "/system/next-actions": {
+      "get": {
+        "operationId": "getNextActions",
+        "summary": "Get next system actions",
+        "responses": { "200": { "description": "Next actions" } }
+      }
+    },
+    "/system/preflight": {
+      "get": {
+        "operationId": "getPreflight",
+        "summary": "Get system preflight before work",
+        "responses": { "200": { "description": "Preflight state" } }
+      }
+    },
+    "/system/tool-health": {
+      "get": {
+        "operationId": "getToolHealth",
+        "summary": "Get tool health",
+        "responses": { "200": { "description": "Tool health" } }
+      }
+    },
     "/brain/search": {
       "get": {
         "operationId": "searchBrain",
