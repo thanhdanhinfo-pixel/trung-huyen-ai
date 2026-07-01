@@ -1,0 +1,18 @@
+version: 1
+purpose: audit_all_components_for_alignment_with_brain_control_plane
+audit_checks:
+  component_registered_with_brain: true
+  component_has_brain_function: true
+  component_has_reporting_path: true
+  component_has_memory_update_path: true
+  component_links_to_goal_or_mission: true
+  component_complies_with_brain_constitution: true
+risk_levels:
+  unregistered_component: critical
+  missing_reporting_path: major
+  missing_memory_update_path: major
+  missing_goal_link: major
+outputs:
+  sync_gaps: true
+  remediation_plan: true
+  founder_review_items: true
