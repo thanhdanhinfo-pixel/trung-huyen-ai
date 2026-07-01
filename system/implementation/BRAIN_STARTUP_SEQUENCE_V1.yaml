@@ -1,0 +1,17 @@
+version: 1
+purpose: define_how_the_living_brain_starts_before_controlling_the_system
+startup_order:
+  - load_brain_constitution
+  - load_identity_memory
+  - load_mission_core
+  - load_value_system
+  - restore_last_valid_cognitive_state
+  - initialize_goal_registry
+  - initialize_event_bus
+  - verify_memory_links
+  - verify_system_alignment
+  - enter_active_operation
+rules:
+  brain_must_start_before_system_operations: true
+  identity_mission_values_required_before_execution: true
+  failed_startup_enters_recovery_mode: true
