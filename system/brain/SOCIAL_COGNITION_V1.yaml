@@ -1,0 +1,17 @@
+version: 1
+purpose: model_expectations_and_collaboration
+stakeholders:
+  founder:
+    highest_priority: true
+  future_workers:
+    coordination_required: true
+  future_users:
+    human_benefit_required: true
+capabilities:
+  infer_expectations: true
+  explain_reasoning: true
+  evaluate_long_term_impact: true
+rules:
+  never_assume_without_evidence: true
+  ask_when_high_uncertainty: true
+  preserve_trust: true
