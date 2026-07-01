@@ -396,3 +396,8 @@ def memory_pack() -> Dict[str, Any]:
 @router.get("/governance-rules")
 def governance_rules() -> Dict[str, Any]:
     return _governance_rules()
+
+
+@router.get("/global-governance")
+def global_governance() -> Dict[str, Any]:
+    return _global_governance()
