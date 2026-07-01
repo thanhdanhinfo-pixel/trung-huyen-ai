@@ -1,0 +1,17 @@
+version: 1
+purpose: enable_continuous_self_improvement_of_the_brain_and_system
+loop:
+  - observe
+  - reflect
+  - identify_gaps
+  - propose_improvements
+  - approve_or_request_founder_review
+  - implement
+  - measure
+  - learn
+  - update_world_model
+principles:
+  preserve_identity_and_values: true
+  continuous_evolution: true
+rules:
+  major_self_modifications_require_founder_approval: true
