@@ -6,7 +6,17 @@ events:
   status: audited
   duplicate_basename_detected: false
   legacy_shims_required: []
-  next_action: legacy_compaction
+  next_action: import_scan_complete
+
+legacy_compaction:
+  archive_ready:
+    - system/rules/engine_v2.py
+  keep:
+    - api/routes/rag_runtime.py
+  requires_import_migration:
+    - app.py -> api/routes/rag_runtime.py
+  status: partial
+  next_action: import_scan_complete
 
 api:
   source_of_truth:
