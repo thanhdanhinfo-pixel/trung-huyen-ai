@@ -1,0 +1,15 @@
+version: 2
+status: completed
+validated_archives:
+  - archive/root/chat.py
+  - archive/root/scheduler.py
+  - archive/root/health.py
+  - archive/root/orchestrator.py
+checks:
+  move_operations_verified: true
+  root_duplicates_reduced: true
+  rollback_possible: true
+next:
+  - automatic_drive_sync_worker
+  - drive_folder_provisioning
+  - knowledge_migration_plan_v1
