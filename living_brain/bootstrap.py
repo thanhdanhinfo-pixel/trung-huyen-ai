@@ -22,6 +22,7 @@ def bootstrap_brain() -> dict:
         "deploy_capability_loaded": False,
         "execution_first_loaded": False,
         "capability_baseline_loaded": False,
+        "action_contracts_loaded": False,
     }
 
     constitution = Path("system/GLOBAL_GOVERNANCE/00_SYSTEM_CONSTITUTION.md")
