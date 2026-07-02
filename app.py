@@ -189,6 +189,7 @@ configure_core_routers(
     execute_router,
     system_awareness_router,
     system_startup_router,
+    task_status_router,
     drive_routes_router,
     rag_routes_router,
     rag_runtime_routes_router,
