@@ -29,5 +29,17 @@ def bootstrap_brain() -> dict:
 
     _ = living_brain
     status["brain_initialized"] = True
-    status["brain_routing_enabled"] = True
+
+    try:
+        tool_router.resolve("DELETE_CODE")
+        status["delete_capability_loaded"] = True
+
+        tool_router.resolve("DEPLOY_SYSTEM")
+        status["deploy_capability_loaded"] = True
+
+        status["brain_routing_enabled"] = True
+    except ToolRoutingError as exc:
+        status["brain_routing_enabled"] = False
+        status["routing_error"] = str(exc)
+
     return status
