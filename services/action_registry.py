@@ -872,6 +872,25 @@ def action_secret_manager_write(payload: Dict[str, Any], context: Any = None) ->
 
 
 @register_action(
+    "migrate_env_secret_to_secret_manager",
+    description="Safely migrate an existing runtime environment variable into Secret Manager and bind it to Cloud Run.",
+    namespace="security",
+    required_level=5,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_migrate_env_secret_to_secret_manager(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.autonomous_execution import migrate_env_secret_to_secret_manager
+    return migrate_env_secret_to_secret_manager(
+        env_var=payload.get("env_var", ""),
+        secret_name=payload.get("secret_name", ""),
+        service=payload.get("service", "trung-huyen-ai"),
+        region=payload.get("region", "asia-southeast1"),
+        version=payload.get("version", "latest"),
+    )
+
+
+@register_action(
     "cloud_run_secret_bind",
     description="Bind a Secret Manager secret to Cloud Run environment variable.",
     namespace="security",
