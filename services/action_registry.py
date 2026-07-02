@@ -810,3 +810,30 @@ def action_cloud_run_deploy(payload: Dict[str, Any], context: Any = None) -> Dic
         region=payload.get("region", "asia-southeast1"),
         allow_unauthenticated=bool(payload.get("allow_unauthenticated", True)),
     )
+
+
+@register_action(
+    "cloud_build_status",
+    description="Read Cloud Build status through Cloud Build API.",
+    namespace="execution",
+    required_level=3,
+    scope="ALL_SYSTEM",
+)
+def action_cloud_build_status(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.autonomous_execution import cloud_build_status
+    return cloud_build_status(build_id=payload.get("build_id", ""))
+
+
+@register_action(
+    "runtime_logs",
+    description="Read recent Cloud Run logs.",
+    namespace="execution",
+    required_level=3,
+    scope="ALL_SYSTEM",
+)
+def action_runtime_logs(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.autonomous_execution import runtime_logs
+    return runtime_logs(
+        service=payload.get("service", "trung-huyen-ai"),
+        limit=int(payload.get("limit", 50)),
+    )
