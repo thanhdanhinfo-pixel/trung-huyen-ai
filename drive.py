@@ -177,25 +177,34 @@ def list_recursive(parent_id: Optional[str] = None, current_path: str = "", limi
         return []
 
     query = f"'{parent_id}' in parents and trashed=false"
-    result = service.files().list(
-        q=query,
-        fields="files(id,name,mimeType,webViewLink,modifiedTime)",
-        supportsAllDrives=True,
-        includeItemsFromAllDrives=True,
-    ).execute()
-
     items: List[Dict[str, Any]] = []
-    for item in result.get("files", []):
-        if limit is not None and counter[0] >= limit:
+    page_token = None
+
+    while True:
+        result = service.files().list(
+            q=query,
+            pageSize=100,
+            pageToken=page_token,
+            fields="nextPageToken,files(id,name,mimeType,webViewLink,modifiedTime)",
+            supportsAllDrives=True,
+            includeItemsFromAllDrives=True,
+        ).execute()
+
+        for item in result.get("files", []):
+            if limit is not None and counter[0] >= limit:
+                return items
+
+            path = f"{current_path}/{item['name']}".strip("/")
+            item["path"] = path
+            items.append(item)
+            counter[0] += 1
+
+            if item["mimeType"] == GOOGLE_FOLDER:
+                items.extend(list_recursive(item["id"], path, limit=limit, _counter=counter))
+
+        page_token = result.get("nextPageToken")
+        if not page_token:
             break
-
-        path = f"{current_path}/{item['name']}".strip("/")
-        item["path"] = path
-        items.append(item)
-        counter[0] += 1
-
-        if item["mimeType"] == GOOGLE_FOLDER:
-            items.extend(list_recursive(item["id"], path, limit=limit, _counter=counter))
 
     return items
 
