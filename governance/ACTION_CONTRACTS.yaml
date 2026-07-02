@@ -1,0 +1,139 @@
+version: 1.0
+owner: LIVING_BRAIN
+priority: P0
+status: ACTIVE
+
+purpose: >
+  Cache verified Action Registry contracts so the Living Brain can execute
+  available actions without repeatedly asking Founder or guessing schemas.
+
+rules:
+  - action_contracts_are_loaded_on_bootstrap
+  - action_registry_is_source_of_truth
+  - if_contract_missing_read_services_action_registry_before_refusal
+  - never_invent_action_payload_schema
+  - attempt_available_action_after_contract_resolution
+
+contracts:
+  action_registry_status:
+    namespace: system
+    payload: {}
+
+  secret_manager_read:
+    namespace: security
+    required_level: 5
+    audit_required: true
+    payload:
+      secret_name:
+        type: string
+        required: true
+      version:
+        type: string
+        required: false
+        default: latest
+
+  secret_manager_write:
+    namespace: security
+    required_level: 5
+    audit_required: true
+    payload:
+      secret_name:
+        type: string
+        required: true
+      value:
+        type: string
+        required: true
+        security: secret_value
+        handling:
+          - never_log
+          - never_echo
+          - never_store_in_repository
+
+  cloud_run_secret_bind:
+    namespace: security
+    required_level: 5
+    audit_required: true
+    payload:
+      env_var:
+        type: string
+        required: true
+      secret_name:
+        type: string
+        required: true
+      service:
+        type: string
+        required: false
+        default: trung-huyen-ai
+      region:
+        type: string
+        required: false
+        default: asia-southeast1
+      version:
+        type: string
+        required: false
+        default: latest
+
+  cloud_build_submit:
+    namespace: execution
+    required_level: 5
+    audit_required: true
+    payload:
+      tag:
+        type: string
+        required: false
+        default: asia-southeast1-docker.pkg.dev/trung-huyen-ai/thos/trung-huyen-ai
+
+  cloud_build_status:
+    namespace: execution
+    payload:
+      build_id:
+        type: string
+        required: true
+
+  cloud_run_deploy:
+    namespace: execution
+    required_level: 5
+    audit_required: true
+    payload:
+      service:
+        type: string
+        required: false
+        default: trung-huyen-ai
+      image:
+        type: string
+        required: false
+        default: asia-southeast1-docker.pkg.dev/trung-huyen-ai/thos/trung-huyen-ai
+      region:
+        type: string
+        required: false
+        default: asia-southeast1
+      allow_unauthenticated:
+        type: boolean
+        required: false
+        default: true
+
+  shell_exec:
+    namespace: execution
+    required_level: 5
+    audit_required: true
+    payload:
+      command:
+        type: string
+        required: true
+      timeout:
+        type: integer
+        required: false
+      cwd:
+        type: string
+        required: false
+
+blocked_response_format:
+  TASK: string
+  ATTEMPTED: list
+  BLOCKER: string
+  FOUNDER_ACTION_REQUIRED: string
+  NEXT_STEP_AFTER_FOUNDER_ACTION: string
+
+next_required_step:
+  - load_action_contracts_in_living_brain_bootstrap
+  - continue_p0_security_hardening_with_verified_contracts
