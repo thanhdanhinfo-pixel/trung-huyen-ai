@@ -496,6 +496,38 @@ def action_github_upsert_file(payload: Dict[str, Any], context: Any = None) -> D
 
 
 @register_action(
+    "github_delete_file",
+    description="Delete a GitHub file through GitHub runtime with unified authorization.",
+    namespace="github",
+    required_level=3,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_github_delete_file(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.github_runtime import github_runtime
+
+    path = payload.get("path", "")
+    message = payload.get("message", "Delete file through action registry")
+
+    if not path or not message:
+        return {
+            "status": "error",
+            "message": "path and message are required",
+        }
+
+    result = github_runtime.delete_file(
+        path=path,
+        message=message,
+    )
+
+    return {
+        "status": "ok" if result.get("status") != "error" else "error",
+        "path": path,
+        "result": result,
+    }
+
+
+@register_action(
     "drive_tree",
     description="List Google Drive tree within Founder configured Drive root with depth and limit.",
     namespace="drive",
