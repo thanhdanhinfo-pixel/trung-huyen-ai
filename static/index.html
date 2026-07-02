@@ -1,1 +1,301 @@
-REWRITE_WITH_DONE_SUPPORT_PLACEHOLDER
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRUNG HUYEN AI OS</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    #taskCountdown {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #020617, #172554);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+    }
+    #taskCountdown.done {
+      background: linear-gradient(135deg, #052e16, #064e3b);
+      border-color: #22c55e;
+    }
+    #taskCountdown .task-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    #taskCountdown .timer {
+      font-size: 30px;
+      font-weight: 800;
+      color: #86efac;
+      letter-spacing: 1px;
+    }
+    #taskCountdown .progress-wrap {
+      height: 8px;
+      background: #0f172a;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+    #taskCountdown .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #22c55e;
+      transition: width .3s ease;
+    }
+    #taskCountdown .task-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 14px;
+      color: #cbd5e1;
+      margin-top: 6px;
+    }
+    #chat {
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 12px;
+      padding: 16px;
+      height: 60vh;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+    .msg {
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .user { background: #1d4ed8; }
+    .bot { background: #1f2937; }
+    textarea {
+      width: 100%;
+      height: 90px;
+      border-radius: 10px;
+      border: 1px solid #374151;
+      padding: 12px;
+      box-sizing: border-box;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #22c55e;
+      color: #052e16;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    button:disabled { background: #6b7280; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="taskCountdown" aria-live="polite">
+      <div class="task-title" id="taskTitle">Đang xử lý nhiệm vụ...</div>
+      <div class="timer" id="taskTimer">--:--</div>
+      <div class="progress-wrap"><div class="progress-bar" id="taskProgress"></div></div>
+      <div class="task-row"><span id="taskStep">Đang chuẩn bị...</span><span id="taskPercent">0%</span></div>
+      <div class="task-row"><span>Cloud Run delay</span><span id="cloudRunDelay">--:--</span></div>
+    </div>
+
+    <h1>TRUNG HUYEN AI OS</h1>
+    <p>Bộ não AI kết nối Google Drive và OpenAI.</p>
+
+    <div id="chat"></div>
+
+    <textarea id="question" placeholder="Nhập câu hỏi..."></textarea>
+    <button onclick="sendMessage()" id="sendBtn">Gửi câu hỏi</button>
+  </div>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const questionInput = document.getElementById("question");
+    const sendBtn = document.getElementById("sendBtn");
+
+    const countdownBox = document.getElementById("taskCountdown");
+    const taskTitle = document.getElementById("taskTitle");
+    const taskTimer = document.getElementById("taskTimer");
+    const taskProgress = document.getElementById("taskProgress");
+    const taskStep = document.getElementById("taskStep");
+    const taskPercent = document.getElementById("taskPercent");
+    const cloudRunDelay = document.getElementById("cloudRunDelay");
+
+    let activeTask = null;
+    let localRemainingSeconds = null;
+    let localCloudRunDelay = null;
+    let hideTimer = null;
+
+    function formatTime(totalSeconds) {
+      if (totalSeconds === null || totalSeconds === undefined || Number.isNaN(totalSeconds)) return "--:--";
+      const safe = Math.max(0, Math.floor(totalSeconds));
+      const minutes = String(Math.floor(safe / 60)).padStart(2, "0");
+      const seconds = String(safe % 60).padStart(2, "0");
+      return minutes + ":" + seconds;
+    }
+
+    function taskStatus(task) {
+      return String((task && task.status) || "").toUpperCase();
+    }
+
+    function isRunningStatus(status) {
+      return ["RUNNING", "QUEUED", "WORKING"].includes(status);
+    }
+
+    function isDoneStatus(status) {
+      return ["DONE", "SUCCESS", "COMPLETED"].includes(status);
+    }
+
+    function firstTaskFromPayload(data) {
+      const tasks = data && data.tasks ? data.tasks : {};
+      const values = Array.isArray(tasks) ? tasks : Object.values(tasks);
+      const active = values.find(t => isRunningStatus(taskStatus(t)));
+      if (active) return active;
+      return values.find(t => isDoneStatus(taskStatus(t))) || null;
+    }
+
+    function computeRemaining(task) {
+      if (typeof task.remaining_seconds === "number") return task.remaining_seconds;
+      if (!task.started_at || !task.eta_seconds) return null;
+      const started = Date.parse(task.started_at);
+      if (Number.isNaN(started)) return task.eta_seconds;
+      const elapsed = (Date.now() - started) / 1000;
+      return Math.max(0, Number(task.eta_seconds) - elapsed);
+    }
+
+    function hideCountdown() {
+      countdownBox.style.display = "none";
+      countdownBox.classList.remove("done");
+      activeTask = null;
+      localRemainingSeconds = null;
+      localCloudRunDelay = null;
+    }
+
+    function renderCompletedTask(task) {
+      countdownBox.style.display = "block";
+      countdownBox.classList.add("done");
+      taskTitle.textContent = "✅ " + (task.title || "Nhiệm vụ đã hoàn thành");
+      taskStep.textContent = "Hoàn thành";
+      taskTimer.textContent = "00:00";
+      taskProgress.style.width = "100%";
+      taskPercent.textContent = "100%";
+      cloudRunDelay.textContent = "00:00";
+      activeTask = null;
+      localRemainingSeconds = null;
+      localCloudRunDelay = null;
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(hideCountdown, 5000);
+    }
+
+    function renderTask(task) {
+      if (!task) {
+        hideCountdown();
+        return;
+      }
+
+      const status = taskStatus(task);
+      if (isDoneStatus(status)) {
+        renderCompletedTask(task);
+        return;
+      }
+
+      if (hideTimer) clearTimeout(hideTimer);
+      countdownBox.classList.remove("done");
+      activeTask = task;
+      localRemainingSeconds = computeRemaining(task);
+      localCloudRunDelay = typeof task.cloud_run_delay_seconds === "number" ? task.cloud_run_delay_seconds : null;
+
+      countdownBox.style.display = "block";
+      taskTitle.textContent = "🧠 " + (task.title || "Đang xử lý nhiệm vụ");
+      taskStep.textContent = task.current_step || "Đang thực hiện";
+      const progress = Math.max(0, Math.min(100, Number(task.progress || 0)));
+      taskProgress.style.width = progress + "%";
+      taskPercent.textContent = Math.round(progress) + "%";
+      taskTimer.textContent = formatTime(localRemainingSeconds);
+      cloudRunDelay.textContent = formatTime(localCloudRunDelay);
+    }
+
+    async function refreshActiveTask() {
+      try {
+        const res = await fetch("/system/tasks/active", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        renderTask(firstTaskFromPayload(data));
+      } catch (err) {
+        // Không làm phiền Founder nếu kênh tiến độ tạm thời lỗi.
+      }
+    }
+
+    setInterval(() => {
+      if (!activeTask) return;
+      if (localRemainingSeconds !== null) {
+        localRemainingSeconds = Math.max(0, localRemainingSeconds - 1);
+        taskTimer.textContent = formatTime(localRemainingSeconds);
+      }
+      if (localCloudRunDelay !== null) {
+        localCloudRunDelay = Math.max(0, localCloudRunDelay - 1);
+        cloudRunDelay.textContent = formatTime(localCloudRunDelay);
+      }
+    }, 1000);
+
+    setInterval(refreshActiveTask, 5000);
+    refreshActiveTask();
+
+    function addMessage(text, type) {
+      const div = document.createElement("div");
+      div.className = "msg " + type;
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const question = questionInput.value.trim();
+      if (!question) return;
+
+      addMessage(question, "user");
+      questionInput.value = "";
+      sendBtn.disabled = true;
+      sendBtn.textContent = "Đang suy nghĩ...";
+
+      try {
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: question, limit: 3, max_chars_per_file: 6000 })
+        });
+
+        const data = await res.json();
+        if (!res.ok) addMessage("Lỗi: " + JSON.stringify(data), "bot");
+        else addMessage(data.answer || "Không có câu trả lời.", "bot");
+      } catch (err) {
+        addMessage("Không kết nối được server: " + err.message, "bot");
+      }
+
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Gửi câu hỏi";
+    }
+  </script>
+</body>
+</html>
