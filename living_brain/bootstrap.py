@@ -30,6 +30,7 @@ def bootstrap_brain() -> dict:
     ownership = Path("living_brain/tool_ownership.yaml")
     execution_first = Path("governance/EXECUTION_FIRST_PROTOCOL.md")
     capability_baseline = Path("governance/CAPABILITY_BASELINE.yaml")
+    action_contracts = Path("governance/ACTION_CONTRACTS.yaml")
 
     if constitution.exists() and amendment.exists():
         status["constitution_loaded"] = True
