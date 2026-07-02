@@ -5,6 +5,7 @@ import difflib
 import ast
 import re
 import time
+import requests
 from typing import Any
 
 router = APIRouter(prefix="/github", tags=["GitHub Runtime"])
