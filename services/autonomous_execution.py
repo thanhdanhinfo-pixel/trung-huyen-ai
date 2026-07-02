@@ -191,6 +191,97 @@ def cloud_build_submit(
         }
 
 
+def cloud_build_status(build_id: str, project_id: str | None = None) -> Dict[str, Any]:
+    """Return Cloud Build status through the Cloud Build API."""
+    if not build_id:
+        return {"status": "error", "message": "build_id is required"}
+    try:
+        project = _google_project_id(project_id)
+        cloudbuild = build("cloudbuild", "v1", cache_discovery=False)
+        build_info = cloudbuild.projects().builds().get(
+            projectId=project,
+            id=build_id,
+        ).execute()
+        return {
+            "status": "ok",
+            "project_id": project,
+            "build_id": build_id,
+            "build_status": build_info.get("status"),
+            "log_url": build_info.get("logUrl"),
+            "create_time": build_info.get("createTime"),
+            "start_time": build_info.get("startTime"),
+            "finish_time": build_info.get("finishTime"),
+            "substitutions": build_info.get("substitutions", {}),
+        }
+    except Exception as exc:
+        return {
+            "status": "error",
+            "message": str(exc),
+            "type": type(exc).__name__,
+            "build_id": build_id,
+        }
+
+
+def cloud_run_service_status(
+    service: str = DEFAULT_SERVICE,
+    region: str = DEFAULT_REGION,
+) -> Dict[str, Any]:
+    """Return Cloud Run service status through allowlisted gcloud describe."""
+    service_q = shlex.quote(service or DEFAULT_SERVICE)
+    region_q = shlex.quote(region or DEFAULT_REGION)
+    command = f"gcloud run services describe {service_q} --region={region_q} --format=json"
+    result = shell_exec(command, timeout=120)
+    result["service"] = service or DEFAULT_SERVICE
+    result["region"] = region or DEFAULT_REGION
+    return result
+
+
+def runtime_logs(
+    service: str = DEFAULT_SERVICE,
+    limit: int = 50,
+    project_id: str | None = None,
+) -> Dict[str, Any]:
+    """Return recent Cloud Run logs through google-cloud-logging client."""
+    try:
+        import google.cloud.logging
+
+        project = _google_project_id(project_id)
+        client = google.cloud.logging.Client(project=project)
+        limit = max(1, min(int(limit or 50), 200))
+        log_filter = (
+            'resource.type="cloud_run_revision" '
+            f'AND resource.labels.service_name="{service or DEFAULT_SERVICE}"'
+        )
+        entries = client.list_entries(
+            filter_=log_filter,
+            order_by=google.cloud.logging.DESCENDING,
+            page_size=limit,
+            max_results=limit,
+        )
+        items = []
+        for entry in entries:
+            items.append({
+                "timestamp": entry.timestamp.isoformat() if entry.timestamp else None,
+                "severity": entry.severity,
+                "payload": str(entry.payload)[:4000],
+            })
+        return {
+            "status": "ok",
+            "project_id": project,
+            "service": service or DEFAULT_SERVICE,
+            "limit": limit,
+            "count": len(items),
+            "entries": items,
+        }
+    except Exception as exc:
+        return {
+            "status": "error",
+            "message": str(exc),
+            "type": type(exc).__name__,
+            "service": service or DEFAULT_SERVICE,
+        }
+
+
 def cloud_run_deploy(
     service: str = DEFAULT_SERVICE,
     image: str = DEFAULT_IMAGE,
