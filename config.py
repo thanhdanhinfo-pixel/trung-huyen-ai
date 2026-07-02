@@ -20,6 +20,6 @@ CACHE_DIR = os.getenv("CACHE_DIR", "storage/cache")
 INDEX_DIR = os.getenv("INDEX_DIR", "storage/index")
 
 QDRANT_URL = os.getenv("QDRANT_URL")
-QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY_SM") or os.getenv("QDRANT_API_KEY")
 
 QDRANT_COLLECTION = "trung_huyen_brain"
