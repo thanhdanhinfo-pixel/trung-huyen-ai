@@ -26,6 +26,7 @@ ALLOWED_COMMAND_PREFIXES = (
     "gcloud builds submit",
     "gcloud run deploy",
     "gcloud run services describe",
+    "gcloud run services update",
     "gcloud artifacts repositories list",
     "curl ",
     "python -m pytest",
