@@ -219,11 +219,47 @@ def cloud_build_status(build_id: str, project_id: str | None = None) -> Dict[str
             projectId=project,
             id=build_id,
         ).execute()
+        build_status = build_info.get("status")
+
+        try:
+            from services.task_runtime import task_runtime
+
+            task_id = f"build-{build_id}"
+            progress_map = {
+                "QUEUED": 5,
+                "WORKING": 55,
+                "SUCCESS": 100,
+                "FAILURE": 100,
+                "CANCELLED": 100,
+                "TIMEOUT": 100,
+            }
+            step_map = {
+                "QUEUED": "Cloud Build queued",
+                "WORKING": "Cloud Build working",
+                "SUCCESS": "Cloud Build completed",
+                "FAILURE": "Cloud Build failed",
+                "CANCELLED": "Cloud Build cancelled",
+                "TIMEOUT": "Cloud Build timeout",
+            }
+            if build_status == "SUCCESS":
+                task_runtime.complete(task_id, status="SUCCESS")
+            elif build_status in {"FAILURE", "CANCELLED", "TIMEOUT"}:
+                task_runtime.complete(task_id, status=build_status)
+            else:
+                task_runtime.update(
+                    task_id,
+                    status=build_status or "WORKING",
+                    progress=progress_map.get(build_status, 35),
+                    current_step=step_map.get(build_status, "Cloud Build working"),
+                )
+        except Exception:
+            pass
+
         return {
             "status": "ok",
             "project_id": project,
             "build_id": build_id,
-            "build_status": build_info.get("status"),
+            "build_status": build_status,
             "log_url": build_info.get("logUrl"),
             "create_time": build_info.get("createTime"),
             "start_time": build_info.get("startTime"),
