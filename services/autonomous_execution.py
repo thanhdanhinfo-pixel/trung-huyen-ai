@@ -282,6 +282,107 @@ def runtime_logs(
         }
 
 
+def secret_manager_read(secret_name: str, project_id: str | None = None, version: str = "latest") -> Dict[str, Any]:
+    """Read Secret Manager metadata and optionally value hash-safe metadata only.
+
+    This function intentionally does not return raw secret values.
+    """
+    if not secret_name:
+        return {"status": "error", "message": "secret_name is required"}
+    try:
+        from google.cloud import secretmanager
+
+        project = _google_project_id(project_id)
+        client = secretmanager.SecretManagerServiceClient()
+        name = f"projects/{project}/secrets/{secret_name}/versions/{version or 'latest'}"
+        response = client.access_secret_version(request={"name": name})
+        payload = response.payload.data or b""
+        return {
+            "status": "ok",
+            "project_id": project,
+            "secret_name": secret_name,
+            "version": version or "latest",
+            "value_present": bool(payload),
+            "value_size": len(payload),
+        }
+    except Exception as exc:
+        return {
+            "status": "error",
+            "message": str(exc),
+            "type": type(exc).__name__,
+            "secret_name": secret_name,
+        }
+
+
+def secret_manager_write(secret_name: str, value: str, project_id: str | None = None) -> Dict[str, Any]:
+    """Create a secret if needed and add a new version."""
+    if not secret_name:
+        return {"status": "error", "message": "secret_name is required"}
+    if value is None or value == "":
+        return {"status": "error", "message": "value is required"}
+    try:
+        from google.cloud import secretmanager
+        from google.api_core.exceptions import AlreadyExists, NotFound
+
+        project = _google_project_id(project_id)
+        client = secretmanager.SecretManagerServiceClient()
+        parent = f"projects/{project}"
+        secret_path = f"{parent}/secrets/{secret_name}"
+
+        try:
+            client.get_secret(request={"name": secret_path})
+            created = False
+        except NotFound:
+            client.create_secret(
+                request={
+                    "parent": parent,
+                    "secret_id": secret_name,
+                    "secret": {"replication": {"automatic": {}}},
+                }
+            )
+            created = True
+        except AlreadyExists:
+            created = False
+
+        version = client.add_secret_version(
+            request={
+                "parent": secret_path,
+                "payload": {"data": value.encode("utf-8")},
+            }
+        )
+        return {
+            "status": "ok",
+            "project_id": project,
+            "secret_name": secret_name,
+            "created": created,
+            "version": version.name,
+        }
+    except Exception as exc:
+        return {
+            "status": "error",
+            "message": str(exc),
+            "type": type(exc).__name__,
+            "secret_name": secret_name,
+        }
+
+
+def cloud_run_secret_bind(
+    env_var: str,
+    secret_name: str,
+    service: str = DEFAULT_SERVICE,
+    region: str = DEFAULT_REGION,
+    version: str = "latest",
+) -> Dict[str, Any]:
+    """Bind a Secret Manager secret to Cloud Run env var."""
+    if not env_var or not secret_name:
+        return {"status": "error", "message": "env_var and secret_name are required"}
+    service_q = shlex.quote(service or DEFAULT_SERVICE)
+    region_q = shlex.quote(region or DEFAULT_REGION)
+    binding = shlex.quote(f"{env_var}={secret_name}:{version or 'latest'}")
+    command = f"gcloud run services update {service_q} --region={region_q} --update-secrets={binding}"
+    return shell_exec(command, timeout=1800)
+
+
 def cloud_run_deploy(
     service: str = DEFAULT_SERVICE,
     image: str = DEFAULT_IMAGE,
