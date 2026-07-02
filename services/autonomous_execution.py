@@ -436,6 +436,74 @@ def cloud_run_secret_bind(
     return shell_exec(command, timeout=1800)
 
 
+def migrate_env_secret_to_secret_manager(
+    env_var: str,
+    secret_name: str,
+    service: str = DEFAULT_SERVICE,
+    region: str = DEFAULT_REGION,
+    version: str = "latest",
+) -> Dict[str, Any]:
+    """Migrate an existing runtime environment value into Secret Manager safely.
+
+    This function never returns or logs the raw secret value. It reads the value
+    from the current process environment, writes it as a Secret Manager version,
+    then binds the Cloud Run env var to that secret.
+    """
+    if not env_var or not secret_name:
+        return {"status": "error", "message": "env_var and secret_name are required"}
+
+    value = os.getenv(env_var)
+    if not value:
+        return {
+            "status": "error",
+            "message": "environment variable is missing or empty",
+            "env_var": env_var,
+            "secret_name": secret_name,
+        }
+
+    write_result = secret_manager_write(secret_name=secret_name, value=value)
+    if write_result.get("status") != "ok":
+        return {
+            "status": "error",
+            "stage": "secret_manager_write",
+            "env_var": env_var,
+            "secret_name": secret_name,
+            "write_result": write_result,
+        }
+
+    bind_result = cloud_run_secret_bind(
+        env_var=env_var,
+        secret_name=secret_name,
+        service=service,
+        region=region,
+        version=version,
+    )
+    if bind_result.get("status") != "ok":
+        return {
+            "status": "error",
+            "stage": "cloud_run_secret_bind",
+            "env_var": env_var,
+            "secret_name": secret_name,
+            "write_result": {
+                "status": write_result.get("status"),
+                "secret_name": write_result.get("secret_name"),
+                "created": write_result.get("created"),
+                "version": write_result.get("version"),
+            },
+            "bind_result": bind_result,
+        }
+
+    return {
+        "status": "ok",
+        "env_var": env_var,
+        "secret_name": secret_name,
+        "secret_written": True,
+        "cloud_run_bound": True,
+        "value_returned": False,
+        "version": write_result.get("version"),
+    }
+
+
 def cloud_run_deploy(
     service: str = DEFAULT_SERVICE,
     image: str = DEFAULT_IMAGE,
