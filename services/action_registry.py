@@ -837,3 +837,54 @@ def action_runtime_logs(payload: Dict[str, Any], context: Any = None) -> Dict[st
         service=payload.get("service", "trung-huyen-ai"),
         limit=int(payload.get("limit", 50)),
     )
+
+
+@register_action(
+    "secret_manager_read",
+    description="Read Secret Manager metadata without returning raw secret values.",
+    namespace="security",
+    required_level=5,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_secret_manager_read(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.autonomous_execution import secret_manager_read
+    return secret_manager_read(
+        secret_name=payload.get("secret_name", ""),
+        version=payload.get("version", "latest"),
+    )
+
+
+@register_action(
+    "secret_manager_write",
+    description="Create or update a Secret Manager secret version.",
+    namespace="security",
+    required_level=5,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_secret_manager_write(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.autonomous_execution import secret_manager_write
+    return secret_manager_write(
+        secret_name=payload.get("secret_name", ""),
+        value=payload.get("value", ""),
+    )
+
+
+@register_action(
+    "cloud_run_secret_bind",
+    description="Bind a Secret Manager secret to Cloud Run environment variable.",
+    namespace="security",
+    required_level=5,
+    scope="ALL_SYSTEM",
+    audit_required=True,
+)
+def action_cloud_run_secret_bind(payload: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
+    from services.autonomous_execution import cloud_run_secret_bind
+    return cloud_run_secret_bind(
+        env_var=payload.get("env_var", ""),
+        secret_name=payload.get("secret_name", ""),
+        service=payload.get("service", "trung-huyen-ai"),
+        region=payload.get("region", "asia-southeast1"),
+        version=payload.get("version", "latest"),
+    )
