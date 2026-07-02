@@ -9,7 +9,7 @@ GOOGLE_REFRESH_TOKEN = os.getenv("GOOGLE_REFRESH_TOKEN", "")
 AI_SYSTEM_MODE = os.getenv("AI_SYSTEM_MODE", "observer")
 AI_SYSTEM_VERSION = os.getenv("AI_SYSTEM_VERSION", "1.0.0")
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY_SM") or os.getenv("OPENAI_API_KEY", "")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 
 MAX_CONTEXT_CHARS = 12000
