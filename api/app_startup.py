@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from typing import Any, Callable
-from brain.bootstrap import bootstrap_brain
+from living_brain.bootstrap import bootstrap_brain
 
 
 async def run_startup_boot(boot: Callable[[], Any], production_scheduler: Any) -> None:
