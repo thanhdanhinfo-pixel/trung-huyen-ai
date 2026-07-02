@@ -43,6 +43,10 @@ def credential_source() -> Dict[str, Any]:
 def _credentials():
     auth_mode = os.getenv("DRIVE_AUTH_MODE", "service_account").strip().lower()
 
+    if auth_mode == "adc":
+        credentials, _ = google.auth.default(scopes=SCOPES)
+        return credentials
+
     if auth_mode == "oauth":
         if not (
             GOOGLE_CLIENT_ID
@@ -65,7 +69,7 @@ def _credentials():
     if auth_mode not in {"service_account", "service-account", "sa"}:
         raise RuntimeError(
             f"Unsupported DRIVE_AUTH_MODE={auth_mode!r}. "
-            "Use 'service_account' or 'oauth'."
+            "Use 'adc', 'service_account' or 'oauth'."
         )
 
     if not GOOGLE_SERVICE_ACCOUNT_JSON:
