@@ -1,17 +1,50 @@
 owner: LIVING_BRAIN
-version: 1
+version: 2
+
 capabilities:
   READ_MEMORY:
+    owner: LIVING_BRAIN
     tools: [drive, rag]
-  TECHNICAL_BODY_ACCESS:
-    tools: [github_read, github_write, patch_file]
+
+  WRITE_MEMORY:
+    owner: LIVING_BRAIN
+    tools: [drive]
+
+  CREATE_CODE:
+    owner: LIVING_BRAIN
+    tools: [github_create_file, github_upsert_file]
+
+  MODIFY_CODE:
+    owner: LIVING_BRAIN
+    tools: [github_update_file, patch_file]
+
+  MOVE_CODE:
+    owner: LIVING_BRAIN
+    tools: [move_file]
+
+  DELETE_CODE:
+    owner: LIVING_BRAIN
+    tools: [github_delete_file]
+
+  MANAGE_GITHUB:
+    owner: LIVING_BRAIN
+    tools: [github_read, github_create_file, github_update_file, github_delete_file, move_file]
+
   OBSERVE_SELF:
+    owner: LIVING_BRAIN
     tools: [runtime, health]
-  EXECUTE_DEPLOYMENT:
+
+  DEPLOY_SYSTEM:
+    owner: LIVING_BRAIN
     tools: [cloud_build, cloud_run]
+
   EXECUTE_EXTERNAL_ACTION:
+    owner: LIVING_BRAIN
     tools: [mcp]
+
 principles:
-  - all_tool_access_must_route_through_brain
+  - all_tool_access_must_route_through_living_brain
   - all_results_return_to_brain_memory
-  - founder_interacts_with_brain_not_tools
+  - founder_interacts_with_living_brain_not_tools
+  - one_capability_one_owner
+  - no_direct_worker_to_tool_access
