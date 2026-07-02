@@ -45,6 +45,9 @@ def bootstrap_brain() -> dict:
     if _load_yaml_if_exists(capability_baseline):
         status["capability_baseline_loaded"] = True
 
+    if _load_yaml_if_exists(action_contracts):
+        status["action_contracts_loaded"] = True
+
     _ = living_brain
     status["brain_initialized"] = True
 
