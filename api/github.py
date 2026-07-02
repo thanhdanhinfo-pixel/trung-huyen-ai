@@ -274,7 +274,16 @@ def list_files(path: str = ''):
 
 @router.post('/read')
 def read(req: ReadFile):
-    return github_runtime.read_file(req.path)
+    try:
+        return github_runtime.read_file(req.path)
+    except requests.HTTPError as exc:
+        if exc.response is not None and exc.response.status_code == 404:
+            return {
+                "status": "not_found",
+                "path": req.path,
+                "message": f"File '{req.path}' does not exist"
+            }
+        raise
 
 
 @router.post('/update')
