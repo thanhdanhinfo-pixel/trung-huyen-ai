@@ -172,6 +172,22 @@ def cloud_build_submit(
         ).execute()
         metadata = operation.get("metadata", {}) if isinstance(operation, dict) else {}
         build_info = metadata.get("build", {}) if isinstance(metadata, dict) else {}
+        build_id = build_info.get("id")
+        try:
+            from services.task_runtime import task_runtime
+
+            if build_id:
+                task_runtime.start(
+                    task_id=f"build-{build_id}",
+                    title=f"Deploy {service or DEFAULT_SERVICE}",
+                    eta_seconds=480,
+                    current_step="Cloud Build queued",
+                    build_id=build_id,
+                    cloud_run_delay_seconds=120,
+                )
+        except Exception:
+            pass
+
         return {
             "status": "ok",
             "provider": "cloud_build_api",
@@ -180,7 +196,7 @@ def cloud_build_submit(
             "service": service,
             "region": region,
             "operation": operation,
-            "build_id": build_info.get("id"),
+            "build_id": build_id,
             "log_url": build_info.get("logUrl"),
         }
     except Exception as exc:
