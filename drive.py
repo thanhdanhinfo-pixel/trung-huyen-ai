@@ -4,6 +4,7 @@ import os
 import unicodedata
 from typing import Any, Dict, List, Optional
 
+import google.auth
 from google.oauth2 import service_account
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
