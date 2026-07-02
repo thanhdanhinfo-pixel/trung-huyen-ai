@@ -28,6 +28,7 @@ from api.runtime import router as runtime_router, register_error
 from api.system import router as system_router
 from api.system_awareness import router as system_awareness_router
 from api.system_startup import router as system_startup_router
+from api.task_status import router as task_status_router
 from api.workspace import router as workspace_router
 
 SERVER_URL = "https://trung-huyen-ai-779121307308.asia-southeast1.run.app"
