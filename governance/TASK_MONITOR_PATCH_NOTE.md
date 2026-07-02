@@ -1,0 +1,1 @@
+Task Monitor always-on patch attempted on static/index.html. Blocked by WRITE_SAFETY_GATE placeholder detection. Need manual override or refined patch operation.
