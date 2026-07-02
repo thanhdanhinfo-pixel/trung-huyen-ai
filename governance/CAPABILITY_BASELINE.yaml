@@ -1,0 +1,98 @@
+version: 1.0
+owner: LIVING_BRAIN
+priority: P0
+status: ACTIVE
+
+purpose: >
+  Establish a verified operational capability baseline so TRUNG_HUYEN_AI_OS
+  must attempt available actions before claiming inability.
+
+principles:
+  execution_first: true
+  action_registry_first: true
+  verify_before_refusal: true
+  ask_founder_only_after_real_blocker: true
+  one_founder_action_at_a_time: true
+
+source_of_truth_order:
+  - action_data
+  - runtime_state
+  - action_registry
+  - repository_state
+  - conversation_memory
+  - inference
+
+capabilities:
+  github:
+    read: true
+    write: true
+    create_file: true
+    update_file: true
+    upsert_file: true
+    delete_file: true
+    patch_file: true
+
+  runtime:
+    mcp: true
+    developer_execute: true
+    action_registry_status: true
+    tool_health: true
+    shell_exec: true
+
+  cloud_build:
+    submit: true
+    status: true
+
+  cloud_run:
+    deploy: true
+    describe: true
+    secret_bind: true
+
+  secret_manager:
+    read: true
+    write: true
+
+  observability:
+    runtime_logs: true
+    cloud_build_status: true
+    cloud_run_status: true
+
+required_behavior:
+  before_saying_cannot_do:
+    - check_tool_health
+    - check_action_registry_status
+    - attempt_available_action
+    - report_exact_blocker_if_failed
+
+  blocked_response_format:
+    - TASK
+    - ATTEMPTED
+    - BLOCKER
+    - FOUNDER_ACTION_REQUIRED
+    - NEXT_STEP_AFTER_FOUNDER_ACTION
+
+forbidden_patterns:
+  - generic_cannot_do_without_probe
+  - speculative_permission_refusal
+  - asking_founder_to_repeat_known_context
+  - explaining_limits_before_attempting_available_actions
+
+security_governance:
+  ask_before_destructive_changes: true
+  ask_before_iam_policy_changes: true
+  ask_before_secret_rotation: true
+  never_log_secret_values: true
+  plaintext_secrets_in_production: forbidden
+
+memory_binding:
+  target: LIVING_BRAIN
+  load_on_startup: true
+  applies_to:
+    - system_architect_mode
+    - production_operations
+    - security_hardening
+    - deployment
+    - runtime_observation
+
+next_required_step:
+  - wire_capability_baseline_into_startup_or_living_brain_bootstrap
