@@ -38,6 +38,22 @@ capabilities:
     owner: LIVING_BRAIN
     tools: [cloud_build, cloud_run]
 
+  OBSERVE_RUNTIME:
+    owner: LIVING_BRAIN
+    tools: [cloud_run_describe, build_status, runtime_logs]
+
+  MANAGE_SECRETS:
+    owner: LIVING_BRAIN
+    tools: [secret_manager_read, secret_manager_write, cloud_run_secret_bind]
+
+  READ_BUILD_STATUS:
+    owner: LIVING_BRAIN
+    tools: [build_status]
+
+  READ_DEPLOYMENT_LOGS:
+    owner: LIVING_BRAIN
+    tools: [runtime_logs]
+
   EXECUTE_EXTERNAL_ACTION:
     owner: LIVING_BRAIN
     tools: [mcp]
