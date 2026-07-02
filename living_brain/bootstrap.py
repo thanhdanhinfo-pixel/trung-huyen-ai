@@ -4,7 +4,6 @@ from pathlib import Path
 import yaml
 from living_brain.facade import living_brain
 from living_brain.tool_router import tool_router, ToolRoutingError
-from living_brain.tool_router import tool_router, ToolRoutingError
 
 
 def bootstrap_brain() -> dict:
