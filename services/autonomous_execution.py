@@ -441,6 +441,7 @@ def cloud_run_deploy(
     image: str = DEFAULT_IMAGE,
     region: str = DEFAULT_REGION,
     allow_unauthenticated: bool = True,
+    task_id: str | None = None,
 ) -> Dict[str, Any]:
     service_q = shlex.quote(service or DEFAULT_SERVICE)
     image_q = shlex.quote(image or DEFAULT_IMAGE)
@@ -448,4 +449,44 @@ def cloud_run_deploy(
     command = f"gcloud run deploy {service_q} --image {image_q} --region {region_q}"
     if allow_unauthenticated:
         command += " --allow-unauthenticated"
-    return shell_exec(command, timeout=1800)
+
+    resolved_task_id = task_id or f"cloud-run-{service or DEFAULT_SERVICE}"
+    try:
+        from services.task_runtime import task_runtime
+
+        task_runtime.start(
+            task_id=resolved_task_id,
+            title=f"Cloud Run rollout {service or DEFAULT_SERVICE}",
+            eta_seconds=180,
+            current_step="Cloud Run rollout started",
+            cloud_run_delay_seconds=120,
+        )
+        task_runtime.update(
+            resolved_task_id,
+            progress=85,
+            current_step="Deploying Cloud Run revision",
+            cloud_run_delay_seconds=120,
+        )
+    except Exception:
+        pass
+
+    result = shell_exec(command, timeout=1800)
+
+    try:
+        from services.task_runtime import task_runtime
+
+        if result.get("status") == "ok":
+            task_runtime.update(
+                resolved_task_id,
+                progress=95,
+                current_step="Cloud Run revision ready; switching traffic",
+                cloud_run_delay_seconds=15,
+            )
+            task_runtime.complete(resolved_task_id, status="SUCCESS")
+        else:
+            task_runtime.complete(resolved_task_id, status="FAILURE")
+    except Exception:
+        pass
+
+    result["task_id"] = resolved_task_id
+    return result
